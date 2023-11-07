@@ -10,11 +10,8 @@ URL / HTTP Method
 
 ### 주문
 - 주문한 상품 조회 - `GET /orders/{id}`
+  - ex) 상품준비중, 배송중, 배송완료
 - 상품 주문 취소 - `DELETE /orders/{id}`
-
-
-- 주문한 상품 배달 상태 조회 - `GET /deliveries/{id}`
-    - ex) 상품준비중, 배송중, 배송완료
 
 
 ## [매장기준]
