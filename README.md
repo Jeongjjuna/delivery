@@ -5,15 +5,15 @@ URL / HTTP Method
 ## [손님 기준]
 ### 상품
 - 상품 전체 조회 - `GET /items`
-- 상품 개별 조회 - `GET /item/{id}`
-- 상품 주문 하기 - `POST /item/{id}`
+- 상품 개별 조회 - `GET /items/{id}`
+- 상품 주문 하기 - `POST /items/{id}`
 
 ### 주문
-- 주문한 상품 조회 - `GET /order/{id}`
-- 상품 주문 취소 - `DELETE /order/{id}`
+- 주문한 상품 조회 - `GET /orders/{id}`
+- 상품 주문 취소 - `DELETE /orders/{id}`
 
 
-- 주문한 상품 배달 상태 조회 - `GET /delivery/{id}`
+- 주문한 상품 배달 상태 조회 - `GET /deliveries/{id}`
     - ex) 상품준비중, 배송중, 배송완료
 
 
