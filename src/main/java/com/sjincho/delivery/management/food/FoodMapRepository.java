@@ -19,4 +19,8 @@ public class FoodMapRepository {
         db.put(idCounter, food);
         idCounter += 1;
     }
+
+    public Food findById(Integer foodId) {
+        return db.get(foodId);
+    }
 }

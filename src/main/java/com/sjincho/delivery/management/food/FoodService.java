@@ -15,4 +15,8 @@ public class FoodService {
     public void register(Food food) {
         foodMapRepository.save(food);
     }
+
+    public Food get(Integer foodId) {
+        return foodMapRepository.findById(foodId);
+    }
 }
