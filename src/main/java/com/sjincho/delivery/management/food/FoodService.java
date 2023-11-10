@@ -24,4 +24,8 @@ public class FoodService {
     public List<Food> getAll() {
         return foodMapRepository.findAll();
     }
+
+    public Food update(int id, Food food) {
+        return foodMapRepository.update(id, food);
+    }
 }

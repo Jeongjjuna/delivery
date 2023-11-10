@@ -29,4 +29,12 @@ public class FoodMapRepository {
         List<Food> foodList = new ArrayList<>(db.values());
         return foodList;
     }
+
+    public Food update(int id, Food food) {
+        if (db.containsKey(id)) {
+            db.put(id, food);
+            return food;
+        }
+        throw new IllegalArgumentException("수정하려는 Food 상품이 없음");
+    }
 }
