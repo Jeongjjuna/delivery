@@ -32,6 +32,7 @@ MySQL Table : food
 ---
 ## [매장기준]
 ### 음식
+Map 자료구조 DB를 활용하여 Controller, Service, Repository 기본틀 구현 완료
 - 판매할 음식 전체 조회 - `GET management/foods`
 - 판매할 음식 조회 - `GET management/foods/{id}`
 - 판매할 음식 등록 - `POST management/foods`

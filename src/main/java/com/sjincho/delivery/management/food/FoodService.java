@@ -28,4 +28,8 @@ public class FoodService {
     public Food update(int id, Food food) {
         return foodMapRepository.update(id, food);
     }
+
+    public void delete(int id) {
+        foodMapRepository.delete(id);
+    }
 }

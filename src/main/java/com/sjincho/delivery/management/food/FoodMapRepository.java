@@ -17,6 +17,7 @@ public class FoodMapRepository {
     }
 
     public void save(Food food) {
+        food.setId(idCounter);
         db.put(idCounter, food);
         idCounter += 1;
     }
@@ -32,9 +33,14 @@ public class FoodMapRepository {
 
     public Food update(int id, Food food) {
         if (db.containsKey(id)) {
+            food.setId(id);
             db.put(id, food);
             return food;
         }
         throw new IllegalArgumentException("수정하려는 Food 상품이 없음");
+    }
+
+    public void delete(int id) {
+        db.remove(id);
     }
 }

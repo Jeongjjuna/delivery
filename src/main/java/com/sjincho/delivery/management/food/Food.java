@@ -2,6 +2,7 @@ package com.sjincho.delivery.management.food;
 
 
 public class Food {
+    private Integer id;
     private String name;
     private int price;
     private String foodType;
@@ -10,6 +11,14 @@ public class Food {
         this.name = name;
         this.price = price;
         this.foodType = foodType;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public String getName() {
