@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 public class FoodController {
@@ -25,5 +26,10 @@ public class FoodController {
     @GetMapping("/management/foods/{id}")
     public Food get(@PathVariable int id) {
         return foodService.get(id);
+    }
+
+    @GetMapping("/management/foods")
+    public List<Food> getAll() {
+        return foodService.getAll();
     }
 }
