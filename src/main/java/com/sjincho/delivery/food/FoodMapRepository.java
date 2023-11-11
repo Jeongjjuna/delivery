@@ -1,4 +1,4 @@
-package com.sjincho.delivery.management.food;
+package com.sjincho.delivery.food;
 
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;

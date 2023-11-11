@@ -1,4 +1,4 @@
-package com.sjincho.delivery.management.food;
+package com.sjincho.delivery.food;
 
 
 public class Food {
