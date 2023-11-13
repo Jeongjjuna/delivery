@@ -1,6 +1,7 @@
-package com.sjincho.delivery.food.user;
+package com.sjincho.delivery.food.controller;
 
-import com.sjincho.delivery.food.FoodResponseDto;
+import com.sjincho.delivery.food.dto.FoodResponse;
+import com.sjincho.delivery.food.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,12 @@ public class FoodController {
     }
 
     @GetMapping("/foods/{id}")
-    public FoodResponseDto get(@PathVariable int id) {
+    public FoodResponse get(@PathVariable int id) {
         return foodService.get(id);
     }
 
     @GetMapping("/foods")
-    public List<FoodResponseDto> getAll() {
+    public List<FoodResponse> getAll() {
         return foodService.getAll();
     }
 }

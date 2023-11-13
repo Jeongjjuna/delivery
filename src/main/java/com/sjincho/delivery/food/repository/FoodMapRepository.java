@@ -1,5 +1,6 @@
-package com.sjincho.delivery.food;
+package com.sjincho.delivery.food.repository;
 
+import com.sjincho.delivery.food.domain.Food;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.HashMap;

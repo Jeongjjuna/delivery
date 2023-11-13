@@ -41,11 +41,11 @@ MySQL Table : food
 ## [매장기준]
 ### 음식
 Map 자료구조 DB를 활용하여 Controller, Service, Repository 기본틀 구현 완료
-- 판매할 음식 전체 조회 - `GET /management/foods`
-- 판매할 음식 조회 - `GET /management/foods/{id}`
-- 판매할 음식 등록 - `POST /management/foods`
-- 판매할 음식 수정 - `PUT /management/foods/{id}`
-- 판매할 음식 삭제 - `DELETE /management/foods/{id}`
+- 판매할 음식 전체 조회 - `GET /admin/foods`
+- 판매할 음식 조회 - `GET /admin/foods/{id}`
+- 판매할 음식 등록 - `POST /admin/foods`
+- 판매할 음식 수정 - `PUT /admin/foods/{id}`
+- 판매할 음식 삭제 - `DELETE /admin/foods/{id}`
 
 ```
 MySQL Table : food
@@ -61,20 +61,20 @@ MySQL Table : food
 
 ---
 ### 주문받은 상품
-- 주문된 음식 전체 조회 - `GET /management/orders`
-- 주문된 음식 개별 조회 - `GET /management/orders/{id}`
-- 주문 수락하기 - `POST /management/orders/{id}`
-- 주문 거절하기 - `DELETE /management/orders/{id}`
+- 주문된 음식 전체 조회 - `GET /admin/orders`
+- 주문된 음식 개별 조회 - `GET /admin/orders/{id}`
+- 주문 수락하기 - `POST /admin/orders/{id}`
+- 주문 거절하기 - `DELETE /admin/orders/{id}`
 
 ---
 ### 배달
-- 배달시작하기 - `POST /management/delivery/orders/{id}`
-- 배달완료하기 - `POST /management/delivery/{id}`
+- 배달시작하기 - `POST /admin/delivery/orders/{id}`
+- 배달완료하기 - `POST /admin/delivery/{id}`
 
 
 ---
 ### 회원
-- 모든 회원 조회 하기 - `GET /management/users`
-- 회원 조회 하기 - `GET /management/users/{id}`
-- 회원 수정 하기 - `PUT /management/users/{id}`
-- 회원 삭제 하기 - `DELETE /management/users/{id}`
+- 모든 회원 조회 하기 - `GET /admin/users`
+- 회원 조회 하기 - `GET /admin/users/{id}`
+- 회원 수정 하기 - `PUT /admin/users/{id}`
+- 회원 삭제 하기 - `DELETE /admin/users/{id}`

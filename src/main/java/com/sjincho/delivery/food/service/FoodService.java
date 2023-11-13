@@ -1,8 +1,8 @@
-package com.sjincho.delivery.food.user;
+package com.sjincho.delivery.food.service;
 
-import com.sjincho.delivery.food.Food;
-import com.sjincho.delivery.food.FoodMapRepository;
-import com.sjincho.delivery.food.FoodResponseDto;
+import com.sjincho.delivery.food.repository.FoodMapRepository;
+import com.sjincho.delivery.food.dto.FoodResponse;
+import com.sjincho.delivery.food.domain.Food;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,15 +17,15 @@ public class FoodService {
         this.foodMapRepository = foodMapRepository;
     }
 
-    public FoodResponseDto get(Integer foodId) {
+    public FoodResponse get(Integer foodId) {
         Food food = foodMapRepository.findById(foodId);
-        return FoodResponseDto.from(food);
+        return FoodResponse.from(food);
     }
 
-    public List<FoodResponseDto> getAll() {
+    public List<FoodResponse> getAll() {
         List<Food> foods = foodMapRepository.findAll();
 
         return foods.stream()
-                .map(FoodResponseDto::from)
+                .map(FoodResponse::from)
                 .collect(Collectors.toList());    }
 }

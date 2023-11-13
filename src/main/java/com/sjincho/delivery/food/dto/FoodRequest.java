@@ -1,11 +1,13 @@
-package com.sjincho.delivery.food;
+package com.sjincho.delivery.food.dto;
 
-public class FoodRequestDto {
+import com.sjincho.delivery.food.domain.Food;
+
+public class FoodRequest {
     private final String name;
     private final String foodType;
     private final int price;
 
-    public FoodRequestDto(final String name, final String foodType, final int price) {
+    public FoodRequest(final String name, final String foodType, final int price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;

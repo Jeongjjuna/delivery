@@ -1,4 +1,4 @@
-package com.sjincho.delivery.food;
+package com.sjincho.delivery.food.domain;
 
 
 public class Food {
