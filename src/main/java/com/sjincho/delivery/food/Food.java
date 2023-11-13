@@ -4,13 +4,13 @@ package com.sjincho.delivery.food;
 public class Food {
     private Integer id;
     private String name;
-    private int price;
     private String foodType;
+    private int price;
 
-    public Food(String name, int price, String foodType) {
+    public Food(String name, String foodType, int price) {
         this.name = name;
-        this.price = price;
         this.foodType = foodType;
+        this.price = price;
     }
 
     public void setId(Integer id) {

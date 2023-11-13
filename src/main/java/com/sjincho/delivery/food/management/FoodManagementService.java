@@ -1,10 +1,13 @@
 package com.sjincho.delivery.food.management;
 
 import com.sjincho.delivery.food.Food;
+import com.sjincho.delivery.food.FoodRequestDto;
 import com.sjincho.delivery.food.FoodMapRepository;
+import com.sjincho.delivery.food.FoodResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FoodManagementService {
@@ -15,20 +18,27 @@ public class FoodManagementService {
         this.foodMapRepository = foodMapRepository;
     }
 
-    public void register(Food food) {
-        foodMapRepository.save(food);
+    public void register(FoodRequestDto foodRequestDto) {
+        Food newFood = foodRequestDto.toEntity();
+        foodMapRepository.save(newFood);
     }
 
-    public Food get(Integer foodId) {
-        return foodMapRepository.findById(foodId);
+    public FoodResponseDto get(Integer foodId) {
+        Food food = foodMapRepository.findById(foodId);
+        return FoodResponseDto.from(food);
     }
 
-    public List<Food> getAll() {
-        return foodMapRepository.findAll();
+    public List<FoodResponseDto> getAll() {
+        List<Food> foods = foodMapRepository.findAll();
+
+        return foods.stream()
+                .map(FoodResponseDto::from)
+                .collect(Collectors.toList());
     }
 
-    public Food update(int id, Food food) {
-        return foodMapRepository.update(id, food);
+    public FoodResponseDto update(int id, Food food) {
+        Food updatedFood = foodMapRepository.update(id, food);
+        return FoodResponseDto.from(updatedFood);
     }
 
     public void delete(int id) {
