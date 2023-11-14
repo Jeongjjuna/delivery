@@ -5,6 +5,7 @@ import com.sjincho.delivery.admin.food.dto.AdminFoodResponse;
 import com.sjincho.delivery.admin.food.dto.AdminFoodUpdateRequest;
 import com.sjincho.delivery.admin.food.service.AdminFoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -24,31 +26,38 @@ public class AdminFoodController {
     }
 
     @PostMapping("/admin/foods")
-    public String resister(@RequestBody final AdminFoodCreateRequest food) {
-        adminFoodService.register(food);
-        return "200 OK";
+    public ResponseEntity<Void> resister(@RequestBody final AdminFoodCreateRequest food) {
+        final Long foodId = adminFoodService.register(food);
+
+        return ResponseEntity.created(URI.create("/admin/foods/" + foodId)).build();
     }
 
     @GetMapping("/admin/foods/{id}")
-    public AdminFoodResponse get(@PathVariable final Long id) {
-        return adminFoodService.get(id);
+    public ResponseEntity<AdminFoodResponse> get(@PathVariable final Long id) {
+        final AdminFoodResponse response = adminFoodService.get(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/admin/foods")
-    public List<AdminFoodResponse> getAll() {
-        return adminFoodService.getAll();
+    public ResponseEntity<List<AdminFoodResponse>> getAll() {
+        final List<AdminFoodResponse> responses = adminFoodService.getAll();
+
+        return ResponseEntity.ok(responses);
     }
 
     @PutMapping("/admin/foods/{id}")
-    public AdminFoodResponse update(
+    public ResponseEntity<AdminFoodResponse> update(
             @PathVariable final Long id,
             @RequestBody final AdminFoodUpdateRequest food) {
-        return adminFoodService.update(id, food);
+        final AdminFoodResponse response = adminFoodService.update(id, food);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/admin/foods/{id}")
-    public String delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         adminFoodService.delete(id);
-        return "200 : OK";
+        return ResponseEntity.ok().build();
     }
 }

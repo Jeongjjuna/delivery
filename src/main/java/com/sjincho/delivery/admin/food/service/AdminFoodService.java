@@ -19,10 +19,12 @@ public class AdminFoodService {
         this.foodMapRepository = foodMapRepository;
     }
 
-    public void register(final AdminFoodCreateRequest request) {
+    public Long register(final AdminFoodCreateRequest request) {
         final Food food = Food.create(request.getName(), request.getFoodType(), request.getPrice());
 
         foodMapRepository.save(food);
+
+        return food.getId();
     }
 
     public AdminFoodResponse get(final Long foodId) {

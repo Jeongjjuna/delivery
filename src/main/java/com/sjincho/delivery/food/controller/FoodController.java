@@ -3,6 +3,7 @@ package com.sjincho.delivery.food.controller;
 import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +19,17 @@ public class FoodController {
     }
 
     @GetMapping("/foods/{id}")
-    public FoodResponse get(@PathVariable final Long id) {
-        return foodService.get(id);
+    public ResponseEntity<FoodResponse> get(@PathVariable final Long id) {
+        final FoodResponse response = foodService.get(id);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/foods")
-    public List<FoodResponse> getAll() {
-        return foodService.getAll();
+    public ResponseEntity<List<FoodResponse>> getAll() {
+        final List<FoodResponse> responses = foodService.getAll();
+
+        return ResponseEntity.ok(responses);
+
     }
 }
