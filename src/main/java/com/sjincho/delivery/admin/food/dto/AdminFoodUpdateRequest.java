@@ -2,12 +2,12 @@ package com.sjincho.delivery.admin.food.dto;
 
 import com.sjincho.delivery.food.domain.Food;
 
-public class AdminFoodRequest {
+public class AdminFoodUpdateRequest {
     private final String name;
     private final String foodType;
     private final Long price;
 
-    public AdminFoodRequest(String name, String foodType, Long price) {
+    public AdminFoodUpdateRequest(String name, String foodType, Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;

@@ -1,9 +1,9 @@
 package com.sjincho.delivery.admin.food.controller;
 
-import com.sjincho.delivery.admin.food.dto.AdminFoodRequest;
+import com.sjincho.delivery.admin.food.dto.AdminFoodCreateRequest;
 import com.sjincho.delivery.admin.food.dto.AdminFoodResponse;
+import com.sjincho.delivery.admin.food.dto.AdminFoodUpdateRequest;
 import com.sjincho.delivery.admin.food.service.AdminFoodService;
-import com.sjincho.delivery.food.domain.Food;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +24,7 @@ public class AdminFoodController {
     }
 
     @PostMapping("/admin/foods")
-    public String resister(@RequestBody AdminFoodRequest food) {
+    public String resister(@RequestBody AdminFoodCreateRequest food) {
         adminFoodService.register(food);
         return "200 OK";
     }
@@ -40,7 +40,7 @@ public class AdminFoodController {
     }
 
     @PutMapping("/admin/foods/{id}")
-    public AdminFoodResponse update(@PathVariable Long id, @RequestBody Food food) {
+    public AdminFoodResponse update(@PathVariable Long id, @RequestBody AdminFoodUpdateRequest food) {
         return adminFoodService.update(id, food);
     }
 

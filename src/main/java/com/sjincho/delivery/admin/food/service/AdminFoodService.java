@@ -1,7 +1,8 @@
 package com.sjincho.delivery.admin.food.service;
 
-import com.sjincho.delivery.admin.food.dto.AdminFoodRequest;
+import com.sjincho.delivery.admin.food.dto.AdminFoodCreateRequest;
 import com.sjincho.delivery.admin.food.dto.AdminFoodResponse;
+import com.sjincho.delivery.admin.food.dto.AdminFoodUpdateRequest;
 import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.repository.FoodMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class AdminFoodService {
         this.foodMapRepository = foodMapRepository;
     }
 
-    public void register(AdminFoodRequest foodRequest) {
+    public void register(AdminFoodCreateRequest foodRequest) {
         Food newFood = foodRequest.toEntity();
         foodMapRepository.save(newFood);
     }
@@ -36,8 +37,8 @@ public class AdminFoodService {
                 .collect(Collectors.toList());
     }
 
-    public AdminFoodResponse update(Long id, Food food) {
-        Food updatedFood = foodMapRepository.update(id, food);
+    public AdminFoodResponse update(Long id, AdminFoodUpdateRequest food) {
+        Food updatedFood = foodMapRepository.update(id, food.toEntity());
         return AdminFoodResponse.from(updatedFood);
     }
 
