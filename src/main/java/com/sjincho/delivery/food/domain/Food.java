@@ -9,23 +9,23 @@ public class Food {
     private String foodType;
     private Long price;
 
-    public Food(String name, String foodType, Long price) {
+    public Food(final String name, final String foodType, final Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
     }
 
-    public static Food create(String name, String foodType, Long price) {
+    public static Food create(final String name, final String foodType, final Long price) {
         return new Food(name, foodType, price);
     }
 
-    public void update(String name, String foodType, Long price) {
+    public void update(final String name, final String foodType, final Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
     }
 
-    public void setId(Long id) {
+    public void setId(final Long id) {
         this.id = id;
     }
 }

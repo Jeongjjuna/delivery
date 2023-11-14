@@ -2,7 +2,6 @@ package com.sjincho.delivery.food.repository;
 
 import com.sjincho.delivery.food.domain.Food;
 import org.springframework.stereotype.Repository;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,22 +16,22 @@ public class FoodMapRepository {
         this.idCounter = 0L;
     }
 
-    public void save(Food food) {
+    public void save(final Food food) {
         food.setId(idCounter);
         db.put(idCounter, food);
         idCounter += 1;
     }
 
-    public Food findById(Long foodId) {
+    public Food findById(final Long foodId) {
         return db.get(foodId);
     }
 
     public List<Food> findAll() {
-        List<Food> foodList = new ArrayList<>(db.values());
-        return foodList;
+        final List<Food> foods = List.copyOf(db.values());
+        return foods;
     }
 
-    public Food update(Long id, Food food) {
+    public Food update(final Long id, final Food food) {
         if (db.containsKey(id)) {
             food.setId(id);
             db.put(id, food);
@@ -41,7 +40,7 @@ public class FoodMapRepository {
         throw new IllegalArgumentException("수정하려는 Food 상품이 없음");
     }
 
-    public void delete(Long id) {
+    public void delete(final Long id) {
         db.remove(id);
     }
 }

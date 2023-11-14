@@ -19,18 +19,18 @@ public class AdminFoodController {
     private final AdminFoodService adminFoodService;
 
     @Autowired
-    public AdminFoodController(AdminFoodService adminFoodService) {
+    public AdminFoodController(final AdminFoodService adminFoodService) {
         this.adminFoodService = adminFoodService;
     }
 
     @PostMapping("/admin/foods")
-    public String resister(@RequestBody AdminFoodCreateRequest food) {
+    public String resister(@RequestBody final AdminFoodCreateRequest food) {
         adminFoodService.register(food);
         return "200 OK";
     }
 
     @GetMapping("/admin/foods/{id}")
-    public AdminFoodResponse get(@PathVariable Long id) {
+    public AdminFoodResponse get(@PathVariable final Long id) {
         return adminFoodService.get(id);
     }
 
@@ -40,7 +40,9 @@ public class AdminFoodController {
     }
 
     @PutMapping("/admin/foods/{id}")
-    public AdminFoodResponse update(@PathVariable Long id, @RequestBody AdminFoodUpdateRequest food) {
+    public AdminFoodResponse update(
+            @PathVariable final Long id,
+            @RequestBody final AdminFoodUpdateRequest food) {
         return adminFoodService.update(id, food);
     }
 

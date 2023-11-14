@@ -10,14 +10,14 @@ public class AdminFoodResponse {
     private final String foodType;
     private final Long price;
 
-    public AdminFoodResponse(Long id, String name, String foodType, Long price) {
+    public AdminFoodResponse(final Long id, final String name, final String foodType, final Long price) {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
         this.price = price;
     }
 
-    public static AdminFoodResponse from(Food food) {
+    public static AdminFoodResponse from(final Food food) {
         return new AdminFoodResponse(
                 food.getId(),
                 food.getName(),

@@ -8,7 +8,7 @@ public class AdminFoodCreateRequest {
     private final String foodType;
     private final Long price;
 
-    public AdminFoodCreateRequest(String name, String foodType, Long price) {
+    public AdminFoodCreateRequest(final String name, final String foodType, final Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;

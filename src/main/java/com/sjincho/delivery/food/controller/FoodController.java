@@ -13,12 +13,12 @@ public class FoodController {
     private final FoodService foodService;
 
     @Autowired
-    public FoodController(FoodService foodService) {
+    public FoodController(final FoodService foodService) {
         this.foodService = foodService;
     }
 
     @GetMapping("/foods/{id}")
-    public FoodResponse get(@PathVariable Long id) {
+    public FoodResponse get(@PathVariable final Long id) {
         return foodService.get(id);
     }
 
