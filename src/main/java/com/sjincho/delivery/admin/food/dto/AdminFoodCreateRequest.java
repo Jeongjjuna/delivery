@@ -1,7 +1,8 @@
 package com.sjincho.delivery.admin.food.dto;
 
-import com.sjincho.delivery.food.domain.Food;
+import lombok.Getter;
 
+@Getter
 public class AdminFoodCreateRequest {
     private final String name;
     private final String foodType;
@@ -11,21 +12,5 @@ public class AdminFoodCreateRequest {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
-    }
-
-    public Food toEntity() {
-        return new Food(name, foodType, price);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFoodType() {
-        return foodType;
-    }
-
-    public Long getPrice() {
-        return price;
     }
 }

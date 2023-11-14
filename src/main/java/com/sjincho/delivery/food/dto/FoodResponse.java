@@ -1,7 +1,9 @@
 package com.sjincho.delivery.food.dto;
 
 import com.sjincho.delivery.food.domain.Food;
+import lombok.Getter;
 
+@Getter
 public class FoodResponse {
     private final Long id;
     private final String name;
@@ -22,21 +24,5 @@ public class FoodResponse {
                 food.getFoodType(),
                 food.getPrice()
         );
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFoodType() {
-        return foodType;
-    }
-
-    public Long getPrice() {
-        return price;
     }
 }

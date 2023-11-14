@@ -1,6 +1,8 @@
 package com.sjincho.delivery.food.domain;
 
+import lombok.Getter;
 
+@Getter
 public class Food {
     private Long id;
     private String name;
@@ -13,23 +15,17 @@ public class Food {
         this.price = price;
     }
 
+    public static Food create(String name, String foodType, Long price) {
+        return new Food(name, foodType, price);
+    }
+
+    public void update(String name, String foodType, Long price) {
+        this.name = name;
+        this.foodType = foodType;
+        this.price = price;
+    }
+
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getFoodType() {
-        return foodType;
-    }
-
-    public Long getPrice() {
-        return price;
     }
 }

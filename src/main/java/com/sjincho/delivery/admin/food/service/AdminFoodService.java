@@ -19,13 +19,15 @@ public class AdminFoodService {
         this.foodMapRepository = foodMapRepository;
     }
 
-    public void register(AdminFoodCreateRequest foodRequest) {
-        Food newFood = foodRequest.toEntity();
-        foodMapRepository.save(newFood);
+    public void register(AdminFoodCreateRequest request) {
+        Food food = Food.create(request.getName(), request.getFoodType(), request.getPrice());
+
+        foodMapRepository.save(food);
     }
 
     public AdminFoodResponse get(Long foodId) {
         Food food = foodMapRepository.findById(foodId);
+
         return AdminFoodResponse.from(food);
     }
 
@@ -37,8 +39,13 @@ public class AdminFoodService {
                 .collect(Collectors.toList());
     }
 
-    public AdminFoodResponse update(Long id, AdminFoodUpdateRequest food) {
-        Food updatedFood = foodMapRepository.update(id, food.toEntity());
+    public AdminFoodResponse update(Long id, AdminFoodUpdateRequest request) {
+        Food findFood = foodMapRepository.findById(id);
+
+        findFood.update(request.getName(), request.getFoodType(), request.getPrice());
+
+        Food updatedFood = foodMapRepository.update(id, findFood);
+
         return AdminFoodResponse.from(updatedFood);
     }
 
