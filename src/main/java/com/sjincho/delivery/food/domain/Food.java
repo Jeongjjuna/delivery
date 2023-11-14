@@ -2,22 +2,22 @@ package com.sjincho.delivery.food.domain;
 
 
 public class Food {
-    private Integer id;
+    private Long id;
     private String name;
     private String foodType;
-    private int price;
+    private Long price;
 
-    public Food(String name, String foodType, int price) {
+    public Food(String name, String foodType, Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -25,11 +25,11 @@ public class Food {
         return name;
     }
 
-    public int getPrice() {
-        return price;
-    }
-
     public String getFoodType() {
         return foodType;
+    }
+
+    public Long getPrice() {
+        return price;
     }
 }

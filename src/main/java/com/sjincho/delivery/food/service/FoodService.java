@@ -17,7 +17,7 @@ public class FoodService {
         this.foodMapRepository = foodMapRepository;
     }
 
-    public FoodResponse get(Integer foodId) {
+    public FoodResponse get(Long foodId) {
         Food food = foodMapRepository.findById(foodId);
         return FoodResponse.from(food);
     }

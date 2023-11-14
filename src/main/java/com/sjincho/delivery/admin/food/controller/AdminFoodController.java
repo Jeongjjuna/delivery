@@ -30,7 +30,7 @@ public class AdminFoodController {
     }
 
     @GetMapping("/admin/foods/{id}")
-    public AdminFoodResponse get(@PathVariable int id) {
+    public AdminFoodResponse get(@PathVariable Long id) {
         return adminFoodService.get(id);
     }
 
@@ -40,12 +40,12 @@ public class AdminFoodController {
     }
 
     @PutMapping("/admin/foods/{id}")
-    public AdminFoodResponse update(@PathVariable int id, @RequestBody Food food) {
+    public AdminFoodResponse update(@PathVariable Long id, @RequestBody Food food) {
         return adminFoodService.update(id, food);
     }
 
     @DeleteMapping("/admin/foods/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable Long id) {
         adminFoodService.delete(id);
         return "200 : OK";
     }

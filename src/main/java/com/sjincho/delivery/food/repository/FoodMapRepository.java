@@ -9,12 +9,12 @@ import java.util.Map;
 
 @Repository
 public class FoodMapRepository {
-    private Map<Integer, Food> db;
-    private Integer idCounter;
+    private Map<Long, Food> db;
+    private Long idCounter;
 
     public FoodMapRepository() {
         this.db = new HashMap<>();
-        this.idCounter = 0;
+        this.idCounter = 0L;
     }
 
     public void save(Food food) {
@@ -23,7 +23,7 @@ public class FoodMapRepository {
         idCounter += 1;
     }
 
-    public Food findById(Integer foodId) {
+    public Food findById(Long foodId) {
         return db.get(foodId);
     }
 
@@ -32,7 +32,7 @@ public class FoodMapRepository {
         return foodList;
     }
 
-    public Food update(int id, Food food) {
+    public Food update(Long id, Food food) {
         if (db.containsKey(id)) {
             food.setId(id);
             db.put(id, food);
@@ -41,7 +41,7 @@ public class FoodMapRepository {
         throw new IllegalArgumentException("수정하려는 Food 상품이 없음");
     }
 
-    public void delete(int id) {
+    public void delete(Long id) {
         db.remove(id);
     }
 }

@@ -3,12 +3,12 @@ package com.sjincho.delivery.food.dto;
 import com.sjincho.delivery.food.domain.Food;
 
 public class FoodResponse {
-    private final Integer id;
+    private final Long id;
     private final String name;
     private final String foodType;
-    private final int price;
+    private final Long price;
 
-    public FoodResponse(Integer id, String name, String foodType, int price) {
+    public FoodResponse(Long id, String name, String foodType, Long price) {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
@@ -24,7 +24,7 @@ public class FoodResponse {
         );
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -36,7 +36,7 @@ public class FoodResponse {
         return foodType;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 }

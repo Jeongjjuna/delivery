@@ -5,9 +5,9 @@ import com.sjincho.delivery.food.domain.Food;
 public class AdminFoodRequest {
     private final String name;
     private final String foodType;
-    private final int price;
+    private final Long price;
 
-    public AdminFoodRequest(String name, String foodType, int price) {
+    public AdminFoodRequest(String name, String foodType, Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
@@ -25,7 +25,7 @@ public class AdminFoodRequest {
         return foodType;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 }

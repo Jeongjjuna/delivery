@@ -6,7 +6,6 @@ import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.repository.FoodMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +23,7 @@ public class AdminFoodService {
         foodMapRepository.save(newFood);
     }
 
-    public AdminFoodResponse get(Integer foodId) {
+    public AdminFoodResponse get(Long foodId) {
         Food food = foodMapRepository.findById(foodId);
         return AdminFoodResponse.from(food);
     }
@@ -37,12 +36,12 @@ public class AdminFoodService {
                 .collect(Collectors.toList());
     }
 
-    public AdminFoodResponse update(int id, Food food) {
+    public AdminFoodResponse update(Long id, Food food) {
         Food updatedFood = foodMapRepository.update(id, food);
         return AdminFoodResponse.from(updatedFood);
     }
 
-    public void delete(int id) {
+    public void delete(Long id) {
         foodMapRepository.delete(id);
     }
 }

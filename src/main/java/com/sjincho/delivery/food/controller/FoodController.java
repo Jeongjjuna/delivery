@@ -18,7 +18,7 @@ public class FoodController {
     }
 
     @GetMapping("/foods/{id}")
-    public FoodResponse get(@PathVariable int id) {
+    public FoodResponse get(@PathVariable Long id) {
         return foodService.get(id);
     }
 
