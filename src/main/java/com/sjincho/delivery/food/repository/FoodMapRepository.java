@@ -17,7 +17,7 @@ public class FoodMapRepository {
     }
 
     public void save(final Food food) {
-        food.setId(idCounter);
+        // food.setId(idCounter);
         db.put(idCounter, food);
         idCounter += 1;
     }
@@ -33,7 +33,7 @@ public class FoodMapRepository {
 
     public Food update(final Long id, final Food food) {
         if (db.containsKey(id)) {
-            food.setId(id);
+            // food.setId(id);
             db.put(id, food);
             return food;
         }

@@ -3,8 +3,8 @@ package com.sjincho.delivery.admin.food.service;
 import com.sjincho.delivery.admin.food.dto.AdminFoodCreateRequest;
 import com.sjincho.delivery.admin.food.dto.AdminFoodResponse;
 import com.sjincho.delivery.admin.food.dto.AdminFoodUpdateRequest;
+import com.sjincho.delivery.admin.food.repository.AdminFoodJpaRepository;
 import com.sjincho.delivery.food.domain.Food;
-import com.sjincho.delivery.food.repository.FoodMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -12,46 +12,51 @@ import java.util.stream.Collectors;
 
 @Service
 public class AdminFoodService {
-    private final FoodMapRepository foodMapRepository;
+    private final AdminFoodJpaRepository adminFoodJpaRepository;
 
     @Autowired
-    public AdminFoodService(final FoodMapRepository foodMapRepository) {
-        this.foodMapRepository = foodMapRepository;
+    public AdminFoodService(final AdminFoodJpaRepository adminFoodJpaRepository) {
+        this.adminFoodJpaRepository = adminFoodJpaRepository;
     }
 
     public Long register(final AdminFoodCreateRequest request) {
         final Food food = Food.create(request.getName(), request.getFoodType(), request.getPrice());
 
-        foodMapRepository.save(food);
+        final Food saved = adminFoodJpaRepository.save(food);
 
-        return food.getId();
+        return saved.getId();
     }
 
     public AdminFoodResponse get(final Long foodId) {
-        final Food food = foodMapRepository.findById(foodId);
+        final Food food = adminFoodJpaRepository.findById(foodId)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] get요청 id에대한 Food데이터가 없습니다."));
 
         return AdminFoodResponse.from(food);
     }
 
     public List<AdminFoodResponse> getAll() {
-        final List<Food> foods = foodMapRepository.findAll();
+        final List<Food> foods = adminFoodJpaRepository.findAll();
 
         return foods.stream()
                 .map(AdminFoodResponse::from)
                 .collect(Collectors.toList());
     }
 
-    public AdminFoodResponse update(final Long id, final AdminFoodUpdateRequest request) {
-        final Food findFood = foodMapRepository.findById(id);
+    public AdminFoodResponse update(final Long foodId, final AdminFoodUpdateRequest request) {
+        final Food food = adminFoodJpaRepository.findById(foodId)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] update요청 id에대한 Food데이터가 없습니다."));
 
-        findFood.update(request.getName(), request.getFoodType(), request.getPrice());
+        food.update(request.getName(), request.getFoodType(), request.getPrice());
 
-        final Food updatedFood = foodMapRepository.update(id, findFood);
+        final Food updatedFood = adminFoodJpaRepository.save(food);
 
         return AdminFoodResponse.from(updatedFood);
     }
 
-    public void delete(final Long id) {
-        foodMapRepository.delete(id);
+    public void delete(final Long foodId) {
+        final Food food = adminFoodJpaRepository.findById(foodId)
+                .orElseThrow(() -> new IllegalArgumentException("[ERROR] delete요청 id에대한 Food데이터가 없습니다."));
+
+        adminFoodJpaRepository.delete(food);
     }
 }
