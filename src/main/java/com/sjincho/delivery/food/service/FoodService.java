@@ -1,5 +1,7 @@
 package com.sjincho.delivery.food.service;
 
+import com.sjincho.delivery.exception.DeliveryApplicationException;
+import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.repository.FoodJpaRepository;
@@ -18,8 +20,8 @@ public class FoodService {
     }
 
     public FoodResponse get(Long foodId) {
-        final Food food = foodJpaRepository.findById(foodId)
-                .orElseThrow(() -> new IllegalArgumentException("[ERROR] get요청 id에대한 Food데이터가 없습니다."));
+        final Food food = foodJpaRepository.findById(foodId).orElseThrow(() ->
+                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", foodId)));
 
         return FoodResponse.from(food);
     }
