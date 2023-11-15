@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+### DataBase 디렉토리 ###
+/db
