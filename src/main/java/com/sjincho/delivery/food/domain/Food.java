@@ -1,22 +1,32 @@
 package com.sjincho.delivery.food.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "food")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Food {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String name;
-    private String foodType;
-    private Long price;
 
-    protected Food() {
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false)
+    private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @Column(name = "food_type", nullable = false)
+    private String foodType;
+
+    @Column(name = "price", nullable = false)
+    private Long price;
 
     public Food(final String name, final String foodType, final Long price) {
         this.name = name;
