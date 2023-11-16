@@ -54,3 +54,17 @@ MySQL Table : food
 | food_type | varchar(50) | NO   |     | NULL    |       |
 +-----------+-------------+------+-----+---------+-------+
 ```
+
+```
+MySQL Table : member
++-------------+--------------------------+------+-----+---------+----------------+
+| Field       | Type                     | Null | Key | Default | Extra          |
++-------------+--------------------------+------+-----+---------+----------------+
+| id          | bigint                   | NO   | PRI | NULL    | auto_increment |
+| cell_phone  | varchar(255)             | NO   |     | NULL    |                |
+| email       | varchar(255)             | NO   | UNI | NULL    |                |
+| member_role | enum('CUSTOMER','OWNER') | NO   |     | NULL    |                |
+| name        | varchar(255)             | NO   |     | NULL    |                |
+| password    | varchar(255)             | NO   |     | NULL    |                |
++-------------+--------------------------+------+-----+---------+----------------+
+```
