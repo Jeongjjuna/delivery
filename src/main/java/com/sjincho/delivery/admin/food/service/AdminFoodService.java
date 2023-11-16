@@ -9,6 +9,7 @@ import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.food.domain.Food;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ public class AdminFoodService {
         this.adminFoodJpaRepository = adminFoodJpaRepository;
     }
 
+    @Transactional
     public Long register(final AdminFoodCreateRequest request) {
         final Food food = Food.create(request.getName(), request.getFoodType(), request.getPrice());
 
@@ -44,6 +46,7 @@ public class AdminFoodService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public AdminFoodResponse update(final Long foodId, final AdminFoodUpdateRequest request) {
         final Food food = adminFoodJpaRepository.findById(foodId).orElseThrow(() ->
                 new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", foodId)));
@@ -55,6 +58,7 @@ public class AdminFoodService {
         return AdminFoodResponse.from(updatedFood);
     }
 
+    @Transactional
     public void delete(final Long foodId) {
         final Food food = adminFoodJpaRepository.findById(foodId).orElseThrow(() ->
                 new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", foodId)));
