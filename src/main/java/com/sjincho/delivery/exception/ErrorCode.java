@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    FOOD_NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Food Not Found");
+    FOOD_NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Food Not Found"),
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Member Not Found");
 
     private final HttpStatus status;
     private final String message;
