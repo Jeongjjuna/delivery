@@ -23,8 +23,7 @@ public class MemberService {
     }
 
     public MemberResponse get(final Long memberId) {
-        final Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.MEMBER_NOT_FOUND, String.format("id:%d Not Found", memberId)));
+        final Member member = findExistingMember(memberId);
 
         return MemberResponse.from(member);
     }
@@ -39,6 +38,8 @@ public class MemberService {
 
     @Transactional
     public Long register(final MemberCreateRequest request) {
+        checkDuplicatedEmail(request.getEmail());
+
         final Member member = Member.create(
                 request.getName(),
                 request.getEmail(),
@@ -54,8 +55,9 @@ public class MemberService {
 
     @Transactional
     public MemberResponse update(final Long memberId, final MemberUpdateRequest request) {
-        final Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", memberId)));
+        final Member member = findExistingMember(memberId);
+
+        checkDuplicatedEmail(request.getEmail());
 
         member.update(
                 request.getName(),
@@ -72,9 +74,20 @@ public class MemberService {
 
     @Transactional
     public void delete(final Long memberId) {
-        final Member member = memberRepository.findById(memberId).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.MEMBER_NOT_FOUND, String.format("id:%d Not Found", memberId)));
+        final Member member = findExistingMember(memberId);
 
         memberRepository.delete(member);
     }
+
+    private void checkDuplicatedEmail(final String email) {
+        memberRepository.findByEmail().ifPresent(value -> {
+            throw new DeliveryApplicationException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("email:%s Duplicated", email));
+        });
+    }
+
+    private Member findExistingMember(final Long id) {
+        return memberRepository.findById(id).orElseThrow(() ->
+                new DeliveryApplicationException(ErrorCode.MEMBER_NOT_FOUND, String.format("id:%d Not Found", id)));
+    }
+
 }
