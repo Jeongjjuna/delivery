@@ -1,12 +1,16 @@
 package com.sjincho.delivery.member.controller;
 
+import com.sjincho.delivery.member.dto.MemberCreateRequest;
 import com.sjincho.delivery.member.dto.MemberResponse;
 import com.sjincho.delivery.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -30,6 +34,14 @@ public class MemberController {
         final List<MemberResponse> responses = memberService.getAll();
 
         return ResponseEntity.ok(responses);
+    }
+
+    @PostMapping("/members")
+    public ResponseEntity<Void> resister(@RequestBody final MemberCreateRequest request) {
+        System.out.println("aaaaa");
+        final Long memberId = memberService.register(request);
+
+        return ResponseEntity.created(URI.create("/members/" + memberId)).build();
     }
 
 }

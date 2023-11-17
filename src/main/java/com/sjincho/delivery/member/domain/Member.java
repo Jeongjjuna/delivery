@@ -37,4 +37,17 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
+    public Member(final String name, final String email, final String password,
+                  final String cellPhone, final MemberRole memberRole) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.cellPhone = cellPhone;
+        this.memberRole = memberRole;
+    }
+
+    public static Member create(final String name, final String email, final String password,
+                                final String cellPhone, final MemberRole memberRole) {
+        return new Member(name, email, password, cellPhone, memberRole);
+    }
 }

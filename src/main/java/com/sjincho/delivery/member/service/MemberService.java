@@ -3,10 +3,12 @@ package com.sjincho.delivery.member.service;
 import com.sjincho.delivery.exception.DeliveryApplicationException;
 import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.member.domain.Member;
+import com.sjincho.delivery.member.dto.MemberCreateRequest;
 import com.sjincho.delivery.member.dto.MemberResponse;
 import com.sjincho.delivery.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,5 +34,20 @@ public class MemberService {
         return members.stream()
                 .map(MemberResponse::from)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Long register(final MemberCreateRequest request) {
+        final Member member = Member.create(
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getCellPhone(),
+                request.getMemberRole()
+        );
+
+        final Member saved = memberRepository.save(member);
+
+        return saved.getId();
     }
 }
