@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 public class MemberController {
@@ -22,6 +23,13 @@ public class MemberController {
         final MemberResponse response = memberService.get(id);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/members")
+    public ResponseEntity<List<MemberResponse>> getAll() {
+        final List<MemberResponse> responses = memberService.getAll();
+
+        return ResponseEntity.ok(responses);
     }
 
 }

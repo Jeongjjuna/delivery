@@ -7,6 +7,8 @@ import com.sjincho.delivery.member.dto.MemberResponse;
 import com.sjincho.delivery.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberService {
@@ -22,5 +24,13 @@ public class MemberService {
                 new DeliveryApplicationException(ErrorCode.MEMBER_NOT_FOUND, String.format("id:%d Not Found", memberId)));
 
         return MemberResponse.from(member);
+    }
+
+    public List<MemberResponse> getAll() {
+        final List<Member> members = memberRepository.findAll();
+
+        return members.stream()
+                .map(MemberResponse::from)
+                .collect(Collectors.toList());
     }
 }
