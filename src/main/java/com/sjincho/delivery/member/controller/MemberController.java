@@ -2,12 +2,14 @@ package com.sjincho.delivery.member.controller;
 
 import com.sjincho.delivery.member.dto.MemberCreateRequest;
 import com.sjincho.delivery.member.dto.MemberResponse;
+import com.sjincho.delivery.member.dto.MemberUpdateRequest;
 import com.sjincho.delivery.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
@@ -42,6 +44,15 @@ public class MemberController {
         final Long memberId = memberService.register(request);
 
         return ResponseEntity.created(URI.create("/members/" + memberId)).build();
+    }
+
+    @PutMapping("/members/{id}")
+    public ResponseEntity<MemberResponse> update(
+            @PathVariable final Long id,
+            @RequestBody final MemberUpdateRequest request) {
+        final MemberResponse response = memberService.update(id, request);
+
+        return ResponseEntity.ok(response);
     }
 
 }

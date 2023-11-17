@@ -50,4 +50,13 @@ public class Member {
                                 final String cellPhone, final MemberRole memberRole) {
         return new Member(name, email, password, cellPhone, memberRole);
     }
+
+    public void update(final String name, final String email, final String password,
+                       final String cellPhone, final MemberRole memberRole) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.cellPhone = cellPhone;
+        this.memberRole = memberRole;
+    }
 }

@@ -5,6 +5,7 @@ import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.member.domain.Member;
 import com.sjincho.delivery.member.dto.MemberCreateRequest;
 import com.sjincho.delivery.member.dto.MemberResponse;
+import com.sjincho.delivery.member.dto.MemberUpdateRequest;
 import com.sjincho.delivery.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,23 @@ public class MemberService {
         final Member saved = memberRepository.save(member);
 
         return saved.getId();
+    }
+
+    @Transactional
+    public MemberResponse update(final Long memberId, final MemberUpdateRequest request) {
+        final Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", memberId)));
+
+        member.update(
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getCellPhone(),
+                request.getMemberRole()
+        );
+
+        final Member updatedMember = memberRepository.save(member);
+
+        return MemberResponse.from(updatedMember);
     }
 }
