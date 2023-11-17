@@ -1,11 +1,11 @@
 package com.sjincho.delivery.food.service;
 
-import com.sjincho.delivery.food.dto.FoodCreateRequest;
-import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.exception.DeliveryApplicationException;
 import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.food.domain.Food;
+import com.sjincho.delivery.food.dto.FoodCreateRequest;
 import com.sjincho.delivery.food.dto.FoodResponse;
+import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.repository.FoodJpaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,19 +18,18 @@ public class FoodService {
     private final FoodJpaRepository foodJpaRepository;
 
     @Autowired
-    public FoodService(FoodJpaRepository foodJpaRepository) {
+    public FoodService(final FoodJpaRepository foodJpaRepository) {
         this.foodJpaRepository = foodJpaRepository;
     }
 
-    public FoodResponse get(Long foodId) {
-        final Food food = foodJpaRepository.findById(foodId).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", foodId)));
+    public FoodResponse get(final Long foodId) {
+        final Food food = findExistingFood(foodId);
 
         return FoodResponse.from(food);
     }
 
     public List<FoodResponse> getAll() {
-        List<Food> foods = foodJpaRepository.findAll();
+        final List<Food> foods = foodJpaRepository.findAll();
 
         return foods.stream()
                 .map(FoodResponse::from)
@@ -48,8 +47,7 @@ public class FoodService {
 
     @Transactional
     public FoodResponse update(final Long foodId, final FoodUpdateRequest request) {
-        final Food food = foodJpaRepository.findById(foodId).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", foodId)));
+        final Food food = findExistingFood(foodId);
 
         food.update(request.getName(), request.getFoodType(), request.getPrice());
 
@@ -60,9 +58,13 @@ public class FoodService {
 
     @Transactional
     public void delete(final Long foodId) {
-        final Food food = foodJpaRepository.findById(foodId).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", foodId)));
+        final Food food = findExistingFood(foodId);
 
         foodJpaRepository.delete(food);
+    }
+
+    private Food findExistingFood(final Long id) {
+        return foodJpaRepository.findById(id).orElseThrow(() ->
+                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", id)));
     }
 }
