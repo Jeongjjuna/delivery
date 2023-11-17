@@ -69,4 +69,12 @@ public class MemberService {
 
         return MemberResponse.from(updatedMember);
     }
+
+    @Transactional
+    public void delete(final Long memberId) {
+        final Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new DeliveryApplicationException(ErrorCode.MEMBER_NOT_FOUND, String.format("id:%d Not Found", memberId)));
+
+        memberRepository.delete(member);
+    }
 }

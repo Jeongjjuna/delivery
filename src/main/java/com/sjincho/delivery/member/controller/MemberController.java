@@ -6,6 +6,7 @@ import com.sjincho.delivery.member.dto.MemberUpdateRequest;
 import com.sjincho.delivery.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +41,6 @@ public class MemberController {
 
     @PostMapping("/members")
     public ResponseEntity<Void> resister(@RequestBody final MemberCreateRequest request) {
-        System.out.println("aaaaa");
         final Long memberId = memberService.register(request);
 
         return ResponseEntity.created(URI.create("/members/" + memberId)).build();
@@ -53,6 +53,12 @@ public class MemberController {
         final MemberResponse response = memberService.update(id, request);
 
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/members/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        memberService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 }
