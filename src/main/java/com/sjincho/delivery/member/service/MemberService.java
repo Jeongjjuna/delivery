@@ -80,7 +80,7 @@ public class MemberService {
     }
 
     private void checkDuplicatedEmail(final String email) {
-        memberRepository.findByEmail().ifPresent(value -> {
+        memberRepository.findByEmail(email).ifPresent(value -> {
             throw new DeliveryApplicationException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("email:%s Duplicated", email));
         });
     }
