@@ -4,17 +4,21 @@ import lombok.Getter;
 
 @Getter
 public class OrderLineDto {
-    private final String foodName;
+    private final Long foodId;
     private final Long price;
     private final Long quantity;
+    private final String foodName;
 
-    private OrderLineDto(final String foodName, final Long price, final Long quantity) {
-        this.foodName = foodName;
+    public OrderLineDto(final Long foodId, final Long price,
+                        final Long quantity, final String foodName) {
+        this.foodId = foodId;
         this.price = price;
         this.quantity = quantity;
+        this.foodName = foodName;
     }
 
-    public static OrderLineDto from(final String foodName, final Long price, final Long quantity) {
-        return new OrderLineDto(foodName, price, quantity);
+    public static OrderLineDto from(final Long foodId, final Long price,
+                                    final Long quantity, final String foodName) {
+        return new OrderLineDto(foodId, price, quantity, foodName);
     }
 }

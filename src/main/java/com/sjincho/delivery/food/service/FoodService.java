@@ -6,7 +6,7 @@ import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.dto.FoodCreateRequest;
 import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
-import com.sjincho.delivery.food.repository.FoodJpaRepository;
+import com.sjincho.delivery.food.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class FoodService {
-    private final FoodJpaRepository foodJpaRepository;
+    private final FoodRepository foodRepository;
 
     @Autowired
-    public FoodService(final FoodJpaRepository foodJpaRepository) {
-        this.foodJpaRepository = foodJpaRepository;
+    public FoodService(final FoodRepository foodRepository) {
+        this.foodRepository = foodRepository;
     }
 
     public FoodResponse get(final Long foodId) {
@@ -29,7 +29,7 @@ public class FoodService {
     }
 
     public List<FoodResponse> getAll() {
-        final List<Food> foods = foodJpaRepository.findAll();
+        final List<Food> foods = foodRepository.findAll();
 
         return foods.stream()
                 .map(FoodResponse::from)
@@ -40,7 +40,7 @@ public class FoodService {
     public Long register(final FoodCreateRequest request) {
         final Food food = Food.create(request.getName(), request.getFoodType(), request.getPrice());
 
-        final Food saved = foodJpaRepository.save(food);
+        final Food saved = foodRepository.save(food);
 
         return saved.getId();
     }
@@ -51,7 +51,7 @@ public class FoodService {
 
         food.update(request.getName(), request.getFoodType(), request.getPrice());
 
-        final Food updatedFood = foodJpaRepository.save(food);
+        final Food updatedFood = foodRepository.save(food);
 
         return FoodResponse.from(updatedFood);
     }
@@ -60,11 +60,11 @@ public class FoodService {
     public void delete(final Long foodId) {
         final Food food = findExistingFood(foodId);
 
-        foodJpaRepository.delete(food);
+        foodRepository.delete(food);
     }
 
     private Food findExistingFood(final Long id) {
-        return foodJpaRepository.findById(id).orElseThrow(() ->
+        return foodRepository.findById(id).orElseThrow(() ->
                 new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", id)));
     }
 }
