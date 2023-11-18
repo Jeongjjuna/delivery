@@ -1,8 +1,8 @@
 package com.sjincho.delivery.food.controller;
 
 import com.sjincho.delivery.food.dto.FoodCreateRequest;
-import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.dto.FoodResponse;
+import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.net.URI;
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class FoodController {
     }
 
     @DeleteMapping("/foods/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         foodService.delete(id);
         return ResponseEntity.ok().build();
     }

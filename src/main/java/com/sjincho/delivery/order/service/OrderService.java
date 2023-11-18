@@ -2,6 +2,7 @@ package com.sjincho.delivery.order.service;
 
 import com.sjincho.delivery.exception.DeliveryApplicationException;
 import com.sjincho.delivery.exception.ErrorCode;
+import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.repository.FoodRepository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderLine;
@@ -53,12 +54,12 @@ public class OrderService {
         final List<OrderLineDto> orderLineDtos = request.getOrderLineDtos();
 
         final List<Long> requestFoodIds = orderLineDtos.stream()
-                .map(orderLineDto -> orderLineDto.getFoodId())
-                .collect(Collectors.toList());
+                .map(OrderLineDto::getFoodId)
+                .toList();
 
         final List<Long> foodIds = foodRepository.findAll().stream()
-                .map(food -> food.getId())
-                .collect(Collectors.toList());
+                .map(Food::getId)
+                .toList();
 
         if (!foodIds.containsAll(requestFoodIds)) {
             throw new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("Order Foods Not Found"));
