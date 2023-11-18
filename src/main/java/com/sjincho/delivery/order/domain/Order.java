@@ -84,6 +84,10 @@ public class Order {
         orderStatus = OrderStatus.REJECTED;
     }
 
+    public void cancel() {
+        orderStatus = OrderStatus.CANCELED;
+    }
+
     public boolean isAccepting() {
         return orderStatus == OrderStatus.ACCEPTING;
     }

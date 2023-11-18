@@ -110,6 +110,19 @@ public class OrderService {
         return order.getOrderStatus();
     }
 
+    @Transactional
+    public OrderStatus cancelOrder(final Long id) {
+        final Order order = findExistingOrder(id);
+
+        checkAccepting(order);
+
+        order.cancel();
+
+        orderRepository.save(order);
+
+        return order.getOrderStatus();
+    }
+
     private Order findExistingOrder(final Long id) {
         return orderRepository.findById(id).orElseThrow(() ->
                 new DeliveryApplicationException(ErrorCode.ORDER_NOT_FOUND, String.format("id:%d Not Found", id)));
