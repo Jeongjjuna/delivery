@@ -87,9 +87,23 @@ public class OrderService {
     public OrderStatus approveOrder(final Long id) {
         final Order order = findExistingOrder(id);
 
-        checkAccepted(order);
+        checkAccepting(order);
 
         order.approve();
+
+        orderRepository.save(order);
+
+        return order.getOrderStatus();
+    }
+
+
+    @Transactional
+    public OrderStatus rejectOrder(final Long id) {
+        final Order order = findExistingOrder(id);
+
+        checkAccepting(order);
+
+        order.reject();
 
         orderRepository.save(order);
 
@@ -101,9 +115,10 @@ public class OrderService {
                 new DeliveryApplicationException(ErrorCode.ORDER_NOT_FOUND, String.format("id:%d Not Found", id)));
     }
 
-    private void checkAccepted(Order order) {
-        if (order.isAccepted()) {
-            throw new DeliveryApplicationException(ErrorCode.ORDER_ALREADY_ACCEPTED, String.format("id:%d Already Accepted", order.getId()));
+    private void checkAccepting(final Order order) {
+        if (!order.isAccepting()) {
+            throw new DeliveryApplicationException(ErrorCode.ORDER_NOT_ACCEPTING, String.format("id:%d is %s", order.getId(), order.getOrderStatus()));
         }
     }
+
 }

@@ -7,6 +7,7 @@ import com.sjincho.delivery.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,9 +45,16 @@ public class OrderController {
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();
     }
 
-    @PostMapping("/orders/{id}/accept")
+    @PatchMapping("/orders/{id}/accept")
     public ResponseEntity<OrderStatus> approveOrder(@PathVariable final Long id) {
         final OrderStatus response = orderService.approveOrder(id);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/orders/{id}/reject")
+    public ResponseEntity<OrderStatus> rejectOrder(@PathVariable final Long id) {
+        final OrderStatus response = orderService.rejectOrder(id);
 
         return ResponseEntity.ok(response);
     }

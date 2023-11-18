@@ -80,7 +80,11 @@ public class Order {
         orderStatus = OrderStatus.ACCEPTED;
     }
 
-    public boolean isAccepted() {
-        return orderStatus == OrderStatus.ACCEPTED;
+    public void reject() {
+        orderStatus = OrderStatus.REJECTED;
+    }
+
+    public boolean isAccepting() {
+        return orderStatus == OrderStatus.ACCEPTING;
     }
 }
