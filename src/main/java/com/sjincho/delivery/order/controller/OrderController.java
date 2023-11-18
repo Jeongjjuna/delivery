@@ -1,5 +1,6 @@
 package com.sjincho.delivery.order.controller;
 
+import com.sjincho.delivery.order.domain.OrderStatus;
 import com.sjincho.delivery.order.dto.OrderAcceptRequest;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.service.OrderService;
@@ -41,5 +42,12 @@ public class OrderController {
         final Long orderId = orderService.acceptOrder(request);
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();
+    }
+
+    @PostMapping("/orders/{id}/accept")
+    public ResponseEntity<OrderStatus> approveOrder(@PathVariable final Long id) {
+        final OrderStatus response = orderService.approveOrder(id);
+
+        return ResponseEntity.ok(response);
     }
 }

@@ -75,4 +75,12 @@ public class Order {
                 .reduce(Long::sum)
                 .get();
     }
+
+    public void approve() {
+        orderStatus = OrderStatus.ACCEPTED;
+    }
+
+    public boolean isAccepted() {
+        return orderStatus == OrderStatus.ACCEPTED;
+    }
 }

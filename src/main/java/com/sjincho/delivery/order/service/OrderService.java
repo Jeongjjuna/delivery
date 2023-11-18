@@ -6,6 +6,7 @@ import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.repository.FoodRepository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderLine;
+import com.sjincho.delivery.order.domain.OrderStatus;
 import com.sjincho.delivery.order.dto.OrderAcceptRequest;
 import com.sjincho.delivery.order.dto.OrderLineDto;
 import com.sjincho.delivery.order.dto.OrderResponse;
@@ -33,11 +34,6 @@ public class OrderService {
         final Long paymentsAmount = order.calculatePaymentsAmount();
 
         return OrderResponse.from(order, paymentsAmount);
-    }
-
-    private Order findExistingOrder(final Long id) {
-        return orderRepository.findById(id).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.ORDER_NOT_FOUND, String.format("id:%d Not Found", id)));
     }
 
     public List<OrderResponse> getAll() {
@@ -85,5 +81,29 @@ public class OrderService {
         final Order saved = orderRepository.save(order);
 
         return saved.getId();
+    }
+
+    @Transactional
+    public OrderStatus approveOrder(final Long id) {
+        final Order order = findExistingOrder(id);
+
+        checkAccepted(order);
+
+        order.approve();
+
+        orderRepository.save(order);
+
+        return order.getOrderStatus();
+    }
+
+    private Order findExistingOrder(final Long id) {
+        return orderRepository.findById(id).orElseThrow(() ->
+                new DeliveryApplicationException(ErrorCode.ORDER_NOT_FOUND, String.format("id:%d Not Found", id)));
+    }
+
+    private void checkAccepted(Order order) {
+        if (order.isAccepted()) {
+            throw new DeliveryApplicationException(ErrorCode.ORDER_ALREADY_ACCEPTED, String.format("id:%d Already Accepted", order.getId()));
+        }
     }
 }
