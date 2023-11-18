@@ -20,9 +20,13 @@ public class OrderLine {
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
-    public OrderLine(final Long foodId, final Long price, final Long quantity) {
+    @Column(name = "food_name", nullable = false)
+    private String foodName;
+
+    public OrderLine(final Long foodId, final Long price, final Long quantity, final String foodName) {
         this.foodId = foodId;
         this.price = price;
         this.quantity = quantity;
+        this.foodName = foodName;
     }
 }
