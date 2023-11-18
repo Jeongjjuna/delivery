@@ -7,6 +7,8 @@ import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
@@ -26,5 +28,13 @@ public class OrderService {
     private Order findExistingOrder(final Long id) {
         return orderRepository.findById(id).orElseThrow(() ->
                 new DeliveryApplicationException(ErrorCode.ORDER_NOT_FOUND, String.format("id:%d Not Found", id)));
+    }
+
+    public List<OrderResponse> getAll() {
+        final List<Order> orders = orderRepository.findAll();
+
+        return orders.stream()
+                .map(OrderResponse::from)
+                .collect(Collectors.toList());
     }
 }

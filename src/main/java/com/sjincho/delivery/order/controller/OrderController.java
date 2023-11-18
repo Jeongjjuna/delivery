@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
 @RestController
 public class OrderController {
@@ -22,5 +23,12 @@ public class OrderController {
         final OrderResponse response = orderService.get(id);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/orders")
+    public ResponseEntity<List<OrderResponse>> getAll() {
+        final List<OrderResponse> responses = orderService.getAll();
+
+        return ResponseEntity.ok(responses);
     }
 }
