@@ -8,9 +8,10 @@ import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 @Service
 public class FoodService {
@@ -27,12 +28,10 @@ public class FoodService {
         return FoodResponse.from(food);
     }
 
-    public List<FoodResponse> getAll() {
-        final List<Food> foods = foodRepository.findAll();
+    public Page<FoodResponse> getAll(final Pageable pageable) {
+        final Page<Food> foods = foodRepository.findAll(pageable);
 
-        return foods.stream()
-                .map(FoodResponse::from)
-                .toList();
+        return foods.map(FoodResponse::from);
     }
 
     @Transactional

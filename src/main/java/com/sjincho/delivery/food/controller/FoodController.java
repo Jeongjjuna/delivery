@@ -5,6 +5,8 @@ import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 public class FoodController {
@@ -33,11 +34,10 @@ public class FoodController {
     }
 
     @GetMapping("/foods")
-    public ResponseEntity<List<FoodResponse>> getAll() {
-        final List<FoodResponse> responses = foodService.getAll();
+    public ResponseEntity<Page<FoodResponse>> getAll(Pageable pageable) {
+        final Page<FoodResponse> responses = foodService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
-
     }
 
     @PostMapping("/foods")

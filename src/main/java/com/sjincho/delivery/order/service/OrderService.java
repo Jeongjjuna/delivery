@@ -12,6 +12,8 @@ import com.sjincho.delivery.order.dto.OrderLineDto;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -36,28 +38,22 @@ public class OrderService {
         return OrderResponse.from(order, paymentsAmount);
     }
 
-    public List<OrderResponse> getAll() {
-        final List<Order> orders = orderRepository.findAll();
+    public Page<OrderResponse> getAll(Pageable pageable) {
+        final Page<Order> orders = orderRepository.findAll(pageable);
 
-        return orders.stream()
-                .map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()))
-                .collect(Collectors.toList());
+        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
     }
 
-    public List<OrderResponse> getAllByMemberId(Long id) {
-        final List<Order> orders = orderRepository.findAllByOrdererMemberId(id);
+    public Page<OrderResponse> getAllByMemberId(Long id, Pageable pageable) {
+        final Page<Order> orders = orderRepository.findAllByOrdererMemberId(id, pageable);
 
-        return orders.stream()
-                .map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()))
-                .collect(Collectors.toList());
+        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
     }
 
-    public List<OrderResponse> getAllAcceptingOrder() {
-        final List<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.ACCEPTING);
+    public Page<OrderResponse> getAllAcceptingOrder(Pageable pageable) {
+        final Page<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.ACCEPTING, pageable);
 
-        return orders.stream()
-                .map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()))
-                .collect(Collectors.toList());
+        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
     }
 
     @Transactional
@@ -111,7 +107,6 @@ public class OrderService {
 
         return order.getOrderStatus();
     }
-
 
     @Transactional
     public OrderStatus rejectOrder(final Long id) {

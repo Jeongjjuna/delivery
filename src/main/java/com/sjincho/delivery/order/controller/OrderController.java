@@ -5,6 +5,8 @@ import com.sjincho.delivery.order.dto.OrderAcceptRequest;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
-import java.util.List;
 
 @RestController
 public class OrderController {
@@ -32,22 +33,22 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<List<OrderResponse>> getAll() {
-        final List<OrderResponse> responses = orderService.getAll();
+    public ResponseEntity<Page<OrderResponse>> getAll(Pageable pageable) {
+        final Page<OrderResponse> responses = orderService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/orders/members/{id}")
-    public ResponseEntity<List<OrderResponse>> getAllByMemberId(@PathVariable final Long id) {
-        final List<OrderResponse> responses = orderService.getAllByMemberId(id);
+    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long id, Pageable pageable) {
+        final Page<OrderResponse> responses = orderService.getAllByMemberId(id, pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/orders/accepting")
-    public ResponseEntity<List<OrderResponse>> getAllAcceptingOrder() {
-        final List<OrderResponse> responses = orderService.getAllAcceptingOrder();
+    public ResponseEntity<Page<OrderResponse>> getAllAcceptingOrder(Pageable pageable) {
+        final Page<OrderResponse> responses = orderService.getAllAcceptingOrder(pageable);
 
         return ResponseEntity.ok(responses);
     }
