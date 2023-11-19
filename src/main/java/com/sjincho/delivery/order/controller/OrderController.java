@@ -38,6 +38,13 @@ public class OrderController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/orders/members/{id}")
+    public ResponseEntity<List<OrderResponse>> getAllByMemberId(@PathVariable final Long id) {
+        final List<OrderResponse> responses = orderService.getAllByMemberId(id);
+
+        return ResponseEntity.ok(responses);
+    }
+
     @PostMapping("/orders")
     public ResponseEntity<Void> acceptOrder(@RequestBody final OrderAcceptRequest request) {
         final Long orderId = orderService.acceptOrder(request);
