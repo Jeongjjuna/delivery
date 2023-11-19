@@ -10,16 +10,19 @@ import com.sjincho.delivery.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public MemberService(final MemberRepository memberRepository) {
+    public MemberService(final MemberRepository memberRepository, final BCryptPasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public MemberResponse get(final Long memberId) {
@@ -38,10 +41,12 @@ public class MemberService {
     public Long register(final MemberCreateRequest request) {
         checkDuplicatedEmail(request.getEmail());
 
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+
         final Member member = Member.create(
                 request.getName(),
                 request.getEmail(),
-                request.getPassword(),
+                encodedPassword,
                 request.getCellPhone(),
                 request.getMemberRole()
         );
