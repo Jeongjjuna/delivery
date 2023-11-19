@@ -25,6 +25,7 @@ URL / HTTP Method
 - 주문 취소 - `PATCH /orders/{id}` - 사용자
 - 주문 거절 - `PATCH /orders/{id}` - 판매점
 - 사용자의 주문 조회 - `GET /orders/members/{id}` - 판매점, 사용자
+- 현재 접수중인 모든 주문 조회 -  `GET /orders/accepting` - 판매점
 
 ### 배달
 - 전체 배달 조회 - `GET /deliveries` - 판매점

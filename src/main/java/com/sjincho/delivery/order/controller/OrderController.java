@@ -45,6 +45,13 @@ public class OrderController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/orders/accepting")
+    public ResponseEntity<List<OrderResponse>> getAllAcceptingOrder() {
+        final List<OrderResponse> responses = orderService.getAllAcceptingOrder();
+
+        return ResponseEntity.ok(responses);
+    }
+
     @PostMapping("/orders")
     public ResponseEntity<Void> acceptOrder(@RequestBody final OrderAcceptRequest request) {
         final Long orderId = orderService.acceptOrder(request);

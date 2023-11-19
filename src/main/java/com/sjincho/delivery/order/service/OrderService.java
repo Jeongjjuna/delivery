@@ -52,6 +52,14 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public List<OrderResponse> getAllAcceptingOrder() {
+        final List<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.ACCEPTING);
+
+        return orders.stream()
+                .map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public Long acceptOrder(final OrderAcceptRequest request) {
         // 주문요청한 모든 음식들이 등록된 음식들인지 확인한다.
