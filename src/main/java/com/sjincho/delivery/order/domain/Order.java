@@ -1,5 +1,7 @@
 package com.sjincho.delivery.order.domain;
 
+import com.sjincho.delivery.exception.DeliveryApplicationException;
+import com.sjincho.delivery.exception.ErrorCode;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -77,18 +79,30 @@ public class Order {
     }
 
     public void approve() {
-        orderStatus = OrderStatus.ACCEPTED;
+        changeOrderStatus(OrderStatus.ACCEPTED);
     }
 
     public void reject() {
-        orderStatus = OrderStatus.REJECTED;
+        changeOrderStatus(OrderStatus.REJECTED);
     }
 
     public void cancel() {
-        orderStatus = OrderStatus.CANCELED;
+        changeOrderStatus(OrderStatus.CANCELED);
     }
 
-    public boolean isAccepting() {
+    private boolean isAccepting() {
         return orderStatus == OrderStatus.ACCEPTING;
+    }
+
+    private void changeOrderStatus(OrderStatus status) {
+        if (isAccepting()) {
+            orderStatus = status;
+            return;
+        }
+
+        throw new DeliveryApplicationException(
+                ErrorCode.ORDER_NOT_ACCEPTING,
+                String.format("id:%d is %s", id, orderStatus)
+        );
     }
 }
