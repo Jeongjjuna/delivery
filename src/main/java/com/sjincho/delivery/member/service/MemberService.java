@@ -28,7 +28,7 @@ public class MemberService {
         return MemberResponse.from(member);
     }
 
-    public Page<MemberResponse> getAll(Pageable pageable) {
+    public Page<MemberResponse> getAll(final Pageable pageable) {
         final Page<Member> members = memberRepository.findAll(pageable);
 
         return members.map(MemberResponse::from);

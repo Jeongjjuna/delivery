@@ -38,19 +38,19 @@ public class OrderService {
         return OrderResponse.from(order, paymentsAmount);
     }
 
-    public Page<OrderResponse> getAll(Pageable pageable) {
+    public Page<OrderResponse> getAll(final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAll(pageable);
 
         return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
     }
 
-    public Page<OrderResponse> getAllByMemberId(Long id, Pageable pageable) {
+    public Page<OrderResponse> getAllByMemberId(final Long id, final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAllByOrdererMemberId(id, pageable);
 
         return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
     }
 
-    public Page<OrderResponse> getAllAcceptingOrder(Pageable pageable) {
+    public Page<OrderResponse> getAllAcceptingOrder(final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.ACCEPTING, pageable);
 
         return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));

@@ -33,21 +33,21 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<Page<OrderResponse>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<OrderResponse>> getAll(final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/orders/members/{id}")
-    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long id, Pageable pageable) {
+    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long id, final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAllByMemberId(id, pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/orders/accepting")
-    public ResponseEntity<Page<OrderResponse>> getAllAcceptingOrder(Pageable pageable) {
+    public ResponseEntity<Page<OrderResponse>> getAllAcceptingOrder(final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAllAcceptingOrder(pageable);
 
         return ResponseEntity.ok(responses);

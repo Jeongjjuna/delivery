@@ -34,7 +34,7 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public ResponseEntity<Page<MemberResponse>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<MemberResponse>> getAll(final Pageable pageable) {
         final Page<MemberResponse> responses = memberService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
@@ -57,7 +57,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/members/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable final Long id) {
         memberService.delete(id);
         return ResponseEntity.ok().build();
     }

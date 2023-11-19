@@ -34,7 +34,7 @@ public class FoodController {
     }
 
     @GetMapping("/foods")
-    public ResponseEntity<Page<FoodResponse>> getAll(Pageable pageable) {
+    public ResponseEntity<Page<FoodResponse>> getAll(final Pageable pageable) {
         final Page<FoodResponse> responses = foodService.getAll(pageable);
 
         return ResponseEntity.ok(responses);

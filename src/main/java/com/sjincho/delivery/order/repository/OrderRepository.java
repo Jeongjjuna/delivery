@@ -7,7 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    Page<Order> findAllByOrdererMemberId(Long memberId, Pageable pageable);
+    Page<Order> findAllByOrdererMemberId(final Long memberId, final Pageable pageable);
 
-    Page<Order> findAllByOrderStatus(OrderStatus accepting, Pageable pageable);
+    Page<Order> findAllByOrderStatus(final OrderStatus status, final Pageable pageable);
 }
