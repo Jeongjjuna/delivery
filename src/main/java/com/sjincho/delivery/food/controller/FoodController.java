@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/foods")
 public class FoodController {
     private final FoodService foodService;
 
@@ -26,39 +28,39 @@ public class FoodController {
         this.foodService = foodService;
     }
 
-    @GetMapping("/foods/{id}")
-    public ResponseEntity<FoodResponse> get(@PathVariable final Long id) {
-        final FoodResponse response = foodService.get(id);
+    @GetMapping("/{foodId}")
+    public ResponseEntity<FoodResponse> get(@PathVariable final Long foodId) {
+        final FoodResponse response = foodService.get(foodId);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/foods")
+    @GetMapping
     public ResponseEntity<Page<FoodResponse>> getAll(final Pageable pageable) {
         final Page<FoodResponse> responses = foodService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping("/foods")
+    @PostMapping
     public ResponseEntity<Void> resister(@RequestBody final FoodCreateRequest food) {
         final Long foodId = foodService.register(food);
 
         return ResponseEntity.created(URI.create("/admin/foods/" + foodId)).build();
     }
 
-    @PutMapping("/foods/{id}")
+    @PutMapping("/{foodId}")
     public ResponseEntity<FoodResponse> update(
-            @PathVariable final Long id,
+            @PathVariable final Long foodId,
             @RequestBody final FoodUpdateRequest food) {
-        final FoodResponse response = foodService.update(id, food);
+        final FoodResponse response = foodService.update(foodId, food);
 
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/foods/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        foodService.delete(id);
+    @DeleteMapping("/{foodId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long foodId) {
+        foodService.delete(foodId);
         return ResponseEntity.ok().build();
     }
 }

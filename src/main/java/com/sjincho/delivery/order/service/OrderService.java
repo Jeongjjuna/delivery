@@ -59,7 +59,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long acceptOrder(final OrderAcceptRequest request) {
+    public Long order(final OrderAcceptRequest request) {
         // 주문요청한 모든 음식들이 등록된 음식들인지 확인한다.
         final List<OrderLineDto> orderLineDtos = request.getOrderLineDtos();
 

@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -25,58 +27,58 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/orders/{id}")
-    public ResponseEntity<OrderResponse> get(@PathVariable final Long id) {
-        final OrderResponse response = orderService.get(id);
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> get(@PathVariable final Long orderId) {
+        final OrderResponse response = orderService.get(orderId);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public ResponseEntity<Page<OrderResponse>> getAll(final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/orders/members/{id}")
-    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long id, final Pageable pageable) {
-        final Page<OrderResponse> responses = orderService.getAllByMemberId(id, pageable);
+    @GetMapping("/members/{orderId}")
+    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long orderId, final Pageable pageable) {
+        final Page<OrderResponse> responses = orderService.getAllByMemberId(orderId, pageable);
 
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/orders/accepting")
+    @GetMapping("/accepting")
     public ResponseEntity<Page<OrderResponse>> getAllAcceptingOrder(final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAllAcceptingOrder(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping("/orders")
-    public ResponseEntity<Void> acceptOrder(@RequestBody final OrderAcceptRequest request) {
-        final Long orderId = orderService.acceptOrder(request);
+    @PostMapping
+    public ResponseEntity<Void> order(@RequestBody final OrderAcceptRequest request) {
+        final Long orderId = orderService.order(request);
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();
     }
 
-    @PatchMapping("/orders/{id}/accept")
-    public ResponseEntity<OrderStatus> approveOrder(@PathVariable final Long id) {
-        final OrderStatus response = orderService.approveOrder(id);
+    @PatchMapping("/{orderId}/accept")
+    public ResponseEntity<OrderStatus> approveOrder(@PathVariable final Long orderId) {
+        final OrderStatus response = orderService.approveOrder(orderId);
 
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/orders/{id}/reject")
-    public ResponseEntity<OrderStatus> rejectOrder(@PathVariable final Long id) {
-        final OrderStatus response = orderService.rejectOrder(id);
+    @PatchMapping("/{orderId}/reject")
+    public ResponseEntity<OrderStatus> rejectOrder(@PathVariable final Long orderId) {
+        final OrderStatus response = orderService.rejectOrder(orderId);
 
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/orders/{id}/cancel")
-    public ResponseEntity<OrderStatus> cancelOrder(@PathVariable final Long id) {
-        final OrderStatus response = orderService.cancelOrder(id);
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderStatus> cancelOrder(@PathVariable final Long orderId) {
+        final OrderStatus response = orderService.cancelOrder(orderId);
 
         return ResponseEntity.ok(response);
     }

@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
+@RequestMapping("/members")
 public class MemberController {
     private final MemberService memberService;
 
@@ -26,39 +28,39 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/members/{id}")
-    public ResponseEntity<MemberResponse> get(@PathVariable final Long id) {
-        final MemberResponse response = memberService.get(id);
+    @GetMapping("/{memberId}")
+    public ResponseEntity<MemberResponse> get(@PathVariable final Long memberId) {
+        final MemberResponse response = memberService.get(memberId);
 
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/members")
+    @GetMapping
     public ResponseEntity<Page<MemberResponse>> getAll(final Pageable pageable) {
         final Page<MemberResponse> responses = memberService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping("/members")
+    @PostMapping
     public ResponseEntity<Void> resister(@RequestBody final MemberCreateRequest request) {
         final Long memberId = memberService.register(request);
 
         return ResponseEntity.created(URI.create("/members/" + memberId)).build();
     }
 
-    @PutMapping("/members/{id}")
+    @PutMapping("/{memberId}")
     public ResponseEntity<MemberResponse> update(
-            @PathVariable final Long id,
+            @PathVariable final Long memberId,
             @RequestBody final MemberUpdateRequest request) {
-        final MemberResponse response = memberService.update(id, request);
+        final MemberResponse response = memberService.update(memberId, request);
 
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/members/{id}")
-    public ResponseEntity<Void> delete(@PathVariable final Long id) {
-        memberService.delete(id);
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long memberId) {
+        memberService.delete(memberId);
         return ResponseEntity.ok().build();
     }
 
