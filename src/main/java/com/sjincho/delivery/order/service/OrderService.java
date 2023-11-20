@@ -1,8 +1,8 @@
 package com.sjincho.delivery.order.service;
 
-import com.sjincho.delivery.exception.DeliveryApplicationException;
-import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.food.domain.Food;
+import com.sjincho.delivery.food.exception.FoodErrorCode;
+import com.sjincho.delivery.food.exception.FoodNotFoundException;
 import com.sjincho.delivery.food.repository.FoodRepository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderLine;
@@ -10,6 +10,8 @@ import com.sjincho.delivery.order.domain.OrderStatus;
 import com.sjincho.delivery.order.dto.OrderAcceptRequest;
 import com.sjincho.delivery.order.dto.OrderLineDto;
 import com.sjincho.delivery.order.dto.OrderResponse;
+import com.sjincho.delivery.order.exception.OrderErrorCode;
+import com.sjincho.delivery.order.exception.OrderNotFoundException;
 import com.sjincho.delivery.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -70,7 +72,7 @@ public class OrderService {
                 .toList();
 
         if (!foodIds.containsAll(requestFoodIds)) {
-            throw new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("Order Foods Not Found"));
+            throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
         }
 
         // 주문 엔티티(도메인)을 생성한다.
@@ -130,7 +132,7 @@ public class OrderService {
 
     private Order findExistingOrder(final Long id) {
         return orderRepository.findById(id).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.ORDER_NOT_FOUND, String.format("id:%d Not Found", id)));
+                new OrderNotFoundException(OrderErrorCode.NOT_FOUND, id));
     }
 
 }

@@ -1,7 +1,7 @@
 package com.sjincho.delivery.order.domain;
 
-import com.sjincho.delivery.exception.DeliveryApplicationException;
-import com.sjincho.delivery.exception.ErrorCode;
+import com.sjincho.delivery.order.exception.OrderErrorCode;
+import com.sjincho.delivery.order.exception.OrderNotAcceptingException;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -100,9 +100,6 @@ public class Order {
             return;
         }
 
-        throw new DeliveryApplicationException(
-                ErrorCode.ORDER_NOT_ACCEPTING,
-                String.format("id:%d is %s", id, orderStatus)
-        );
+        throw new OrderNotAcceptingException(OrderErrorCode.NOT_ACCEPTING);
     }
 }

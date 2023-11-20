@@ -1,11 +1,11 @@
 package com.sjincho.delivery.food.service;
 
-import com.sjincho.delivery.exception.DeliveryApplicationException;
-import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.dto.FoodCreateRequest;
 import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
+import com.sjincho.delivery.food.exception.FoodErrorCode;
+import com.sjincho.delivery.food.exception.FoodNotFoundException;
 import com.sjincho.delivery.food.repository.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -63,6 +63,6 @@ public class FoodService {
 
     private Food findExistingFood(final Long id) {
         return foodRepository.findById(id).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.FOOD_NOT_FOUND, String.format("id:%d Not Found", id)));
+                new FoodNotFoundException(FoodErrorCode.NOT_FOUND, id));
     }
 }

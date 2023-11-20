@@ -5,15 +5,13 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public class DeliveryApplicationException extends RuntimeException {
-    private final ErrorCode errorCode;
-    private final String message;
+    private final HttpStatus httpStatus;
+    private final String httpStatusMessage;
+    private final String detailMessage;
 
-    public DeliveryApplicationException(final ErrorCode errorCode, final String message) {
-        this.errorCode = errorCode;
-        this.message = message;
-    }
-
-    public HttpStatus getStatusCode() {
-        return errorCode.getStatus();
+    public DeliveryApplicationException(final HttpStatus httpStatus, final String httpStatusMessage, final String detailMessage) {
+        this.httpStatus = httpStatus;
+        this.httpStatusMessage = httpStatusMessage;
+        this.detailMessage = detailMessage;
     }
 }

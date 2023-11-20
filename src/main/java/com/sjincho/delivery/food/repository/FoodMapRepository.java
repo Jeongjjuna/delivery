@@ -1,6 +1,8 @@
 package com.sjincho.delivery.food.repository;
 
 import com.sjincho.delivery.food.domain.Food;
+import com.sjincho.delivery.food.exception.FoodErrorCode;
+import com.sjincho.delivery.food.exception.FoodNotFoundException;
 import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ public class FoodMapRepository {
             db.put(id, food);
             return food;
         }
-        throw new IllegalArgumentException("수정하려는 Food 상품이 없음");
+        throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
     }
 
     public void delete(final Long id) {

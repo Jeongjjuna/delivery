@@ -1,11 +1,12 @@
 package com.sjincho.delivery.member.service;
 
-import com.sjincho.delivery.exception.DeliveryApplicationException;
-import com.sjincho.delivery.exception.ErrorCode;
 import com.sjincho.delivery.member.domain.Member;
 import com.sjincho.delivery.member.dto.MemberCreateRequest;
 import com.sjincho.delivery.member.dto.MemberResponse;
 import com.sjincho.delivery.member.dto.MemberUpdateRequest;
+import com.sjincho.delivery.member.exception.MemberEmailDuplicatedException;
+import com.sjincho.delivery.member.exception.MemberErrorCode;
+import com.sjincho.delivery.member.exception.MemberNotFoundException;
 import com.sjincho.delivery.member.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -84,13 +85,13 @@ public class MemberService {
 
     private void checkDuplicatedEmail(final String email) {
         memberRepository.findByEmail(email).ifPresent(value -> {
-            throw new DeliveryApplicationException(ErrorCode.DUPLICATED_USER_EMAIL, String.format("email:%s Duplicated", email));
+            throw new MemberEmailDuplicatedException(MemberErrorCode.DUPLICATED_EMAIL, email);
         });
     }
 
     private Member findExistingMember(final Long id) {
         return memberRepository.findById(id).orElseThrow(() ->
-                new DeliveryApplicationException(ErrorCode.MEMBER_NOT_FOUND, String.format("id:%d Not Found", id)));
+                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, id));
     }
 
 }

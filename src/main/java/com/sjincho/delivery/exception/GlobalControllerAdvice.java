@@ -11,7 +11,8 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(DeliveryApplicationException.class)
     public ResponseEntity<ErrorResponse> applicationHandler(final DeliveryApplicationException e) {
         return ResponseEntity
-                .status(e.getStatusCode())
-                .body(new ErrorResponse(LocalDateTime.now(), e.getErrorCode().getMessage(), e.getMessage()));
+                .status(e.getHttpStatus())
+                .body(new ErrorResponse(LocalDateTime.now(), e.getHttpStatusMessage(), e.getDetailMessage()));
     }
+
 }
