@@ -1,7 +1,7 @@
 package com.sjincho.delivery.order.controller;
 
 import com.sjincho.delivery.order.domain.OrderStatus;
-import com.sjincho.delivery.order.dto.OrderAcceptRequest;
+import com.sjincho.delivery.order.dto.OrderRequest;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.service.OrderService;
 import jakarta.validation.Valid;
@@ -57,7 +57,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(@Valid @RequestBody final OrderAcceptRequest request) {
+    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest request) {
         final Long orderId = orderService.order(request);
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();

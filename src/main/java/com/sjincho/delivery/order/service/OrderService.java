@@ -7,7 +7,7 @@ import com.sjincho.delivery.food.repository.FoodRepository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderLine;
 import com.sjincho.delivery.order.domain.OrderStatus;
-import com.sjincho.delivery.order.dto.OrderAcceptRequest;
+import com.sjincho.delivery.order.dto.OrderRequest;
 import com.sjincho.delivery.order.dto.OrderLineDto;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.exception.OrderErrorCode;
@@ -59,7 +59,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(final OrderAcceptRequest request) {
+    public Long order(final OrderRequest request) {
         // 주문요청한 모든 음식들이 등록된 음식들인지 확인한다.
         final List<OrderLineDto> orderLineDtos = request.getOrderLineDtos();
 
