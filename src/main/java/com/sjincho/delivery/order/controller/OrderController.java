@@ -4,6 +4,7 @@ import com.sjincho.delivery.order.domain.OrderStatus;
 import com.sjincho.delivery.order.dto.OrderAcceptRequest;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.service.OrderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,7 +57,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> order(@RequestBody final OrderAcceptRequest request) {
+    public ResponseEntity<Void> order(@Valid @RequestBody final OrderAcceptRequest request) {
         final Long orderId = orderService.order(request);
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();

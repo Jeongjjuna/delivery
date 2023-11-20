@@ -4,6 +4,7 @@ import com.sjincho.delivery.member.dto.MemberCreateRequest;
 import com.sjincho.delivery.member.dto.MemberResponse;
 import com.sjincho.delivery.member.dto.MemberUpdateRequest;
 import com.sjincho.delivery.member.service.MemberService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class MemberController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> resister(@RequestBody final MemberCreateRequest request) {
+    public ResponseEntity<Void> resister(@Valid @RequestBody final MemberCreateRequest request) {
         final Long memberId = memberService.register(request);
 
         return ResponseEntity.created(URI.create("/members/" + memberId)).build();
@@ -52,7 +53,7 @@ public class MemberController {
     @PutMapping("/{memberId}")
     public ResponseEntity<MemberResponse> update(
             @PathVariable final Long memberId,
-            @RequestBody final MemberUpdateRequest request) {
+            @Valid @RequestBody final MemberUpdateRequest request) {
         final MemberResponse response = memberService.update(memberId, request);
 
         return ResponseEntity.ok(response);

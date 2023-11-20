@@ -4,6 +4,7 @@ import com.sjincho.delivery.food.dto.FoodCreateRequest;
 import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.service.FoodService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +44,7 @@ public class FoodController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> resister(@RequestBody final FoodCreateRequest food) {
+    public ResponseEntity<Void> resister(@Valid @RequestBody final FoodCreateRequest food) {
         final Long foodId = foodService.register(food);
 
         return ResponseEntity.created(URI.create("/admin/foods/" + foodId)).build();
@@ -52,7 +53,7 @@ public class FoodController {
     @PutMapping("/{foodId}")
     public ResponseEntity<FoodResponse> update(
             @PathVariable final Long foodId,
-            @RequestBody final FoodUpdateRequest food) {
+            @Valid @RequestBody final FoodUpdateRequest food) {
         final FoodResponse response = foodService.update(foodId, food);
 
         return ResponseEntity.ok(response);
