@@ -17,13 +17,13 @@ URL / HTTP Method
 - 회원 수정 - `PUT /members/{id}` - 판매점, 사용자
 - 회원 삭제 - `DELETE /members/{id}` - 판매점, 사용자
 
-### 주문
+### 주문(구현완료)
 - 전체 주문 조회 - `GET /orders` - 판매점
 - 주문 조회 - `GET /orders/{id}` - 판매점
 - 주문 하기 - `POST /orders` - 사용자
 - 주문 수락 - `PATCH /orders/{id}/accept` - 판매점
-- 주문 취소 - `PATCH /orders/{id}` - 사용자
-- 주문 거절 - `PATCH /orders/{id}` - 판매점
+- 주문 취소 - `PATCH /orders/{id}/cancel` - 사용자
+- 주문 거절 - `PATCH /orders/{id}/reject` - 판매점
 - 사용자의 주문 조회 - `GET /orders/members/{id}` - 판매점, 사용자
 - 현재 접수중인 모든 주문 조회 -  `GET /orders/accepting` - 판매점
 
