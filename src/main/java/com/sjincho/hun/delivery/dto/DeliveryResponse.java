@@ -33,11 +33,11 @@ public class DeliveryResponse {
     public static DeliveryResponse from(final Delivery delivery) {
         return new DeliveryResponse(
                 delivery.getId(),
-                delivery.getOrderInfo().getOrderId(),
-                delivery.getOrderInfo().getReceiver().getMemberId(),
-                delivery.getOrderInfo().getReceiver().getCellPhone(),
-                delivery.getOrderInfo().getAddress().getPostalCode(),
-                delivery.getOrderInfo().getAddress().getDetailAddress(),
+                delivery.getOrderId(),
+                delivery.getReceiver().getMemberId(),
+                delivery.getReceiver().getCellPhone(),
+                delivery.getAddress().getPostalCode(),
+                delivery.getAddress().getDetailAddress(),
                 delivery.getDeliveryStatus(),
                 delivery.getDeliveryStartedAt()
         );

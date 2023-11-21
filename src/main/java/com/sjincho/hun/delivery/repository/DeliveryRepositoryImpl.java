@@ -24,4 +24,9 @@ public class DeliveryRepositoryImpl implements DeliveryRepository {
     public Page<Delivery> findAll(final Pageable pageable) {
         return deliveryJpaRepository.findAll(pageable);
     }
+
+    @Override
+    public Delivery save(final Delivery delivery) {
+        return deliveryJpaRepository.save(delivery);
+    }
 }

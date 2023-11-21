@@ -10,4 +10,6 @@ public interface DeliveryRepository {
     Optional<Delivery> findById(Long id);
 
     Page<Delivery> findAll(Pageable pageable);
+
+    Delivery save(Delivery delivery);
 }

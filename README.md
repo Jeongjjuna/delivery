@@ -30,7 +30,8 @@ URL / HTTP Method
 ### 배달
 - 전체 배달 조회 - `GET /deliveries` - 판매점
 - 배달 조회 - `GET /deliveries/{id}` - 판매점, 사용자
-- 배달 시작 - `POST /deliveries` - 판매점
+- 배달 등록 - `POST /deliveries` - 판매점
+- 배달 시작 - `PATCH /deliveries/{id}/start` - 판매점
 - 배달 취소 - `DELETE /deliveries/{id}` - 판매점
 - 배달 완료 - `POST /deliveries/{id}/complete` - 판매점
 

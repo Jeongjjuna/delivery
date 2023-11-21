@@ -1,4 +1,4 @@
-package com.sjincho.hun.delivery.domain;
+package com.sjincho.hun.delivery.dto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
