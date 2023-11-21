@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/delivery-database
+    username: root
+    password: root1234
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+  sql:
+    init:
+      mode: always
