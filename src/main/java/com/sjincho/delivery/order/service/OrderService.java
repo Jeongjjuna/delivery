@@ -4,11 +4,14 @@ import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.exception.FoodErrorCode;
 import com.sjincho.delivery.food.exception.FoodNotFoundException;
 import com.sjincho.delivery.food.repository.FoodRepository;
+import com.sjincho.delivery.member.domain.Member;
+import com.sjincho.delivery.member.exception.MemberErrorCode;
+import com.sjincho.delivery.member.exception.MemberNotFoundException;
+import com.sjincho.delivery.member.repository.MemberRepository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderLine;
 import com.sjincho.delivery.order.domain.OrderStatus;
 import com.sjincho.delivery.order.dto.OrderRequest;
-import com.sjincho.delivery.order.dto.OrderLineDto;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.exception.OrderErrorCode;
 import com.sjincho.delivery.order.exception.OrderNotFoundException;
@@ -19,17 +22,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
     private final FoodRepository foodRepository;
+    private final MemberRepository memberRepository;
 
     @Autowired
-    public OrderService(final OrderRepository orderRepository, final FoodRepository foodRepository) {
+    public OrderService(final OrderRepository orderRepository, final FoodRepository foodRepository, final  MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.foodRepository = foodRepository;
+        this.memberRepository = memberRepository;
     }
 
     public OrderResponse get(final Long id) {
@@ -60,33 +64,26 @@ public class OrderService {
 
     @Transactional
     public Long order(final OrderRequest request) {
-        // 주문요청한 모든 음식들이 등록된 음식들인지 확인한다.
-        final List<OrderLineDto> orderLineDtos = request.getOrderLineDtos();
 
-        final List<Long> requestFoodIds = orderLineDtos.stream()
-                .map(OrderLineDto::getFoodId)
-                .toList();
+        List<OrderLine> orderLines = request.getOrderLineRequests().stream()
+                .map(orderLineRequest -> {
+                    Long foodId = orderLineRequest.getFoodId();
+                    Food orderFood = foodRepository.findById(foodId).orElseThrow(() ->
+                            new FoodNotFoundException(FoodErrorCode.NOT_FOUND, foodId));
+                    return OrderLine.create(
+                            orderFood.getId(),
+                            orderFood.getPrice(),
+                            orderLineRequest.getQuantity(),
+                            orderFood.getName()
+                    );
+                }).toList();
 
-        final List<Long> foodIds = foodRepository.findAll().stream()
-                .map(Food::getId)
-                .toList();
-
-        if (!foodIds.containsAll(requestFoodIds)) {
-            throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
-        }
-
-        // 주문 엔티티(도메인)을 생성한다.
-        final List<OrderLine> orderLines = orderLineDtos.stream()
-                .map(orderLineDto -> OrderLine.create(
-                        orderLineDto.getFoodId(),
-                        orderLineDto.getPrice(),
-                        orderLineDto.getQuantity(),
-                        orderLineDto.getFoodName()))
-                .collect(Collectors.toList());
+        Member orderer = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
+                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
 
         final Order order = Order.create(
-                request.getMemberId(),
-                request.getCellPhone(),
+                orderer.getId(),
+                orderer.getCellPhone(),
                 request.getPostalCode(),
                 request.getDetailAddress(),
                 orderLines

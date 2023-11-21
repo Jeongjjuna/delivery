@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Getter
 public class OrderResponse {
     private final Long id;
-    private final List<OrderLineDto> orderLineDtos;
+    private final List<OrderLineResponse> orderLineResponses;
     private final String ordererCellPhone;
     private final String postalCode;
     private final String detailAddress;
@@ -18,12 +18,12 @@ public class OrderResponse {
     private final Long paymentAmount;
     private final OrderStatus orderStatus;
 
-    private OrderResponse(final Long id, final List<OrderLineDto> orderLineDtos,
+    private OrderResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
                           final String ordererCellPhone, final String postalCode,
                           final String detailAddress, final LocalDateTime createAt,
                           final Long paymentAmount, final OrderStatus orderStatus) {
         this.id = id;
-        this.orderLineDtos = orderLineDtos;
+        this.orderLineResponses = orderLineResponses;
         this.ordererCellPhone = ordererCellPhone;
         this.postalCode = postalCode;
         this.detailAddress = detailAddress;
@@ -33,8 +33,8 @@ public class OrderResponse {
     }
 
     public static OrderResponse from(final Order order, final Long paymentAmount) {
-        final List<OrderLineDto> orderLineDtos = order.getOrderLines().stream()
-                .map(line -> OrderLineDto.from(
+        final List<OrderLineResponse> orderLineResponses = order.getOrderLines().stream()
+                .map(line -> OrderLineResponse.from(
                         line.getFoodId(),
                         line.getPrice(),
                         line.getQuantity(),
@@ -44,7 +44,7 @@ public class OrderResponse {
 
         return new OrderResponse(
                 order.getId(),
-                orderLineDtos,
+                orderLineResponses,
                 order.getOrderer().getCellPhone(),
                 order.getAddress().getPostalCode(),
                 order.getAddress().getDetailAddress(),
