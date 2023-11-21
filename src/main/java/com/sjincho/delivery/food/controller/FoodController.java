@@ -5,7 +5,6 @@ import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.service.FoodService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import java.net.URI;
 public class FoodController {
     private final FoodService foodService;
 
-    @Autowired
     public FoodController(final FoodService foodService) {
         this.foodService = foodService;
     }

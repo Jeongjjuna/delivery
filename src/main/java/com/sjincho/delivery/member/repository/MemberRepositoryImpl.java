@@ -2,7 +2,6 @@ package com.sjincho.delivery.member.repository;
 
 import com.sjincho.delivery.member.domain.Member;
 import com.sjincho.delivery.member.service.port.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -13,7 +12,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     private final MemberJpaRepository memberJpaRepository;
 
-    @Autowired
     public MemberRepositoryImpl(final MemberJpaRepository memberJpaRepository) {
         this.memberJpaRepository = memberJpaRepository;
     }

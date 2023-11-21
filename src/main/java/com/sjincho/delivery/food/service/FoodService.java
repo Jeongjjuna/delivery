@@ -7,7 +7,6 @@ import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.exception.FoodErrorCode;
 import com.sjincho.delivery.food.exception.FoodNotFoundException;
 import com.sjincho.delivery.food.service.port.FoodRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class FoodService {
     private final FoodRepository foodRepository;
 
-    @Autowired
     public FoodService(final FoodRepository foodRepository) {
         this.foodRepository = foodRepository;
     }

@@ -5,7 +5,6 @@ import com.sjincho.delivery.order.dto.OrderRequest;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.service.OrderService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import java.net.URI;
 public class OrderController {
     private final OrderService orderService;
 
-    @Autowired
     public OrderController(final OrderService orderService) {
         this.orderService = orderService;
     }

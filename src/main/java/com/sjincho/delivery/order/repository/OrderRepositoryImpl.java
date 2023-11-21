@@ -3,7 +3,6 @@ package com.sjincho.delivery.order.repository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderStatus;
 import com.sjincho.delivery.order.service.port.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -14,7 +13,6 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private final OrderJpaRepository orderJpaRepository;
 
-    @Autowired
     public OrderRepositoryImpl(final OrderJpaRepository orderJpaRepository) {
         this.orderJpaRepository = orderJpaRepository;
     }

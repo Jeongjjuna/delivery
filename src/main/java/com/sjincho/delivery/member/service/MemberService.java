@@ -7,9 +7,7 @@ import com.sjincho.delivery.member.dto.MemberUpdateRequest;
 import com.sjincho.delivery.member.exception.MemberEmailDuplicatedException;
 import com.sjincho.delivery.member.exception.MemberErrorCode;
 import com.sjincho.delivery.member.exception.MemberNotFoundException;
-import com.sjincho.delivery.member.repository.MemberJpaRepository;
 import com.sjincho.delivery.member.service.port.MemberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +19,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
     public MemberService(final MemberRepository memberRepository, final BCryptPasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;

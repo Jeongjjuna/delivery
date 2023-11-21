@@ -16,7 +16,6 @@ import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.exception.OrderErrorCode;
 import com.sjincho.delivery.order.exception.OrderNotFoundException;
 import com.sjincho.delivery.order.service.port.OrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final MemberRepository memberRepository;
 
-    @Autowired
     public OrderService(final OrderRepository orderRepository, final FoodRepository foodRepository, final MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.foodRepository = foodRepository;
