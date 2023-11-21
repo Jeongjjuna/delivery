@@ -34,12 +34,6 @@ URL / HTTP Method
 - 배달 취소 - `DELETE /deliveries/{id}` - 판매점
 - 배달 완료 - `POST /deliveries/{id}/complete` - 판매점
 
-### 리뷰/(별점)
-- 전체 리뷰 조회 - `GET /reviews/foods/{id}` - 판매점, 사용자
-- 리뷰 작성 - `POST /reviews` - 사용자
-- 리뷰 수정 - `PUT /reviews/{id}` - 사용자
-- 리뷰 삭제 - `DELETE /reviews/{id}` - 사용자
-
 
 ---
 ## MySQL 다이어그램
