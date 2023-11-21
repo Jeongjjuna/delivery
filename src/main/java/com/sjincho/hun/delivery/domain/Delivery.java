@@ -2,6 +2,7 @@ package com.sjincho.hun.delivery.domain;
 
 import com.sjincho.hun.delivery.dto.Receiver;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
+import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.domain.Order;
@@ -63,19 +64,32 @@ public class Delivery {
     }
 
     public void start() {
-        changeDeliveryStatus(DeliveryStatus.DELIVERING);
-
-        deliveryStartedAt = LocalDateTime.now();
+        if (isReadyStatus()) {
+            changeDeliveryStatus(DeliveryStatus.DELIVERING);
+            deliveryStartedAt = LocalDateTime.now();
+            return;
+        }
+        throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS);
     }
 
-    private boolean isNotReadyStatus() {
-        return deliveryStatus != DeliveryStatus.READY_FOR_DELIVERY;
+    public void complete() {
+        if (isDeliveringStatus()) {
+            changeDeliveryStatus(DeliveryStatus.COMPLETED);
+            return;
+        }
+        throw new DeliveryNotDeliveringException(DeliveryErrorCode.NOT_DELIVERING_STATUS, id);
+    }
+
+    private boolean isDeliveringStatus() {
+        return deliveryStatus == DeliveryStatus.DELIVERING;
+    }
+
+    private boolean isReadyStatus() {
+        return deliveryStatus == DeliveryStatus.READY_FOR_DELIVERY;
     }
 
     private void changeDeliveryStatus(final DeliveryStatus status) {
-        if (isNotReadyStatus()) {
-            throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS);
-        }
         deliveryStatus = status;
     }
+
 }

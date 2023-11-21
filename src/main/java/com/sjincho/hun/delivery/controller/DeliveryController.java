@@ -53,6 +53,13 @@ public class DeliveryController {
         return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
     }
 
+    @PatchMapping("/{deliveryId}/complete")
+    public ResponseEntity<DeliveryResponse> completeDelivery(@PathVariable final Long deliveryId) {
+        deliveryService.completeDelivery(deliveryId);
+
+        return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
+    }
+
     @DeleteMapping("/{deliveryId}")
     public ResponseEntity<Void> delete(@PathVariable final Long deliveryId) {
         deliveryService.delete(deliveryId);

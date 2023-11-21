@@ -77,14 +77,26 @@ public class DeliveryService {
         deliveryRepository.save(delivery);
     }
 
-    private Delivery findExistingDelivery(final Long id) {
-        return deliveryRepository.findById(id).orElseThrow(() ->
-                new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
+    @Transactional
+    public void completeDelivery(final Long deliveryId) {
+        final Delivery delivery = findExistingDelivery(deliveryId);
+
+        System.out.println("test");
+        delivery.complete();
+
+        deliveryRepository.save(delivery);
     }
 
+    @Transactional
     public void delete(final Long deliveryId) {
         final Delivery delivery = findExistingDelivery(deliveryId);
 
         deliveryRepository.delete(delivery);
     }
+
+    private Delivery findExistingDelivery(final Long id) {
+        return deliveryRepository.findById(id).orElseThrow(() ->
+                new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
+    }
+
 }
