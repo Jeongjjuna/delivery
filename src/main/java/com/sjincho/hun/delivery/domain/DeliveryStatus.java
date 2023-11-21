@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum DeliveryStatus {
+    READY_FOR_DELIVERY("ready_for_delivery"),
     DELIVERING("delivering"),
     COMPLETED("completed");
 
