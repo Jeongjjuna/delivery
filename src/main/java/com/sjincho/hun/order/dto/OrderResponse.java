@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class OrderResponse {
     private final Long id;
     private final List<OrderLineResponse> orderLineResponses;
+    private final Long ordererId;
     private final String ordererCellPhone;
     private final String postalCode;
     private final String detailAddress;
@@ -18,12 +19,14 @@ public class OrderResponse {
     private final Long paymentAmount;
     private final OrderStatus orderStatus;
 
-    private OrderResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
-                          final String ordererCellPhone, final String postalCode,
-                          final String detailAddress, final LocalDateTime createAt,
-                          final Long paymentAmount, final OrderStatus orderStatus) {
+    public OrderResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
+                         final Long ordererId, final String ordererCellPhone,
+                         final String postalCode, final String detailAddress,
+                         final LocalDateTime createAt, final Long paymentAmount,
+                         final OrderStatus orderStatus) {
         this.id = id;
         this.orderLineResponses = orderLineResponses;
+        this.ordererId = ordererId;
         this.ordererCellPhone = ordererCellPhone;
         this.postalCode = postalCode;
         this.detailAddress = detailAddress;
@@ -45,6 +48,7 @@ public class OrderResponse {
         return new OrderResponse(
                 order.getId(),
                 orderLineResponses,
+                order.getId(),
                 order.getOrderer().getCellPhone(),
                 order.getAddress().getPostalCode(),
                 order.getAddress().getDetailAddress(),
