@@ -27,7 +27,7 @@ URL / HTTP Method
 - 사용자의 주문 조회 - `GET /orders/members/{id}` - 판매점, 사용자
 - 현재 접수중인 모든 주문 조회 -  `GET /orders/accepting` - 판매점
 
-### 배달
+### 배달(구현완료)
 - 전체 배달 조회 - `GET /deliveries` - 판매점
 - 배달 조회 - `GET /deliveries/{id}` - 판매점, 사용자
 - 배달 등록 - `POST /deliveries` - 판매점
@@ -37,8 +37,8 @@ URL / HTTP Method
 
 
 ---
-## MySQL 다이어그램
-![mysql_table_diagram.png](docs%2Fimages%2Fmysql_table_diagram.png)
+## ERD
+![table_diagram.png](docs%2Fimages%2Ftable_diagram.png)
 
-## 엔티티 다이어그램
-![img.png](docs/images/entity_diagram.png)
+## 도메인
+![entity_diagram.png](docs%2Fimages%2Fentity_diagram.png)
