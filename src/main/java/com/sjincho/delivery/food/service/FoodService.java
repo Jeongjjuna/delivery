@@ -6,7 +6,7 @@ import com.sjincho.delivery.food.dto.FoodResponse;
 import com.sjincho.delivery.food.dto.FoodUpdateRequest;
 import com.sjincho.delivery.food.exception.FoodErrorCode;
 import com.sjincho.delivery.food.exception.FoodNotFoundException;
-import com.sjincho.delivery.food.repository.FoodRepository;
+import com.sjincho.delivery.food.service.port.FoodRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

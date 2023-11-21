@@ -3,11 +3,11 @@ package com.sjincho.delivery.order.service;
 import com.sjincho.delivery.food.domain.Food;
 import com.sjincho.delivery.food.exception.FoodErrorCode;
 import com.sjincho.delivery.food.exception.FoodNotFoundException;
-import com.sjincho.delivery.food.repository.FoodRepository;
+import com.sjincho.delivery.food.service.port.FoodRepository;
 import com.sjincho.delivery.member.domain.Member;
 import com.sjincho.delivery.member.exception.MemberErrorCode;
 import com.sjincho.delivery.member.exception.MemberNotFoundException;
-import com.sjincho.delivery.member.repository.MemberRepository;
+import com.sjincho.delivery.member.service.port.MemberRepository;
 import com.sjincho.delivery.order.domain.Order;
 import com.sjincho.delivery.order.domain.OrderLine;
 import com.sjincho.delivery.order.domain.OrderStatus;
@@ -15,7 +15,7 @@ import com.sjincho.delivery.order.dto.OrderRequest;
 import com.sjincho.delivery.order.dto.OrderResponse;
 import com.sjincho.delivery.order.exception.OrderErrorCode;
 import com.sjincho.delivery.order.exception.OrderNotFoundException;
-import com.sjincho.delivery.order.repository.OrderRepository;
+import com.sjincho.delivery.order.service.port.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,14 +30,14 @@ public class OrderService {
     private final MemberRepository memberRepository;
 
     @Autowired
-    public OrderService(final OrderRepository orderRepository, final FoodRepository foodRepository, final  MemberRepository memberRepository) {
+    public OrderService(final OrderRepository orderRepository, final FoodRepository foodRepository, final MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.foodRepository = foodRepository;
         this.memberRepository = memberRepository;
     }
 
-    public OrderResponse get(final Long id) {
-        final Order order = findExistingOrder(id);
+    public OrderResponse get(final Long orderId) {
+        final Order order = findExistingOrder(orderId);
 
         final Long paymentsAmount = order.calculatePaymentsAmount();
 
@@ -95,8 +95,8 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderStatus approveOrder(final Long id) {
-        final Order order = findExistingOrder(id);
+    public OrderStatus approveOrder(final Long orderId) {
+        final Order order = findExistingOrder(orderId);
 
         order.approve();
 
@@ -106,8 +106,8 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderStatus rejectOrder(final Long id) {
-        final Order order = findExistingOrder(id);
+    public OrderStatus rejectOrder(final Long orderId) {
+        final Order order = findExistingOrder(orderId);
 
         order.reject();
 
@@ -117,8 +117,8 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderStatus cancelOrder(final Long id) {
-        final Order order = findExistingOrder(id);
+    public OrderStatus cancelOrder(final Long orderId) {
+        final Order order = findExistingOrder(orderId);
 
         order.cancel();
 
