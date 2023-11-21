@@ -1,6 +1,5 @@
 package com.sjincho.hun.delivery.domain;
 
-import com.sjincho.hun.delivery.dto.Receiver;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;

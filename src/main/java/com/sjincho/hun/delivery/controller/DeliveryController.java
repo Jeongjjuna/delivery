@@ -1,5 +1,6 @@
 package com.sjincho.hun.delivery.controller;
 
+import com.sjincho.hun.delivery.dto.DeliveryRequest;
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.service.DeliveryService;
 import jakarta.validation.Valid;
