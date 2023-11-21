@@ -26,7 +26,7 @@ public class Delivery {
     @Embedded
     private OrderInfo orderInfo;
 
-    @Column(name = "member_role", nullable = false)
+    @Column(name = "delivery_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
