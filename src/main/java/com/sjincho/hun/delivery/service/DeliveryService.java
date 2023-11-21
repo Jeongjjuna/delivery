@@ -80,7 +80,6 @@ public class DeliveryService {
     public void completeDelivery(final Long deliveryId) {
         final Delivery delivery = findExistingDelivery(deliveryId);
 
-        System.out.println("test");
         delivery.complete();
 
         deliveryRepository.save(delivery);
