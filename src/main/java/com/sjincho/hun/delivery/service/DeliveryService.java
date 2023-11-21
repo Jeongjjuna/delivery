@@ -74,4 +74,9 @@ public class DeliveryService {
                 new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
     }
 
+    public void delete(final Long deliveryId) {
+        final Delivery delivery = findExistingDelivery(deliveryId);
+
+        deliveryRepository.delete(delivery);
+    }
 }

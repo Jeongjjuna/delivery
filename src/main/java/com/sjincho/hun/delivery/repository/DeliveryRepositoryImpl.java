@@ -29,4 +29,9 @@ public class DeliveryRepositoryImpl implements DeliveryRepository {
     public Delivery save(final Delivery delivery) {
         return deliveryJpaRepository.save(delivery);
     }
+
+    @Override
+    public void delete(final Delivery delivery) {
+        deliveryJpaRepository.delete(delivery);
+    }
 }

@@ -12,4 +12,6 @@ public interface DeliveryRepository {
     Page<Delivery> findAll(Pageable pageable);
 
     Delivery save(Delivery delivery);
+
+    void delete(Delivery delivery);
 }
