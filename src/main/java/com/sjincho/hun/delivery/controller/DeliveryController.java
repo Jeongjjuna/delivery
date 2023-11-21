@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,13 @@ public class DeliveryController {
     @PostMapping
     public ResponseEntity<Void> resister(@Valid @RequestBody final DeliveryRequest request) {
         final Long deliveryId = deliveryService.resister(request);
+
+        return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
+    }
+
+    @PatchMapping("/{deliveryId}/start")
+    public ResponseEntity<DeliveryResponse> startDelivery(@PathVariable final Long deliveryId) {
+        deliveryService.startDelivery(deliveryId);
 
         return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
     }

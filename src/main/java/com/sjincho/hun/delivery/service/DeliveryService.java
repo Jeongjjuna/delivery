@@ -45,11 +45,6 @@ public class DeliveryService {
         return deliveries.map(delivery -> DeliveryResponse.from(delivery));
     }
 
-    private Delivery findExistingDelivery(final Long id) {
-        return deliveryRepository.findById(id).orElseThrow(() ->
-                new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
-    }
-
     @Transactional
     public Long resister(final DeliveryRequest request) {
         Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() ->
@@ -64,4 +59,19 @@ public class DeliveryService {
 
         return saved.getId();
     }
+
+    @Transactional
+    public void startDelivery(final Long deliveryId) {
+        final Delivery delivery = findExistingDelivery(deliveryId);
+
+        delivery.start();
+
+        deliveryRepository.save(delivery);
+    }
+
+    private Delivery findExistingDelivery(final Long id) {
+        return deliveryRepository.findById(id).orElseThrow(() ->
+                new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
+    }
+
 }

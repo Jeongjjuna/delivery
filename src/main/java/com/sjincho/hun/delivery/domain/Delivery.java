@@ -1,6 +1,8 @@
 package com.sjincho.hun.delivery.domain;
 
 import com.sjincho.hun.delivery.dto.Receiver;
+import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
+import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.domain.Order;
 import jakarta.persistence.Column;
@@ -58,5 +60,22 @@ public class Delivery {
                 DeliveryStatus.READY_FOR_DELIVERY,
                 null
         );
+    }
+
+    public void start() {
+        changeDeliveryStatus(DeliveryStatus.DELIVERING);
+
+        deliveryStartedAt = LocalDateTime.now();
+    }
+
+    private boolean isNotReadyStatus() {
+        return deliveryStatus != DeliveryStatus.READY_FOR_DELIVERY;
+    }
+
+    private void changeDeliveryStatus(final DeliveryStatus status) {
+        if (isNotReadyStatus()) {
+            throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS);
+        }
+        deliveryStatus = status;
     }
 }

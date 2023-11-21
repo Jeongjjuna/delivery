@@ -5,7 +5,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum DeliveryErrorCode {
-    NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Delivery Not Found");
+    NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Delivery Not Found"),
+    NOT_READY_STATUS(HttpStatus.CONFLICT, "[ERROR] Delivery Not Ready Status ");
 
     private final HttpStatus status;
     private final String message;
