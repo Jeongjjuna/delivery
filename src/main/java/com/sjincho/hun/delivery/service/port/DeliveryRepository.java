@@ -14,4 +14,6 @@ public interface DeliveryRepository {
     Delivery save(Delivery delivery);
 
     void delete(Delivery delivery);
+
+    Optional<Delivery> findByOrderId(Long orderId);
 }

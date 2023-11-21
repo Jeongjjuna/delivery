@@ -17,5 +17,4 @@ public interface OrderRepository {
     Page<Order> findAllByOrderStatus(final OrderStatus status, final Pageable pageable);
 
     Order save(Order order);
-
 }

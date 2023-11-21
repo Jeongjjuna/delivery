@@ -21,6 +21,11 @@ public class DeliveryRepositoryImpl implements DeliveryRepository {
     }
 
     @Override
+    public Optional<Delivery> findByOrderId(final Long orderId) {
+        return deliveryJpaRepository.findByOrderId(orderId);
+    }
+
+    @Override
     public Page<Delivery> findAll(final Pageable pageable) {
         return deliveryJpaRepository.findAll(pageable);
     }
@@ -34,4 +39,5 @@ public class DeliveryRepositoryImpl implements DeliveryRepository {
     public void delete(final Delivery delivery) {
         deliveryJpaRepository.delete(delivery);
     }
+
 }

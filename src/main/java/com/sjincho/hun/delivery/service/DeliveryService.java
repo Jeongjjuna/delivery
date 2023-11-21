@@ -3,6 +3,7 @@ package com.sjincho.hun.delivery.service;
 import com.sjincho.hun.delivery.controller.DeliveryRequest;
 import com.sjincho.hun.delivery.domain.Delivery;
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
+import com.sjincho.hun.delivery.exception.DeliveryAlreadyRegisterException;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotFoundException;
 import com.sjincho.hun.delivery.service.port.DeliveryRepository;
@@ -52,6 +53,13 @@ public class DeliveryService {
 
         Member receiver = memberRepository.findById(request.getReceiverId()).orElseThrow(() ->
                 new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getReceiverId()));
+
+        deliveryRepository.findByOrderId(request.getOrderId())
+                .ifPresent(delivery -> {
+                    throw new DeliveryAlreadyRegisterException(DeliveryErrorCode.NOT_READY_REGISTERED, request.getOrderId());
+                });
+
+        // TODO : order의 주문자가 receiver가 맞는지 검증해야함.
 
         Delivery delivery = Delivery.create(order, receiver);
 
