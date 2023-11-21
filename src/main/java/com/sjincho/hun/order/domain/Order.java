@@ -32,7 +32,7 @@ public class Order {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "order_foods", joinColumns =
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "orders_id")
     )
     private List<OrderLine> orderLines;
 
