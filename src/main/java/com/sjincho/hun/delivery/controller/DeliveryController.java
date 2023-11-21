@@ -2,6 +2,8 @@ package com.sjincho.hun.delivery.controller;
 
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.service.DeliveryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,5 +24,12 @@ public class DeliveryController {
         final DeliveryResponse response = deliveryService.get(deliveryId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DeliveryResponse>> getAll(final Pageable pageable) {
+        final Page<DeliveryResponse> responses = deliveryService.getAll(pageable);
+
+        return ResponseEntity.ok(responses);
     }
 }

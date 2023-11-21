@@ -5,6 +5,8 @@ import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotFoundException;
 import com.sjincho.hun.delivery.service.port.DeliveryRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +21,12 @@ public class DeliveryService {
         final Delivery delivery = findExistingDelivery(deliveryId);
 
         return DeliveryResponse.from(delivery);
+    }
+
+    public Page<DeliveryResponse> getAll(final Pageable pageable) {
+        final Page<Delivery> deliveries = deliveryRepository.findAll(pageable);
+
+        return deliveries.map(delivery -> DeliveryResponse.from(delivery));
     }
 
     private Delivery findExistingDelivery(final Long id) {
