@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,7 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
+    @Builder
     public Member(final String name, final String email, final String password,
                   final String cellPhone, final MemberRole memberRole) {
         this.name = name;
@@ -44,11 +46,6 @@ public class Member {
         this.password = password;
         this.cellPhone = cellPhone;
         this.memberRole = memberRole;
-    }
-
-    public static Member create(final String name, final String email, final String password,
-                                final String cellPhone, final MemberRole memberRole) {
-        return new Member(name, email, password, cellPhone, memberRole);
     }
 
     public void update(final String name, final String email, final String password,

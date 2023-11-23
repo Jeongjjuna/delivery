@@ -3,6 +3,7 @@ package com.sjincho.hun.member.dto;
 import com.sjincho.hun.member.domain.MemberRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -23,6 +24,7 @@ public class MemberCreateRequest {
     @NotNull(message = "회원유형을 확인해주세요. null 일 수 없습니다.")
     private final MemberRole memberRole;
 
+    @Builder
     public MemberCreateRequest(final String name, final String email, final String password,
                                final String cellPhone, final MemberRole memberRole) {
         this.name = name;

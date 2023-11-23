@@ -32,12 +32,13 @@ class DeliveryTest {
                 1L, "010-1111-2222",
                 "123445", "101동 1001호", orderLines);
 
-        receiver = Member.create(
-                "홍길동",
-                "email@gmail.com",
-                "password",
-                "010-1111-2222",
-                MemberRole.CUSTOMER);
+        receiver = Member.builder()
+                .name("홍길동")
+                .email("email@gmail.com")
+                .password("password")
+                .cellPhone("010-1111-2222")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
     }
 
     @DisplayName("Delivery 도메인 생성 테스트")

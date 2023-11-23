@@ -42,13 +42,13 @@ public class MemberService {
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-        final Member member = Member.create(
-                request.getName(),
-                request.getEmail(),
-                encodedPassword,
-                request.getCellPhone(),
-                request.getMemberRole()
-        );
+        final Member member = Member.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(encodedPassword)
+                .cellPhone(request.getCellPhone())
+                .memberRole(request.getMemberRole())
+                .build();
 
         final Member saved = memberRepository.save(member);
 
