@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,14 +29,11 @@ public class Food {
     @Column(name = "price", nullable = false)
     private Long price;
 
+    @Builder
     public Food(final String name, final String foodType, final Long price) {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
-    }
-
-    public static Food create(final String name, final String foodType, final Long price) {
-        return new Food(name, foodType, price);
     }
 
     public void update(final String name, final String foodType, final Long price) {
