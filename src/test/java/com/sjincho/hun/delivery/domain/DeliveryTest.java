@@ -6,8 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
-import com.sjincho.hun.member.domain.Member;
-import com.sjincho.hun.member.domain.MemberRole;
 import com.sjincho.hun.order.domain.Address;
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderLine;
@@ -22,7 +20,7 @@ import java.util.List;
 class DeliveryTest {
 
     private Order order;
-    private Member receiver;
+    private Receiver receiver;
 
     @BeforeEach
     void setup() {
@@ -36,26 +34,33 @@ class DeliveryTest {
                 .orderer(new Orderer(1L, "010-1111-2222"))
                 .build();
 
-        receiver = Member.builder()
-                .name("홍길동")
-                .email("email@gmail.com")
-                .password("password")
+        receiver = Receiver.builder()
+                .memberId(1L)
                 .cellPhone("010-1111-2222")
-                .memberRole(MemberRole.CUSTOMER)
                 .build();
     }
 
     @DisplayName("Delivery 도메인 생성 테스트")
     @Test
     void create() {
-        assertThatCode(() -> Delivery.create(order, receiver))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> Delivery.builder()
+                .orderId(order.getId())
+                .receiver(receiver)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build()
+        ).doesNotThrowAnyException();
     }
 
     @DisplayName("배달 시작 테스트")
     @Test
     void start() {
-        Delivery delivery = Delivery.create(order, receiver);
+        Delivery delivery = Delivery.builder()
+                .orderId(order.getId())
+                .receiver(receiver)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
 
         delivery.start();
 
@@ -65,7 +70,13 @@ class DeliveryTest {
     @DisplayName("이미 배달중일때 배달시작 요청이 들어오면 예가외발생")
     @Test
     void start_exception() {
-        Delivery delivery = Delivery.create(order, receiver);
+        Delivery delivery = Delivery.builder()
+                .orderId(order.getId())
+                .receiver(receiver)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
+
         delivery.start();
 
         assertThatThrownBy(() -> delivery.start())
@@ -75,7 +86,12 @@ class DeliveryTest {
     @DisplayName("배달 완료 테스트")
     @Test
     void complete() {
-        Delivery delivery = Delivery.create(order, receiver);
+        Delivery delivery = Delivery.builder()
+                .orderId(order.getId())
+                .receiver(receiver)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
         delivery.start();
 
         delivery.complete();
@@ -86,7 +102,12 @@ class DeliveryTest {
     @DisplayName("배달중이 아닌 상태에서 배달완료 요청이 들어오면 예외발생")
     @Test
     void complete_exception() {
-        Delivery delivery = Delivery.create(order, receiver);
+        Delivery delivery = Delivery.builder()
+                .orderId(order.getId())
+                .receiver(receiver)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
 
         assertThatThrownBy(() -> delivery.complete())
                 .isInstanceOf(DeliveryNotDeliveringException.class);

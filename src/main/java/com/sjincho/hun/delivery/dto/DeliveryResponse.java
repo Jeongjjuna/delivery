@@ -2,6 +2,7 @@ package com.sjincho.hun.delivery.dto;
 
 import com.sjincho.hun.delivery.domain.Delivery;
 import com.sjincho.hun.delivery.domain.DeliveryStatus;
+import lombok.Builder;
 import lombok.Getter;
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ public class DeliveryResponse {
     private final DeliveryStatus deliveryStatus;
     private final LocalDateTime deliveryStartedAt;
 
+    @Builder
     public DeliveryResponse(final Long id, final Long orderId,
                             final Long receiverId, final String receiverCellPhone,
                             final String postalCode, final String detailAddress,
@@ -31,15 +33,15 @@ public class DeliveryResponse {
     }
 
     public static DeliveryResponse from(final Delivery delivery) {
-        return new DeliveryResponse(
-                delivery.getId(),
-                delivery.getOrderId(),
-                delivery.getReceiver().getMemberId(),
-                delivery.getReceiver().getCellPhone(),
-                delivery.getAddress().getPostalCode(),
-                delivery.getAddress().getDetailAddress(),
-                delivery.getDeliveryStatus(),
-                delivery.getDeliveryStartedAt()
-        );
+        return DeliveryResponse.builder()
+                .id(delivery.getId())
+                .orderId(delivery.getOrderId())
+                .receiverId(delivery.getReceiver().getMemberId())
+                .receiverCellPhone(delivery.getReceiver().getCellPhone())
+                .postalCode(delivery.getAddress().getPostalCode())
+                .detailAddress(delivery.getAddress().getDetailAddress())
+                .deliveryStatus(delivery.getDeliveryStatus())
+                .deliveryStartedAt(delivery.getDeliveryStartedAt())
+                .build();
     }
 }

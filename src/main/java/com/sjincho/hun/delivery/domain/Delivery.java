@@ -3,8 +3,6 @@ package com.sjincho.hun.delivery.domain;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
-import com.sjincho.hun.member.domain.Member;
-import com.sjincho.hun.order.domain.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -14,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
@@ -44,6 +43,7 @@ public class Delivery {
     @Column(name = "delivery_started_at")
     private LocalDateTime deliveryStartedAt;
 
+    @Builder
     public Delivery(final Long orderId, final Receiver receiver, final Address address, final DeliveryStatus deliveryStatus, final LocalDateTime deliveryStartedAt) {
         this.orderId = orderId;
         this.receiver = receiver;
@@ -52,15 +52,15 @@ public class Delivery {
         this.deliveryStartedAt = deliveryStartedAt;
     }
 
-    public static Delivery create(final Order order, final Member receiver) {
-        return new Delivery(
-                order.getId(),
-                new Receiver(receiver.getId(), receiver.getCellPhone()),
-                new Address(order.getAddress().getPostalCode(), order.getAddress().getDetailAddress()),
-                DeliveryStatus.READY_FOR_DELIVERY,
-                null
-        );
-    }
+//    public static Delivery create(final Order order, final Member receiver) {
+//        return new Delivery(
+//                order.getId(),
+//                new Receiver(receiver.getId(), receiver.getCellPhone()),
+//                new Address(order.getAddress().getPostalCode(), order.getAddress().getDetailAddress()),
+//                DeliveryStatus.READY_FOR_DELIVERY,
+//                null
+//        );
+//    }
 
     public void start() {
         if (isReadyStatus()) {
