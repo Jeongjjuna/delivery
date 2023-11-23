@@ -8,9 +8,12 @@ import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.exception.MemberErrorCode;
 import com.sjincho.hun.member.exception.MemberNotFoundException;
 import com.sjincho.hun.member.service.port.MemberRepository;
+import com.sjincho.hun.order.domain.Address;
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderLine;
 import com.sjincho.hun.order.domain.OrderStatus;
+import com.sjincho.hun.order.domain.Orderer;
+import com.sjincho.hun.order.dto.OrderLineRequest;
 import com.sjincho.hun.order.dto.OrderRequest;
 import com.sjincho.hun.order.dto.OrderResponse;
 import com.sjincho.hun.order.exception.OrderErrorCode;
@@ -76,23 +79,14 @@ public class OrderService {
                 new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
 
         final List<OrderLine> orderLines = request.getOrderLineRequests().stream()
-                .map(orderLineRequest -> {
-                    Long foodId = orderLineRequest.getFoodId();
-                    Food orderFood = findFoodById(foods, foodId);
-                    return OrderLine.create(
-                            orderFood.getId(),
-                            orderFood.getPrice(),
-                            orderLineRequest.getQuantity(),
-                            orderFood.getName()
-                    );
-                }).toList();
-        final Order order = Order.create(
-                orderer.getId(),
-                orderer.getCellPhone(),
-                request.getPostalCode(),
-                request.getDetailAddress(),
-                orderLines
-        );
+                .map(orderLineRequest -> toOrderLine(orderLineRequest, foods))
+                .toList();
+
+        final Order order = Order.builder()
+                .orderLines(orderLines)
+                .address(new Address(request.getPostalCode(), request.getDetailAddress()))
+                .orderer(new Orderer(orderer.getId(), orderer.getCellPhone()))
+                .build();
 
         final Order saved = orderRepository.save(order);
 
@@ -144,4 +138,14 @@ public class OrderService {
                 .orElseThrow(() -> new FoodNotFoundException(FoodErrorCode.NOT_FOUND));
     }
 
+    private OrderLine toOrderLine(OrderLineRequest orderLineRequest, List<Food> foods) {
+        Long foodId = orderLineRequest.getFoodId();
+        Food orderFood = findFoodById(foods, foodId);
+        return OrderLine.builder()
+                .foodId(orderFood.getId())
+                .price(orderFood.getPrice())
+                .quantity(orderLineRequest.getQuantity())
+                .foodName(orderFood.getName())
+                .build();
+    }
 }

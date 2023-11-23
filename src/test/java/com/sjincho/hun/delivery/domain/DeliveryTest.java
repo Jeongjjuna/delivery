@@ -8,8 +8,10 @@ import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.domain.MemberRole;
+import com.sjincho.hun.order.domain.Address;
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderLine;
+import com.sjincho.hun.order.domain.Orderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,9 +30,11 @@ class DeliveryTest {
                 new OrderLine(1L, 9000L, 2L, "짜장면"),
                 new OrderLine(2L, 8000L, 1L, "짬뽕")
         ));
-        order = Order.create(
-                1L, "010-1111-2222",
-                "123445", "101동 1001호", orderLines);
+        order = Order.builder()
+                .orderLines(orderLines)
+                .address(new Address("123445", "101동 1001호"))
+                .orderer(new Orderer(1L, "010-1111-2222"))
+                .build();
 
         receiver = Member.builder()
                 .name("홍길동")

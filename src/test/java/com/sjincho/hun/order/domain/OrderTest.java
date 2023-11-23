@@ -17,9 +17,11 @@ class OrderTest {
     private List<OrderLine> orderLines;
 
     private Order createtTestOrder() {
-        return Order.create(
-                1L, "010-1111-2222",
-                "123445", "101동 1001호", orderLines);
+        return Order.builder()
+                .orderLines(orderLines)
+                .address(new Address("123445", "101동 1001호"))
+                .orderer(new Orderer(1L, "010-1111-2222"))
+                .build();
     }
 
     @BeforeEach
@@ -33,10 +35,12 @@ class OrderTest {
     @DisplayName("Order 도메인 생성 테스트")
     @Test
     void create() {
-        assertThatCode(() -> Order.create(
-                1L, "010-1111-2222",
-                "123445", "101동 1001호", orderLines))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> Order.builder()
+                .orderLines(orderLines)
+                .address(new Address("123445", "101동 1001호"))
+                .orderer(new Orderer(1L, "010-1111-2222"))
+                .build()
+        ).doesNotThrowAnyException();
     }
 
     @DisplayName("Order 전체 주문 금액 계산 테스트")

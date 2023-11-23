@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
@@ -49,26 +50,13 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    public Order(final List<OrderLine> orderLines, final Address address,
-                 final Orderer orderer, final LocalDateTime createdAt,
-                 final OrderStatus orderStatus) {
+    @Builder
+    public Order(final List<OrderLine> orderLines, final Address address, final Orderer orderer) {
         this.orderLines = orderLines;
         this.address = address;
         this.orderer = orderer;
-        this.createdAt = createdAt;
-        this.orderStatus = orderStatus;
-    }
-
-    public static Order create(final Long memberId, final String cellPhone,
-                               final String postalCode, final String detailAddress,
-                               final List<OrderLine> orderLines) {
-        return new Order(
-                orderLines,
-                new Address(postalCode, detailAddress),
-                new Orderer(memberId, cellPhone),
-                LocalDateTime.now(),
-                OrderStatus.ACCEPTING
-        );
+        this.createdAt = LocalDateTime.now();
+        this.orderStatus = OrderStatus.ACCEPTING;
     }
 
     public Long calculatePaymentsAmount() {

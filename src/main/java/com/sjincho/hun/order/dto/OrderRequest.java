@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 import lombok.Getter;
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class OrderRequest {
     @NotEmpty(message = "주문 내용을 확안해주세요. 주문내역이 1개라도 존재해야 합니다.")
     private final List<OrderLineRequest> orderLineRequests;
 
+    @Builder
     public OrderRequest(final Long memberId, final String postalCode,
                         final String detailAddress, final List<OrderLineRequest> orderLineRequests) {
         this.memberId = memberId;
@@ -30,5 +32,4 @@ public class OrderRequest {
         this.detailAddress = detailAddress;
         this.orderLineRequests = orderLineRequests;
     }
-
 }

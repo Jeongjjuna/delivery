@@ -11,18 +11,22 @@ class OrderLineTest {
     @DisplayName("OrderLine 도메인 생성 테스트")
     @Test
     void create() {
-        assertThatCode(() -> OrderLine.create(
-                1L, 8000L,
-                2L, "짜장면"))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> OrderLine.builder()
+                .foodId(1L)
+                .price(8000L)
+                .quantity(2L)
+                .foodName("짜장면").build()
+        ).doesNotThrowAnyException();
     }
 
     @DisplayName("OrderLine 주문 금액 계산 테스트")
     @Test
     void calculatePayment() {
-        OrderLine orderLine = new OrderLine(
-                1L, 8000L,
-                2L, "짜장면");
+        OrderLine orderLine = OrderLine.builder()
+                .foodId(1L)
+                .price(8000L)
+                .quantity(2L)
+                .foodName("짜장면").build();
 
         Long payments = orderLine.calculatePayment();
 
