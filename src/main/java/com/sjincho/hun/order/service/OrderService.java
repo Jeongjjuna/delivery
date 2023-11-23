@@ -63,11 +63,22 @@ public class OrderService {
     @Transactional
     public Long order(final OrderRequest request) {
 
-        List<OrderLine> orderLines = request.getOrderLineRequests().stream()
+        final List<Long> foodIds = request.getOrderLineRequests().stream()
+                .map(orderLineRequest -> orderLineRequest.getFoodId())
+                .toList();
+        final List<Food> foods = foodRepository.findAllById(foodIds);
+
+        if (foodIds.size() != foods.size()) {
+            throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
+        }
+
+        final Member orderer = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
+                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
+
+        final List<OrderLine> orderLines = request.getOrderLineRequests().stream()
                 .map(orderLineRequest -> {
                     Long foodId = orderLineRequest.getFoodId();
-                    Food orderFood = foodRepository.findById(foodId).orElseThrow(() ->
-                            new FoodNotFoundException(FoodErrorCode.NOT_FOUND, foodId));
+                    Food orderFood = findFoodById(foods, foodId);
                     return OrderLine.create(
                             orderFood.getId(),
                             orderFood.getPrice(),
@@ -75,10 +86,6 @@ public class OrderService {
                             orderFood.getName()
                     );
                 }).toList();
-
-        Member orderer = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
-                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
-
         final Order order = Order.create(
                 orderer.getId(),
                 orderer.getCellPhone(),
@@ -128,6 +135,13 @@ public class OrderService {
     private Order findExistingOrder(final Long id) {
         return orderRepository.findById(id).orElseThrow(() ->
                 new OrderNotFoundException(OrderErrorCode.NOT_FOUND, id));
+    }
+
+    private Food findFoodById(List<Food> foods, Long foodId) {
+        return foods.stream()
+                .filter(food -> food.getId().equals(foodId))
+                .findFirst()
+                .orElseThrow(() -> new FoodNotFoundException(FoodErrorCode.NOT_FOUND));
     }
 
 }

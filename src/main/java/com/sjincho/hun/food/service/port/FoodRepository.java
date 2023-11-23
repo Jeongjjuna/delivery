@@ -3,6 +3,7 @@ package com.sjincho.hun.food.service.port;
 import com.sjincho.hun.food.domain.Food;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import java.util.List;
 import java.util.Optional;
 
 public interface FoodRepository {
@@ -14,4 +15,6 @@ public interface FoodRepository {
     Food save(Food food);
 
     void delete(Food food);
+
+    List<Food> findAllById(List<Long> foodIds);
 }
