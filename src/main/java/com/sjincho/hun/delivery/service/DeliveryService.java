@@ -49,6 +49,13 @@ public class DeliveryService {
         return deliveries.map(delivery -> DeliveryResponse.from(delivery));
     }
 
+    public Page<DeliveryResponse> getAllDelivering(final Pageable pageable) {
+        final Page<Delivery> deliveries = deliveryRepository.findAllByDeliveryStatus(
+                DeliveryStatus.DELIVERING, pageable);
+
+        return deliveries.map(delivery -> DeliveryResponse.from(delivery));
+    }
+
     @Transactional
     public Long resister(final DeliveryRequest request) {
         Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() ->
@@ -104,5 +111,4 @@ public class DeliveryService {
         return deliveryRepository.findById(id).orElseThrow(() ->
                 new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
     }
-
 }
