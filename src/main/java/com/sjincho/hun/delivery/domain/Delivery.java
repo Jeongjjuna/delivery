@@ -52,16 +52,6 @@ public class Delivery {
         this.deliveryStartedAt = deliveryStartedAt;
     }
 
-//    public static Delivery create(final Order order, final Member receiver) {
-//        return new Delivery(
-//                order.getId(),
-//                new Receiver(receiver.getId(), receiver.getCellPhone()),
-//                new Address(order.getAddress().getPostalCode(), order.getAddress().getDetailAddress()),
-//                DeliveryStatus.READY_FOR_DELIVERY,
-//                null
-//        );
-//    }
-
     public void start() {
         if (isReadyStatus()) {
             changeDeliveryStatus(DeliveryStatus.DELIVERING);
