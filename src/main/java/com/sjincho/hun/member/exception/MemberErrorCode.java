@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum MemberErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Member Not Found"),
-    DUPLICATED_EMAIL(HttpStatus.CONFLICT, "[ERROR] Member email is duplicated");
+    DUPLICATED_EMAIL(HttpStatus.CONFLICT, "[ERROR] Member Email Duplicated");
 
     private final HttpStatus status;
     private final String message;
