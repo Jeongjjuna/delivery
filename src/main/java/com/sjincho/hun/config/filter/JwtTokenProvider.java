@@ -4,11 +4,15 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
 public class JwtTokenProvider {
+
+    @Value("${jwt.secret-key}")
+    private String key;
 
     public static String generate(String userName, String email, String key, long expiredTimeMs) {
         Claims claims = Jwts.claims();

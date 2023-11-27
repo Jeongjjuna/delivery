@@ -1,26 +1,42 @@
 package com.sjincho.hun.config;
 
+import com.sjincho.hun.config.filter.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
 
+    private final UserDetailsService userDetailsService;
+
+    @Value("${jwt.secret-key}")
+    private String key;
+
+    public SecurityConfig(final UserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
-    public SecurityFilterChain filterChain(final HttpSecurity http) throws Exception {
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers(HttpMethod.POST, "/members")
+                .requestMatchers(HttpMethod.POST, "auth/login");
+    }
 
-        // POST /memebers외에 모두 인증을 거쳐야 한다.
-        // 1. 요청받은 id, 비밀번호를 검사한다.(혹은로그인정보)
-        // 2. 인증된 정보를 SecurityContextHolder 안에 값으로 넣어준다.(값이 있기만 하면 인증된 것으로 간주한다)
-        http.authorizeHttpRequests(auth -> auth
-//                .requestMatchers(HttpMethod.POST, "/members").permitAll()
-                        .anyRequest().permitAll()
-        );
-
-        http.csrf(csrf -> csrf.disable());
-
-        return http.build();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().authenticated())
+                .addFilterBefore(new JwtAuthenticationFilter(key, userDetailsService), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }
