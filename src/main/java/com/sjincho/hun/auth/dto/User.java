@@ -1,4 +1,4 @@
-package com.sjincho.hun.config.filter;
+package com.sjincho.hun.auth.dto;
 
 import com.sjincho.hun.member.domain.MemberRole;
 import com.sjincho.hun.member.dto.MemberResponse;
@@ -37,9 +37,9 @@ public class User implements UserDetails {
                 .cellPhone(memberResponse.getCellPhone())
                 .authorities(
                         roleTypes.stream()
-                        .map(MemberRole::getName)
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toUnmodifiableSet()))
+                                .map(MemberRole::getName)
+                                .map(SimpleGrantedAuthority::new)
+                                .collect(Collectors.toUnmodifiableSet()))
                 .build();
     }
 

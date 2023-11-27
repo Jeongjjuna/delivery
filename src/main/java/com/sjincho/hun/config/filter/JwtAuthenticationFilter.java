@@ -1,70 +1,92 @@
 package com.sjincho.hun.config.filter;
 
+import com.sjincho.hun.auth.exception.AuthErrorCode;
+import com.sjincho.hun.auth.exception.AuthorizationHeaderNullException;
+import com.sjincho.hun.auth.exception.NotBearerAuthorizationException;
+import com.sjincho.hun.auth.exception.TokenExpiredException;
+import com.sjincho.hun.auth.service.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final String secretKey;
     private final UserDetailsService userDetailsService;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtAuthenticationFilter(final String secretKey, final UserDetailsService userDetailsService) {
-        this.secretKey = secretKey;
+    public JwtAuthenticationFilter(final UserDetailsService userDetailsService, final JwtTokenProvider jwtTokenProvider) {
         this.userDetailsService = userDetailsService;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
-        final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info(header);
-        if (header == null || !header.startsWith("Bearer ")) {
-            log.error("jwt 헤더값이 null 이거나 존재하지 않습니다.");
-            filterChain.doFilter(request, response);
-            return;
-        }
 
-        UserDetails user;
         try {
-            // 1. header jwt토큰의 유효기간을 확인한다.
-            final String token = header.split(" ")[1].trim();
-            if (JwtTokenProvider.isExpired(token, secretKey)) {
-                log.error("토근 유효기간이 만료되었습니다.");
-                throw new IllegalArgumentException("[임시] 유효하지 않은 토큰 에러");
-            }
+            final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-            // 2. header jwt토큰의 사용자 email이 존재하는지 확인한다.
-            String name = JwtTokenProvider.getUserName(token, secretKey);
-            String email = JwtTokenProvider.getEmail(token, secretKey);
+            checkNull(authorizationHeader);
+            checkBearer(authorizationHeader);
 
-            // ??? : UserDetailsService를 꼭써야하는가? 곧바로 MemberRepository를 사용하면 안되는가?
-            user = userDetailsService.loadUserByUsername(email);
+            final String token = parseBearerToken(authorizationHeader);
 
-            // 3. UserDetails User객정보를 시큐리티 컨텍스트 홀더에 넣어준다.
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    user, null, user.getAuthorities()
-            );
+            checkTokenExpired(token);
+
+            String email = jwtTokenProvider.getEmail(token);
+            UserDetails user = userDetailsService.loadUserByUsername(email);
+
+            AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-            SecurityContextHolder.getContext().setAuthentication(authentication); //-> 컨트롤러로 Authentiaction을 보내준다.
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        }catch (RuntimeException e) {
-            log.error("Error occurs while validating. {}", e.toString());
+        } catch (AuthorizationHeaderNullException e) {
+            request.setAttribute("exception", e);
+        } catch (NotBearerAuthorizationException e) {
+            request.setAttribute("exception", e);
+        } catch (TokenExpiredException e) {
+            request.setAttribute("exception", e);
+        } finally {
             filterChain.doFilter(request, response);
-            return;
         }
-
-        log.info(user.getUsername() + " : 로그인 인증에 성공.");
-        filterChain.doFilter(request, response);
     }
+
+    private void checkTokenExpired(final String jwtToken) {
+        if (jwtTokenProvider.isExpired(jwtToken)) {
+            throw new TokenExpiredException(AuthErrorCode.TOKEN_EXPIRED);
+        }
+    }
+
+    private void checkNull(final String header) {
+        try {
+            Objects.requireNonNull(header);
+        } catch (NullPointerException e) {
+            throw new AuthorizationHeaderNullException(AuthErrorCode.AUTHORIZATION_HEADER_NULL);
+        }
+    }
+
+    private void checkBearer(final String authorizationHeader) {
+        if (!authorizationHeader.startsWith("Bearer ")) {
+            throw new NotBearerAuthorizationException(AuthErrorCode.INVALID_BEARER);
+        }
+    }
+
+    private String parseBearerToken(final String header) {
+        return header.split(" ")[1].trim();
+    }
+
 }

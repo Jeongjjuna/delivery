@@ -3,28 +3,24 @@ package com.sjincho.hun.auth.service;
 import com.sjincho.hun.auth.dto.LoginRequest;
 import com.sjincho.hun.auth.exception.AuthErrorCode;
 import com.sjincho.hun.auth.exception.PasswordInvalidException;
-import com.sjincho.hun.config.filter.JwtTokenProvider;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.exception.MemberErrorCode;
 import com.sjincho.hun.member.exception.MemberNotFoundException;
 import com.sjincho.hun.member.service.port.MemberRepository;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
     private final MemberRepository memberRepository;
+    private final JwtTokenProvider jwtTokenProvider;
     private final BCryptPasswordEncoder encoder;
 
-    @Value("${jwt.secret-key}")
-    private String secretKey;
-
-    @Value("${jwt.accessToken.expired-time-ms}")
-    private Long accessTokenExpiredTimeMs;
-
-    public AuthService(final MemberRepository memberRepository, final BCryptPasswordEncoder encoder) {
+    public AuthService(final MemberRepository memberRepository,
+                       final JwtTokenProvider jwtTokenProvider,
+                       final BCryptPasswordEncoder encoder) {
         this.memberRepository = memberRepository;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.encoder = encoder;
     }
 
@@ -37,7 +33,7 @@ public class AuthService {
 
         checkPassword(password, member);
 
-        return JwtTokenProvider.generate(member.getName(), member.getEmail(), secretKey, accessTokenExpiredTimeMs);
+        return jwtTokenProvider.generate(member.getName(), member.getEmail());
     }
 
     private void checkPassword(String password, Member member) {
