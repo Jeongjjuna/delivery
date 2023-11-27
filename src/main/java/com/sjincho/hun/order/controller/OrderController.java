@@ -1,8 +1,8 @@
 package com.sjincho.hun.order.controller;
 
 import com.sjincho.hun.order.domain.OrderStatus;
-import com.sjincho.hun.order.dto.OrderRequest;
-import com.sjincho.hun.order.dto.OrderResponse;
+import com.sjincho.hun.order.dto.request.OrderRequest;
+import com.sjincho.hun.order.dto.response.OrderResponse;
 import com.sjincho.hun.order.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

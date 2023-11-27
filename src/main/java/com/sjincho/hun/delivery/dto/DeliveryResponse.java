@@ -35,11 +35,11 @@ public class DeliveryResponse {
     public static DeliveryResponse from(final Delivery delivery) {
         return DeliveryResponse.builder()
                 .id(delivery.getId())
-                .orderId(delivery.getOrderId())
-                .receiverId(delivery.getReceiver().getMemberId())
-                .receiverCellPhone(delivery.getReceiver().getCellPhone())
-                .postalCode(delivery.getAddress().getPostalCode())
-                .detailAddress(delivery.getAddress().getDetailAddress())
+                .orderId(delivery.getOrder().getId())
+                .receiverId(delivery.getOrder().getMember().getId())
+                .receiverCellPhone(delivery.getOrder().getMember().getCellPhone())
+                .postalCode(delivery.getOrder().getAddress().getPostalCode())
+                .detailAddress(delivery.getOrder().getAddress().getDetailAddress())
                 .deliveryStatus(delivery.getDeliveryStatus())
                 .deliveryStartedAt(delivery.getDeliveryStartedAt())
                 .build();

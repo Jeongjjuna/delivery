@@ -22,8 +22,8 @@ public class DeliveryRepositoryImpl implements DeliveryRepository {
     }
 
     @Override
-    public Optional<Delivery> findByOrderId(final Long orderId) {
-        return deliveryJpaRepository.findByOrderId(orderId);
+    public Optional<Delivery> findByOrderIdWithOrder(final Long orderId) {
+        return deliveryJpaRepository.findByOrderIdWithOrder(orderId);
     }
 
     @Override

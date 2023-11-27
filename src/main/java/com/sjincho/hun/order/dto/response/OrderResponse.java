@@ -1,4 +1,4 @@
-package com.sjincho.hun.order.dto;
+package com.sjincho.hun.order.dto.response;
 
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderStatus;
@@ -45,8 +45,8 @@ public class OrderResponse {
         return OrderResponse.builder()
                 .id(order.getId())
                 .orderLineResponses(orderLineResponses)
-                .ordererId(order.getOrderer().getMemberId())
-                .ordererCellPhone(order.getOrderer().getCellPhone())
+                .ordererId(order.getMember().getId())
+                .ordererCellPhone(order.getMember().getCellPhone())
                 .postalCode(order.getAddress().getPostalCode())
                 .detailAddress(order.getAddress().getDetailAddress())
                 .createAt(order.getCreatedAt())

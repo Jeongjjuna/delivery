@@ -9,15 +9,18 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
+import java.time.LocalDateTime;
 
 @Entity(name = "food")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "deleted_at IS NULL")
 public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "food_id", updatable = false)
     private Long id;
 
     @Column(name = "name", nullable = false)
@@ -28,6 +31,9 @@ public class Food {
 
     @Column(name = "price", nullable = false)
     private Long price;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
     @Builder
     public Food(final String name, final String foodType, final Long price) {
@@ -41,4 +47,13 @@ public class Food {
         this.foodType = foodType;
         this.price = price;
     }
+
+    public Long calculate(Long quantity) {
+        return price * quantity;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
+    }
+
 }

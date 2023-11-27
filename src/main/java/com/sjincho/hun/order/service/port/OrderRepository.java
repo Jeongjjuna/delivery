@@ -12,7 +12,7 @@ public interface OrderRepository {
 
     Page<Order> findAll(Pageable pageable);
 
-    Page<Order> findAllByOrdererMemberId(final Long memberId, final Pageable pageable);
+    Page<Order> findAllByMemberIdWithMember(final Long memberId, final Pageable pageable);
 
     Page<Order> findAllByOrderStatus(final OrderStatus status, final Pageable pageable);
 

@@ -18,5 +18,5 @@ public interface DeliveryRepository {
 
     void delete(Delivery delivery);
 
-    Optional<Delivery> findByOrderId(Long orderId);
+    Optional<Delivery> findByOrderIdWithOrder(Long orderId);
 }

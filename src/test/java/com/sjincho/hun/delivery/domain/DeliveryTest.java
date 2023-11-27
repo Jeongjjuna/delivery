@@ -6,37 +6,22 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
+import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.domain.Address;
 import com.sjincho.hun.order.domain.Order;
-import com.sjincho.hun.order.domain.OrderLine;
-import com.sjincho.hun.order.domain.Orderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 class DeliveryTest {
 
     private Order order;
-    private Receiver receiver;
 
     @BeforeEach
     void setup() {
-        List<OrderLine> orderLines = new ArrayList<>(Arrays.asList(
-                new OrderLine(1L, 9000L, 2L, "짜장면"),
-                new OrderLine(2L, 8000L, 1L, "짬뽕")
-        ));
         order = Order.builder()
-                .orderLines(orderLines)
                 .address(new Address("123445", "101동 1001호"))
-                .orderer(new Orderer(1L, "010-1111-2222"))
-                .build();
-
-        receiver = Receiver.builder()
-                .memberId(1L)
-                .cellPhone("010-1111-2222")
+                .member(Member.builder().id(1L).cellPhone("010-1111-2222").build())
                 .build();
     }
 
@@ -44,8 +29,7 @@ class DeliveryTest {
     @Test
     void create() {
         assertThatCode(() -> Delivery.builder()
-                .orderId(order.getId())
-                .receiver(receiver)
+                .order(order)
                 .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
                 .deliveryStartedAt(null)
                 .build()
@@ -56,8 +40,7 @@ class DeliveryTest {
     @Test
     void start() {
         Delivery delivery = Delivery.builder()
-                .orderId(order.getId())
-                .receiver(receiver)
+                .order(order)
                 .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
                 .deliveryStartedAt(null)
                 .build();
@@ -71,8 +54,7 @@ class DeliveryTest {
     @Test
     void start_exception() {
         Delivery delivery = Delivery.builder()
-                .orderId(order.getId())
-                .receiver(receiver)
+                .order(order)
                 .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
                 .deliveryStartedAt(null)
                 .build();
@@ -87,8 +69,7 @@ class DeliveryTest {
     @Test
     void complete() {
         Delivery delivery = Delivery.builder()
-                .orderId(order.getId())
-                .receiver(receiver)
+                .order(order)
                 .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
                 .deliveryStartedAt(null)
                 .build();
@@ -103,8 +84,7 @@ class DeliveryTest {
     @Test
     void complete_exception() {
         Delivery delivery = Delivery.builder()
-                .orderId(order.getId())
-                .receiver(receiver)
+                .order(order)
                 .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
                 .deliveryStartedAt(null)
                 .build();

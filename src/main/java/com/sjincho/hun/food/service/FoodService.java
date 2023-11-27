@@ -60,7 +60,9 @@ public class FoodService {
     public void delete(final Long foodId) {
         final Food food = findExistingFood(foodId);
 
-        foodRepository.delete(food);
+        food.delete();
+
+        foodRepository.save(food);
     }
 
     private Food findExistingFood(final Long id) {

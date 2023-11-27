@@ -1,4 +1,4 @@
-package com.sjincho.hun.order.dto;
+package com.sjincho.hun.order.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,8 +25,10 @@ public class OrderRequest {
     private final List<OrderLineRequest> orderLineRequests;
 
     @Builder
-    public OrderRequest(final Long memberId, final String postalCode,
-                        final String detailAddress, final List<OrderLineRequest> orderLineRequests) {
+    public OrderRequest(final Long memberId,
+                        final String postalCode,
+                        final String detailAddress,
+                        final List<OrderLineRequest> orderLineRequests) {
         this.memberId = memberId;
         this.postalCode = postalCode;
         this.detailAddress = detailAddress;

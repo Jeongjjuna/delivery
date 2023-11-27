@@ -12,10 +12,9 @@ import com.sjincho.hun.order.domain.Address;
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderLine;
 import com.sjincho.hun.order.domain.OrderStatus;
-import com.sjincho.hun.order.domain.Orderer;
-import com.sjincho.hun.order.dto.OrderLineRequest;
-import com.sjincho.hun.order.dto.OrderRequest;
-import com.sjincho.hun.order.dto.OrderResponse;
+import com.sjincho.hun.order.dto.request.OrderLineRequest;
+import com.sjincho.hun.order.dto.request.OrderRequest;
+import com.sjincho.hun.order.dto.response.OrderResponse;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotFoundException;
 import com.sjincho.hun.order.service.port.OrderRepository;
@@ -31,7 +30,9 @@ public class OrderService {
     private final FoodRepository foodRepository;
     private final MemberRepository memberRepository;
 
-    public OrderService(final OrderRepository orderRepository, final FoodRepository foodRepository, final MemberRepository memberRepository) {
+    public OrderService(final OrderRepository orderRepository,
+                        final FoodRepository foodRepository,
+                        final MemberRepository memberRepository) {
         this.orderRepository = orderRepository;
         this.foodRepository = foodRepository;
         this.memberRepository = memberRepository;
@@ -40,54 +41,59 @@ public class OrderService {
     public OrderResponse get(final Long orderId) {
         final Order order = findExistingOrder(orderId);
 
-        final Long paymentsAmount = order.calculatePaymentsAmount();
+        // TODO : 지연로딩 체크 -> 엔티티와 모델을 분리할 생각도 해보자.
+        Long paymentAmount = order.calculatePaymentAmount();
 
-        return OrderResponse.from(order, paymentsAmount);
+        // TODO : 응답에 OrderLine 정보도 넣어주면 좋을 것 같다.
+        return OrderResponse.from(order, paymentAmount);
     }
 
     public Page<OrderResponse> getAll(final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAll(pageable);
 
-        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
+        // TODO : order.calculatePaymentAmount() 지연로딩 체크
+        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
     }
 
-    public Page<OrderResponse> getAllByMemberId(final Long id, final Pageable pageable) {
-        final Page<Order> orders = orderRepository.findAllByOrdererMemberId(id, pageable);
+    public Page<OrderResponse> getAllByMemberId(final Long memberId, final Pageable pageable) {
+        // TODO : 지연로딩 체크
+        final Page<Order> orders = orderRepository.findAllByMemberIdWithMember(memberId, pageable);
 
-        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
+        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
     }
 
     public Page<OrderResponse> getAllAcceptingOrder(final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.ACCEPTING, pageable);
 
-        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentsAmount()));
+        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
     }
 
     @Transactional
     public Long order(final OrderRequest request) {
-
+        // 요청 음식이 있는지 검사한다.
         final List<Long> foodIds = request.getOrderLineRequests().stream()
                 .map(orderLineRequest -> orderLineRequest.getFoodId())
                 .toList();
         final List<Food> foods = foodRepository.findAllById(foodIds);
-
         if (foodIds.size() != foods.size()) {
             throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
         }
 
-        final Member orderer = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
+        // 주문한 사람 가져오기.
+        final Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
                 new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
-
-        final List<OrderLine> orderLines = request.getOrderLineRequests().stream()
-                .map(orderLineRequest -> toOrderLine(orderLineRequest, foods))
-                .toList();
-
+        // 오더 생성
         final Order order = Order.builder()
-                .orderLines(orderLines)
                 .address(new Address(request.getPostalCode(), request.getDetailAddress()))
-                .orderer(new Orderer(orderer.getId(), orderer.getCellPhone()))
+                .member(member)
                 .build();
 
+        // 주문 생성하기.
+        request.getOrderLineRequests().stream()
+                .map(orderLineRequest -> toOrderLine(order, orderLineRequest, foods))
+                .toList();
+
+        // 주문 저장 시, List<OrderLine>의 값들도 모두 함께 저장된다.(CascadeType.ALL)
         final Order saved = orderRepository.save(order);
 
         return saved.getId();
@@ -138,14 +144,13 @@ public class OrderService {
                 .orElseThrow(() -> new FoodNotFoundException(FoodErrorCode.NOT_FOUND));
     }
 
-    private OrderLine toOrderLine(OrderLineRequest orderLineRequest, List<Food> foods) {
+    private OrderLine toOrderLine(Order order, OrderLineRequest orderLineRequest, List<Food> foods) {
         Long foodId = orderLineRequest.getFoodId();
-        Food orderFood = findFoodById(foods, foodId);
+        Food food = findFoodById(foods, foodId);
         return OrderLine.builder()
-                .foodId(orderFood.getId())
-                .price(orderFood.getPrice())
+                .order(order)
+                .food(food)
                 .quantity(orderLineRequest.getQuantity())
-                .foodName(orderFood.getName())
                 .build();
     }
 }

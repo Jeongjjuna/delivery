@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum DeliveryStatus {
     READY_FOR_DELIVERY("ready_for_delivery"),
     DELIVERING("delivering"),
-    COMPLETED("completed");
+    COMPLETED("completed"),
+    CANCELED("canceled");
 
     private final String status;
 

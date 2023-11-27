@@ -1,4 +1,4 @@
-package com.sjincho.hun.order.dto;
+package com.sjincho.hun.order.dto.response;
 
 import com.sjincho.hun.order.domain.OrderLine;
 import lombok.Builder;
@@ -8,24 +8,23 @@ import lombok.Getter;
 public class OrderLineResponse {
     private final Long foodId;
     private final Long price;
-    private final Long quantity;
     private final String foodName;
+    private final Long quantity;
 
     @Builder
-    private OrderLineResponse(final Long foodId, final Long price,
-                              final Long quantity, final String foodName) {
+    public OrderLineResponse(final Long foodId, final Long price, final String foodName, final Long quantity) {
         this.foodId = foodId;
         this.price = price;
-        this.quantity = quantity;
         this.foodName = foodName;
+        this.quantity = quantity;
     }
 
     public static OrderLineResponse from(OrderLine orderLine) {
         return OrderLineResponse.builder()
-                .foodId(orderLine.getFoodId())
-                .price(orderLine.getFoodId())
+                .foodId(orderLine.getFood().getId())
+                .price(orderLine.getFood().getPrice())
+                .foodName(orderLine.getFood().getName())
                 .quantity(orderLine.getQuantity())
-                .foodName(orderLine.getFoodName())
                 .build();
     }
 }

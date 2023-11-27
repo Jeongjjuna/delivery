@@ -78,7 +78,9 @@ public class MemberService {
     public void delete(final Long memberId) {
         final Member member = findExistingMember(memberId);
 
-        memberRepository.delete(member);
+        member.delete();
+
+        memberRepository.save(member);
     }
 
     private void checkDuplicatedEmail(final String email) {

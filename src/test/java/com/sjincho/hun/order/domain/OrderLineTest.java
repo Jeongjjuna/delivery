@@ -3,6 +3,7 @@ package com.sjincho.hun.order.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
+import com.sjincho.hun.food.domain.Food;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -12,10 +13,10 @@ class OrderLineTest {
     @Test
     void create() {
         assertThatCode(() -> OrderLine.builder()
-                .foodId(1L)
-                .price(8000L)
+                .order(Order.builder().build())
+                .food(Food.builder().price(8000L).build())
                 .quantity(2L)
-                .foodName("짜장면").build()
+                .build()
         ).doesNotThrowAnyException();
     }
 
@@ -23,10 +24,10 @@ class OrderLineTest {
     @Test
     void calculatePayment() {
         OrderLine orderLine = OrderLine.builder()
-                .foodId(1L)
-                .price(8000L)
+                .order(Order.builder().build())
+                .food(Food.builder().price(8000L).build())
                 .quantity(2L)
-                .foodName("짜장면").build();
+                .build();
 
         Long payments = orderLine.calculatePayment();
 
