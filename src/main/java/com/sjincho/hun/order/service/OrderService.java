@@ -41,22 +41,18 @@ public class OrderService {
     public OrderResponse get(final Long orderId) {
         final Order order = findExistingOrder(orderId);
 
-        // TODO : 지연로딩 체크 -> 엔티티와 모델을 분리할 생각도 해보자.
         Long paymentAmount = order.calculatePaymentAmount();
 
-        // TODO : 응답에 OrderLine 정보도 넣어주면 좋을 것 같다.
         return OrderResponse.from(order, paymentAmount);
     }
 
     public Page<OrderResponse> getAll(final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAll(pageable);
 
-        // TODO : order.calculatePaymentAmount() 지연로딩 체크
         return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
     }
 
     public Page<OrderResponse> getAllByMemberId(final Long memberId, final Pageable pageable) {
-        // TODO : 지연로딩 체크
         final Page<Order> orders = orderRepository.findAllByMemberIdWithMember(memberId, pageable);
 
         return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
@@ -70,7 +66,6 @@ public class OrderService {
 
     @Transactional
     public Long order(final OrderRequest request) {
-        // 요청 음식이 있는지 검사한다.
         final List<Long> foodIds = request.getOrderLineRequests().stream()
                 .map(orderLineRequest -> orderLineRequest.getFoodId())
                 .toList();
@@ -79,21 +74,18 @@ public class OrderService {
             throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
         }
 
-        // 주문한 사람 가져오기.
         final Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
                 new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
-        // 오더 생성
+
         final Order order = Order.builder()
                 .address(new Address(request.getPostalCode(), request.getDetailAddress()))
                 .member(member)
                 .build();
 
-        // 주문 생성하기.
         request.getOrderLineRequests().stream()
                 .map(orderLineRequest -> toOrderLine(order, orderLineRequest, foods))
                 .toList();
 
-        // 주문 저장 시, List<OrderLine>의 값들도 모두 함께 저장된다.(CascadeType.ALL)
         final Order saved = orderRepository.save(order);
 
         return saved.getId();
