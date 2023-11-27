@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum AuthErrorCode {
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "[ERROR] Password Invalid"),
-    AUTHORIZATION_HEADER_NULL(HttpStatus.UNAUTHORIZED, "[ERROR] Header Authorization Is Null"),
-    INVALID_BEARER(HttpStatus.UNAUTHORIZED, "[ERROR] Not Bearer"),
-    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "[ERROR] Token Is Expired");
+    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "[ERROR] Password Invalid"),
+    MISSING_AUTHORIZATION_HEADER(HttpStatus.UNAUTHORIZED, "[ERROR] Authorization Header Is Null"),
+    INVALID_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Not Bearer"),
+    EXPIRED_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Token Is Expired");
 
     private final HttpStatus status;
     private final String message;

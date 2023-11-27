@@ -67,7 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private void checkTokenExpired(final String jwtToken) {
         if (jwtTokenProvider.isExpired(jwtToken)) {
-            throw new TokenExpiredException(AuthErrorCode.TOKEN_EXPIRED);
+            throw new TokenExpiredException(AuthErrorCode.EXPIRED_AUTHENTICATION_TOKEN);
         }
     }
 
@@ -75,13 +75,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             Objects.requireNonNull(header);
         } catch (NullPointerException e) {
-            throw new AuthorizationHeaderNullException(AuthErrorCode.AUTHORIZATION_HEADER_NULL);
+            throw new AuthorizationHeaderNullException(AuthErrorCode.MISSING_AUTHORIZATION_HEADER);
         }
     }
 
     private void checkBearer(final String authorizationHeader) {
         if (!authorizationHeader.startsWith("Bearer ")) {
-            throw new NotBearerAuthorizationException(AuthErrorCode.INVALID_BEARER);
+            throw new NotBearerAuthorizationException(AuthErrorCode.INVALID_AUTHENTICATION_TOKEN);
         }
     }
 
