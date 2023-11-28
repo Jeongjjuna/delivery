@@ -4,6 +4,7 @@ import com.sjincho.hun.member.dto.MemberCreateRequest;
 import com.sjincho.hun.member.dto.MemberResponse;
 import com.sjincho.hun.member.dto.MemberUpdateRequest;
 import com.sjincho.hun.member.service.MemberService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/members")
+@Tag(name = "member-controller", description = "회원 서비스")
 public class MemberController {
     private final MemberService memberService;
 

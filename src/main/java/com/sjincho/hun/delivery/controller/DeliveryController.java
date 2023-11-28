@@ -3,6 +3,7 @@ package com.sjincho.hun.delivery.controller;
 import com.sjincho.hun.delivery.dto.DeliveryRequest;
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.service.DeliveryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/deliveries")
+@Tag(name = "delivery-controller", description = "배달 서비스")
 public class DeliveryController {
     private final DeliveryService deliveryService;
 

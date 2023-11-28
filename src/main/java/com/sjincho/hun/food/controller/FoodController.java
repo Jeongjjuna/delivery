@@ -4,6 +4,7 @@ import com.sjincho.hun.food.dto.FoodCreateRequest;
 import com.sjincho.hun.food.dto.FoodResponse;
 import com.sjincho.hun.food.dto.FoodUpdateRequest;
 import com.sjincho.hun.food.service.FoodService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/foods")
+@Tag(name = "food-controller", description = "음식상품 서비스")
 public class FoodController {
     private final FoodService foodService;
 

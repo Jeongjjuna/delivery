@@ -4,6 +4,7 @@ import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.dto.request.OrderRequest;
 import com.sjincho.hun.order.dto.response.OrderResponse;
 import com.sjincho.hun.order.service.OrderService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,6 +20,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/orders")
+@Tag(name = "order-controller", description = "주문 서비스")
 public class OrderController {
     private final OrderService orderService;
 
