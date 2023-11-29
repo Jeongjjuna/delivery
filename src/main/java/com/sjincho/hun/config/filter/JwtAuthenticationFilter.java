@@ -53,13 +53,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            log.info("jwt 인증 필터를 통과하였습니다.");
         } catch (AuthorizationHeaderNullException e) {
-            request.setAttribute("exception", e);
+            request.setAttribute("JwtAuthenticationFilterException", e);
         } catch (NotBearerAuthorizationException e) {
-            request.setAttribute("exception", e);
+            request.setAttribute("JwtAuthenticationFilterException", e);
         } catch (TokenExpiredException e) {
-            request.setAttribute("exception", e);
+            request.setAttribute("JwtAuthenticationFilterException", e);
         } finally {
             filterChain.doFilter(request, response);
         }

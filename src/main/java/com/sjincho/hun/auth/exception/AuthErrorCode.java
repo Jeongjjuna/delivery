@@ -8,7 +8,8 @@ public enum AuthErrorCode {
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "[ERROR] Password Invalid"),
     MISSING_AUTHORIZATION_HEADER(HttpStatus.UNAUTHORIZED, "[ERROR] Authorization Header Is Null"),
     INVALID_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Not Bearer"),
-    EXPIRED_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Token Is Expired");
+    EXPIRED_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Token Is Expired"),
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "[ERROR] Access Denied");
 
     private final HttpStatus status;
     private final String message;
