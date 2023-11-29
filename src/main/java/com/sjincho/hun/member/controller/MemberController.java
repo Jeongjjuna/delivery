@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<MemberResponse> get(@PathVariable final Long memberId) {
         final MemberResponse response = memberService.get(memberId);
 
@@ -37,6 +39,7 @@ public class MemberController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<MemberResponse>> getAll(final Pageable pageable) {
         final Page<MemberResponse> responses = memberService.getAll(pageable);
 
@@ -51,6 +54,7 @@ public class MemberController {
     }
 
     @PutMapping("/{memberId}")
+    @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<MemberResponse> update(
             @PathVariable final Long memberId,
             @Valid @RequestBody final MemberUpdateRequest request) {
@@ -60,6 +64,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{memberId}")
+    @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<Void> delete(@PathVariable final Long memberId) {
         memberService.delete(memberId);
         return ResponseEntity.ok().build();

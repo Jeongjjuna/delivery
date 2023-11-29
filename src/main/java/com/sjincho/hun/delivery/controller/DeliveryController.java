@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,6 +30,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/{deliveryId}")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<DeliveryResponse> get(@PathVariable final Long deliveryId) {
         final DeliveryResponse response = deliveryService.get(deliveryId);
 
@@ -36,6 +38,7 @@ public class DeliveryController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<DeliveryResponse>> getAll(final Pageable pageable) {
         final Page<DeliveryResponse> responses = deliveryService.getAll(pageable);
 
@@ -43,6 +46,7 @@ public class DeliveryController {
     }
 
     @GetMapping("/delivering")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<DeliveryResponse>> getAllDelivering(final Pageable pageable) {
         final Page<DeliveryResponse> responses = deliveryService.getAllDelivering(pageable);
 
@@ -50,6 +54,7 @@ public class DeliveryController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Void> resister(@Valid @RequestBody final DeliveryRequest request) {
         final Long deliveryId = deliveryService.resister(request);
 
@@ -57,6 +62,7 @@ public class DeliveryController {
     }
 
     @PatchMapping("/{deliveryId}/start")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<DeliveryResponse> startDelivery(@PathVariable final Long deliveryId) {
         deliveryService.startDelivery(deliveryId);
 
@@ -64,6 +70,7 @@ public class DeliveryController {
     }
 
     @PatchMapping("/{deliveryId}/complete")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<DeliveryResponse> completeDelivery(@PathVariable final Long deliveryId) {
         deliveryService.completeDelivery(deliveryId);
 
@@ -71,6 +78,7 @@ public class DeliveryController {
     }
 
     @DeleteMapping("/{deliveryId}")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Void> delete(@PathVariable final Long deliveryId) {
         deliveryService.delete(deliveryId);
         return ResponseEntity.ok().build();

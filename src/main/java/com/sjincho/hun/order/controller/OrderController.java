@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ public class OrderController {
     }
 
     @GetMapping("/{orderId}")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<OrderResponse> get(@PathVariable final Long orderId) {
         final OrderResponse response = orderService.get(orderId);
 
@@ -36,6 +38,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderResponse>> getAll(final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAll(pageable);
 
@@ -43,6 +46,7 @@ public class OrderController {
     }
 
     @GetMapping("/members/{orderId}")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long orderId, final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAllByMemberId(orderId, pageable);
 
@@ -50,6 +54,7 @@ public class OrderController {
     }
 
     @GetMapping("/accepting")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderResponse>> getAllAcceptingOrder(final Pageable pageable) {
         final Page<OrderResponse> responses = orderService.getAllAcceptingOrder(pageable);
 
@@ -57,13 +62,23 @@ public class OrderController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('customer')")
     public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest request) {
         final Long orderId = orderService.order(request);
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();
     }
 
+    @PatchMapping("/{orderId}/cancel")
+    @PreAuthorize("hasAnyAuthority('customer')")
+    public ResponseEntity<OrderStatus> cancelOrder(@PathVariable final Long orderId) {
+        final OrderStatus response = orderService.cancelOrder(orderId);
+
+        return ResponseEntity.ok(response);
+    }
+
     @PatchMapping("/{orderId}/accept")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<OrderStatus> approveOrder(@PathVariable final Long orderId) {
         final OrderStatus response = orderService.approveOrder(orderId);
 
@@ -71,15 +86,9 @@ public class OrderController {
     }
 
     @PatchMapping("/{orderId}/reject")
+    @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<OrderStatus> rejectOrder(@PathVariable final Long orderId) {
         final OrderStatus response = orderService.rejectOrder(orderId);
-
-        return ResponseEntity.ok(response);
-    }
-
-    @PatchMapping("/{orderId}/cancel")
-    public ResponseEntity<OrderStatus> cancelOrder(@PathVariable final Long orderId) {
-        final OrderStatus response = orderService.cancelOrder(orderId);
 
         return ResponseEntity.ok(response);
     }

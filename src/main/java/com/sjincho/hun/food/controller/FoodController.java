@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ public class FoodController {
     }
 
     @GetMapping("/{foodId}")
+    @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<FoodResponse> get(@PathVariable final Long foodId) {
         final FoodResponse response = foodService.get(foodId);
 
@@ -37,6 +39,7 @@ public class FoodController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<Page<FoodResponse>> getAll(final Pageable pageable) {
         final Page<FoodResponse> responses = foodService.getAll(pageable);
 
@@ -44,6 +47,7 @@ public class FoodController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('owner')")
     public ResponseEntity<Void> resister(@Valid @RequestBody final FoodCreateRequest food) {
         final Long foodId = foodService.register(food);
 
@@ -51,6 +55,7 @@ public class FoodController {
     }
 
     @PutMapping("/{foodId}")
+    @PreAuthorize("hasAuthority('owner')")
     public ResponseEntity<FoodResponse> update(
             @PathVariable final Long foodId,
             @Valid @RequestBody final FoodUpdateRequest food) {
@@ -60,6 +65,7 @@ public class FoodController {
     }
 
     @DeleteMapping("/{foodId}")
+    @PreAuthorize("hasAuthority('owner')")
     public ResponseEntity<Void> delete(@PathVariable final Long foodId) {
         foodService.delete(foodId);
         return ResponseEntity.ok().build();
