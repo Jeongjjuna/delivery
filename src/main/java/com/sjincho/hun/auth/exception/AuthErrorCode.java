@@ -10,7 +10,7 @@ public enum AuthErrorCode {
     INVALID_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Not Bearer"),
     EXPIRED_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Token Is Expired"),
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "[ERROR] Access Denied"),
-    UNKNOWN_AUTHENTICATION_EXCEPTION(HttpStatus.UNAUTHORIZED, "[ERROR] Unknown jwt filter authentication error");
+    UNKNOWN_AUTHENTICATION_EXCEPTION(HttpStatus.UNAUTHORIZED, "[ERROR] Unknown Jwt Filter Authentication Error");
 
     private final HttpStatus status;
     private final String message;

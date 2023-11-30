@@ -2,6 +2,7 @@ package com.sjincho.hun.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,5 +28,13 @@ public class GlobalControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.getReasonPhrase(), fieldError.getDefaultMessage()));
+    }
+
+    /*
+     권한 인증중에 발생한 에러는 auth패키지의 CustomAccessDeniedHandle가 핸들링할 수 있도록 던져줍니다.
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public void throwAccessDeniedException(final AccessDeniedException e) {
+        throw e;
     }
 }
