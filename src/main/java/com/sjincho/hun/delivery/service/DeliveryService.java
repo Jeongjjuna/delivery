@@ -1,15 +1,13 @@
 package com.sjincho.hun.delivery.service;
 
-import com.sjincho.hun.delivery.dto.DeliveryRequest;
 import com.sjincho.hun.delivery.domain.Delivery;
+import com.sjincho.hun.delivery.domain.DeliveryStatus;
+import com.sjincho.hun.delivery.dto.DeliveryRequest;
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.exception.DeliveryAlreadyRegisterException;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotFoundException;
 import com.sjincho.hun.delivery.service.port.DeliveryRepository;
-import com.sjincho.hun.member.domain.Member;
-import com.sjincho.hun.member.exception.MemberErrorCode;
-import com.sjincho.hun.member.exception.MemberNotFoundException;
 import com.sjincho.hun.member.service.port.MemberRepository;
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.exception.OrderErrorCode;
@@ -46,21 +44,29 @@ public class DeliveryService {
         return deliveries.map(delivery -> DeliveryResponse.from(delivery));
     }
 
+    public Page<DeliveryResponse> getAllDelivering(final Pageable pageable) {
+        final Page<Delivery> deliveries = deliveryRepository.findAllByDeliveryStatus(
+                DeliveryStatus.DELIVERING, pageable);
+
+        return deliveries.map(delivery -> DeliveryResponse.from(delivery));
+    }
+
     @Transactional
     public Long resister(final DeliveryRequest request) {
         Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() ->
                 new OrderNotFoundException(OrderErrorCode.NOT_FOUND, request.getOrderId()));
 
-
-        Member receiver = memberRepository.findById(order.getOrderer().getMemberId()).orElseThrow(() ->
-                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, order.getOrderer().getMemberId()));
-
-        deliveryRepository.findByOrderId(request.getOrderId())
+        deliveryRepository.findByOrderIdWithOrder(order.getId())
                 .ifPresent(delivery -> {
-                    throw new DeliveryAlreadyRegisterException(DeliveryErrorCode.NOT_READY_REGISTERED, request.getOrderId());
+                    throw new DeliveryAlreadyRegisterException(DeliveryErrorCode.ALREADY_REGISTERED, request.getOrderId());
                 });
 
-        Delivery delivery = Delivery.create(order, receiver);
+        // TODO : 배달 생성을 위해 order -> member 지연로딩 체크
+        final Delivery delivery = Delivery.builder()
+                .order(order)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
 
         final Delivery saved = deliveryRepository.save(delivery);
 
@@ -89,12 +95,13 @@ public class DeliveryService {
     public void delete(final Long deliveryId) {
         final Delivery delivery = findExistingDelivery(deliveryId);
 
-        deliveryRepository.delete(delivery);
+        delivery.delete();
+
+        deliveryRepository.save(delivery);
     }
 
     private Delivery findExistingDelivery(final Long id) {
         return deliveryRepository.findById(id).orElseThrow(() ->
                 new DeliveryNotFoundException(DeliveryErrorCode.NOT_FOUND, id));
     }
-
 }

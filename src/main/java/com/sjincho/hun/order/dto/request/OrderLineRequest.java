@@ -1,9 +1,10 @@
-package com.sjincho.hun.order.dto;
+package com.sjincho.hun.order.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -16,12 +17,9 @@ public class OrderLineRequest {
     @Positive(message = "주문상품 수량은 1보다 같거나 커야합니다.")
     private final Long quantity;
 
+    @Builder
     public OrderLineRequest(final Long foodId, final Long quantity) {
         this.foodId = foodId;
         this.quantity = quantity;
-    }
-
-    public static OrderLineRequest from(final Long foodId, final Long quantity) {
-        return new OrderLineRequest(foodId, quantity);
     }
 }

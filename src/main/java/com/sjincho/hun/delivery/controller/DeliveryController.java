@@ -40,6 +40,13 @@ public class DeliveryController {
         return ResponseEntity.ok(responses);
     }
 
+    @GetMapping("/delivering")
+    public ResponseEntity<Page<DeliveryResponse>> getAllDelivering(final Pageable pageable) {
+        final Page<DeliveryResponse> responses = deliveryService.getAllDelivering(pageable);
+
+        return ResponseEntity.ok(responses);
+    }
+
     @PostMapping
     public ResponseEntity<Void> resister(@Valid @RequestBody final DeliveryRequest request) {
         final Long deliveryId = deliveryService.resister(request);

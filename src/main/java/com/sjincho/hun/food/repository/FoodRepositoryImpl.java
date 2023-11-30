@@ -5,6 +5,7 @@ import com.sjincho.hun.food.service.port.FoodRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -26,6 +27,11 @@ public class FoodRepositoryImpl implements FoodRepository {
     }
 
     @Override
+    public List<Food> findAllById(final List<Long> Ids) {
+        return foodJpaRepository.findAllById(Ids);
+    }
+
+    @Override
     public Food save(final Food food) {
         return foodJpaRepository.save(food);
     }
@@ -34,4 +40,5 @@ public class FoodRepositoryImpl implements FoodRepository {
     public void delete(final Food food) {
         foodJpaRepository.delete(food);
     }
+
 }

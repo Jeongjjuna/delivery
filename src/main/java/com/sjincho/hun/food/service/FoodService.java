@@ -34,7 +34,11 @@ public class FoodService {
 
     @Transactional
     public Long register(final FoodCreateRequest request) {
-        final Food food = Food.create(request.getName(), request.getFoodType(), request.getPrice());
+        final Food food = Food.builder()
+                .name(request.getName())
+                .foodType(request.getFoodType())
+                .price(request.getPrice())
+                .build();
 
         final Food saved = foodRepository.save(food);
 
@@ -56,7 +60,9 @@ public class FoodService {
     public void delete(final Long foodId) {
         final Food food = findExistingFood(foodId);
 
-        foodRepository.delete(food);
+        food.delete();
+
+        foodRepository.save(food);
     }
 
     private Food findExistingFood(final Long id) {

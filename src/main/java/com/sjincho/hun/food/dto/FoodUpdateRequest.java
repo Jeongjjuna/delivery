@@ -3,6 +3,7 @@ package com.sjincho.hun.food.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -18,6 +19,7 @@ public class FoodUpdateRequest {
     @PositiveOrZero(message = "음식상품 가격은 0보다 같거나 커야합니다.")
     private final Long price;
 
+    @Builder
     public FoodUpdateRequest(final String name, final String foodType, final Long price) {
         this.name = name;
         this.foodType = foodType;

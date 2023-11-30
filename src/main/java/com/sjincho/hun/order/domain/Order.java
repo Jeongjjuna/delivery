@@ -1,10 +1,10 @@
 package com.sjincho.hun.order.domain;
 
+import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotAcceptingException;
-import jakarta.persistence.CollectionTable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,10 +14,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "orders")
@@ -27,55 +31,32 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "order_id", updatable = false)
     private Long id;
-
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "order_foods", joinColumns =
-    @JoinColumn(name = "orders_id")
-    )
-    private List<OrderLine> orderLines;
 
     @Embedded
     private Address address;
 
-    @Embedded
-    private Orderer orderer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<OrderLine> orderLines = new ArrayList<>();
 
     @Column(name = "create_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    public Order(final List<OrderLine> orderLines, final Address address,
-                 final Orderer orderer, final LocalDateTime createdAt,
-                 final OrderStatus orderStatus) {
-        this.orderLines = orderLines;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Order(final Address address, final Member member) {
         this.address = address;
-        this.orderer = orderer;
-        this.createdAt = createdAt;
-        this.orderStatus = orderStatus;
-    }
-
-    public static Order create(final Long memberId, final String cellPhone,
-                               final String postalCode, final String detailAddress,
-                               final List<OrderLine> orderLines) {
-        return new Order(
-                orderLines,
-                new Address(postalCode, detailAddress),
-                new Orderer(memberId, cellPhone),
-                LocalDateTime.now(),
-                OrderStatus.ACCEPTING
-        );
-    }
-
-    public Long calculatePaymentsAmount() {
-        return orderLines.stream()
-                .map(OrderLine::calculatePayment)
-                .reduce(Long::sum)
-                .get();
+        this.member = member;
+        this.createdAt = LocalDateTime.now();
+        this.orderStatus = OrderStatus.ACCEPTING;
     }
 
     public void approve() {
@@ -101,5 +82,16 @@ public class Order {
         }
 
         throw new OrderNotAcceptingException(OrderErrorCode.NOT_ACCEPTING);
+    }
+
+    public Long calculatePaymentAmount() {
+        return orderLines.stream()
+                .map(OrderLine::calculatePayment)
+                .mapToLong(Long::longValue)
+                .sum();
+    }
+
+    public void addOrderLine(OrderLine orderLine) {
+        orderLines.add(orderLine);
     }
 }

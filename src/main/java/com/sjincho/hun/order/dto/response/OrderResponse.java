@@ -1,7 +1,8 @@
-package com.sjincho.hun.order.dto;
+package com.sjincho.hun.order.dto.response;
 
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderStatus;
+import lombok.Builder;
 import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,11 +20,12 @@ public class OrderResponse {
     private final Long paymentAmount;
     private final OrderStatus orderStatus;
 
-    public OrderResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
-                         final Long ordererId, final String ordererCellPhone,
-                         final String postalCode, final String detailAddress,
-                         final LocalDateTime createAt, final Long paymentAmount,
-                         final OrderStatus orderStatus) {
+    @Builder
+    private OrderResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
+                          final Long ordererId, final String ordererCellPhone,
+                          final String postalCode, final String detailAddress,
+                          final LocalDateTime createAt, final Long paymentAmount,
+                          final OrderStatus orderStatus) {
         this.id = id;
         this.orderLineResponses = orderLineResponses;
         this.ordererId = ordererId;
@@ -37,24 +39,19 @@ public class OrderResponse {
 
     public static OrderResponse from(final Order order, final Long paymentAmount) {
         final List<OrderLineResponse> orderLineResponses = order.getOrderLines().stream()
-                .map(line -> OrderLineResponse.from(
-                        line.getFoodId(),
-                        line.getPrice(),
-                        line.getQuantity(),
-                        line.getFoodName()
-                ))
+                .map(OrderLineResponse::from)
                 .collect(Collectors.toList());
 
-        return new OrderResponse(
-                order.getId(),
-                orderLineResponses,
-                order.getId(),
-                order.getOrderer().getCellPhone(),
-                order.getAddress().getPostalCode(),
-                order.getAddress().getDetailAddress(),
-                order.getCreatedAt(),
-                paymentAmount,
-                order.getOrderStatus()
-        );
+        return OrderResponse.builder()
+                .id(order.getId())
+                .orderLineResponses(orderLineResponses)
+                .ordererId(order.getMember().getId())
+                .ordererCellPhone(order.getMember().getCellPhone())
+                .postalCode(order.getAddress().getPostalCode())
+                .detailAddress(order.getAddress().getDetailAddress())
+                .createAt(order.getCreatedAt())
+                .paymentAmount(paymentAmount)
+                .orderStatus(order.getOrderStatus())
+                .build();
     }
 }

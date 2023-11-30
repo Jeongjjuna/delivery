@@ -1,6 +1,7 @@
 package com.sjincho.hun.delivery.repository;
 
 import com.sjincho.hun.delivery.domain.Delivery;
+import com.sjincho.hun.delivery.domain.DeliveryStatus;
 import com.sjincho.hun.delivery.service.port.DeliveryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +22,18 @@ public class DeliveryRepositoryImpl implements DeliveryRepository {
     }
 
     @Override
-    public Optional<Delivery> findByOrderId(final Long orderId) {
-        return deliveryJpaRepository.findByOrderId(orderId);
+    public Optional<Delivery> findByOrderIdWithOrder(final Long orderId) {
+        return deliveryJpaRepository.findByOrderIdWithOrder(orderId);
     }
 
     @Override
     public Page<Delivery> findAll(final Pageable pageable) {
         return deliveryJpaRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<Delivery> findAllByDeliveryStatus(final DeliveryStatus deliveryStatus, final Pageable pageable) {
+        return deliveryJpaRepository.findAllByDeliveryStatus(deliveryStatus, pageable);
     }
 
     @Override

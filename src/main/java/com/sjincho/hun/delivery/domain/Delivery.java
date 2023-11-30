@@ -3,17 +3,19 @@ package com.sjincho.hun.delivery.domain;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
-import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.domain.Order;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
@@ -25,17 +27,12 @@ public class Delivery {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
+    @Column(name = "delivery_id", updatable = false)
     private Long id;
 
-    @Column(name = "orders_id", nullable = false)
-    private Long orderId;
-
-    @Embedded
-    private Receiver receiver;
-
-    @Embedded
-    private Address address;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     @Column(name = "delivery_status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -44,22 +41,11 @@ public class Delivery {
     @Column(name = "delivery_started_at")
     private LocalDateTime deliveryStartedAt;
 
-    public Delivery(final Long orderId, final Receiver receiver, final Address address, final DeliveryStatus deliveryStatus, final LocalDateTime deliveryStartedAt) {
-        this.orderId = orderId;
-        this.receiver = receiver;
-        this.address = address;
+    @Builder
+    public Delivery(final Order order, final DeliveryStatus deliveryStatus, final LocalDateTime deliveryStartedAt) {
+        this.order = order;
         this.deliveryStatus = deliveryStatus;
         this.deliveryStartedAt = deliveryStartedAt;
-    }
-
-    public static Delivery create(final Order order, final Member receiver) {
-        return new Delivery(
-                order.getId(),
-                new Receiver(receiver.getId(), receiver.getCellPhone()),
-                new Address(order.getAddress().getPostalCode(), order.getAddress().getDetailAddress()),
-                DeliveryStatus.READY_FOR_DELIVERY,
-                null
-        );
     }
 
     public void start() {
@@ -77,6 +63,14 @@ public class Delivery {
             return;
         }
         throw new DeliveryNotDeliveringException(DeliveryErrorCode.NOT_DELIVERING_STATUS, id);
+    }
+
+    public void delete() {
+        if (isReadyStatus()) {
+            changeDeliveryStatus(DeliveryStatus.CANCELED);
+            return;
+        }
+        throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS);
     }
 
     private boolean isDeliveringStatus() {

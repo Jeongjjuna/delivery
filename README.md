@@ -34,6 +34,7 @@ URL / HTTP Method
 - 배달 시작 - `PATCH /deliveries/{id}/start` - 판매점
 - 배달 취소 - `DELETE /deliveries/{id}` - 판매점
 - 배달 완료 - `PATCH/deliveries/{id}/complete` - 판매점
+- 현재 배달중인 모든 배달 조회 - `GET /deliveries/delivering` - 판매점
 
 
 ---

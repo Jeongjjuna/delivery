@@ -2,6 +2,7 @@ package com.sjincho.hun.member.dto;
 
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.domain.MemberRole;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -12,9 +13,9 @@ public class MemberResponse {
     private final String cellPhone;
     private final MemberRole memberRole;
 
-    public MemberResponse(final Long id, final String name,
-                          final String email, final String cellPhone,
-                          final MemberRole memberRole) {
+    @Builder
+    private MemberResponse(final Long id, final String name, final String email,
+                           final String cellPhone, final MemberRole memberRole) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -23,12 +24,12 @@ public class MemberResponse {
     }
 
     public static MemberResponse from(final Member member) {
-        return new MemberResponse(
-                member.getId(),
-                member.getName(),
-                member.getEmail(),
-                member.getCellPhone(),
-                member.getMemberRole()
-        );
+        return MemberResponse.builder()
+                .id(member.getId())
+                .name(member.getName())
+                .email(member.getEmail())
+                .cellPhone(member.getCellPhone())
+                .memberRole(member.getMemberRole())
+                .build();
     }
 }

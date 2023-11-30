@@ -28,8 +28,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Page<Order> findAllByOrdererMemberId(final Long memberId, final Pageable pageable) {
-        return orderJpaRepository.findAllByOrdererMemberId(memberId, pageable);
+    public Page<Order> findAllByMemberIdWithMember(final Long memberId, final Pageable pageable) {
+        return orderJpaRepository.findAllByMemberIdWithMember(memberId, pageable);
     }
 
     @Override

@@ -1,47 +1,49 @@
 package com.sjincho.hun.order.domain;
 
+import com.sjincho.hun.food.domain.Food;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Embeddable
+@Entity(name = "order_line")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderLine {
 
-    @Column(name = "food_id", nullable = false)
-    private Long foodId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_line_id", updatable = false)
+    private Long id;
 
-    @Column(name = "price", nullable = false)
-    private Long price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "food_id", nullable = false)
+    private Food food;
 
     @Column(name = "quantity", nullable = false)
     private Long quantity;
 
-    @Column(name = "food_name", nullable = false)
-    private String foodName;
-
-    public OrderLine(final Long foodId, final Long price,
-                     final Long quantity, final String foodName) {
-        this.foodId = foodId;
-        this.price = price;
+    @Builder
+    public OrderLine(final Order order, final Food food, final Long quantity) {
+        this.order = order;
+        this.food = food;
         this.quantity = quantity;
-        this.foodName = foodName;
-    }
-
-    public static OrderLine create(final Long foodId, final Long price,
-                                   final Long quantity, final String foodName) {
-        return new OrderLine(
-                foodId,
-                price,
-                quantity,
-                foodName
-        );
+        order.addOrderLine(this);
     }
 
     public Long calculatePayment() {
-        return price*quantity;
+        return food.calculate(quantity);
     }
 }

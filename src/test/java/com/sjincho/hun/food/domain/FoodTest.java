@@ -12,8 +12,12 @@ class FoodTest {
     @DisplayName("Food 도메인 생성 테스트")
     @Test
     void create() {
-        assertThatCode(() -> Food.create("짜장면", "중식", 9000L))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build()
+        ).doesNotThrowAnyException();
     }
 
     @DisplayName("Food 도메인 수정 테스트")

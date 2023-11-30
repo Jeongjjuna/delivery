@@ -1,12 +1,26 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/delivery-database
-    username: root
-    password: root1234
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
+    properties:
+      hibernate:
+        show_sql: true
+#        format_sql: true
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: create
   sql:
     init:
       mode: always
+
+logging:
+  level:
+    org:
+      springframework:
+        web: DEBUG
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  accessToken.expired-time-ms: ${ACCESS_TOKEN_EXPIRED_TIME_MS}

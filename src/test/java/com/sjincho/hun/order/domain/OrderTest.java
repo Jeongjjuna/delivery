@@ -4,47 +4,47 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.sjincho.hun.food.domain.Food;
+import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.exception.OrderNotAcceptingException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 class OrderTest {
 
-    private List<OrderLine> orderLines;
-
     private Order createtTestOrder() {
-        return Order.create(
-                1L, "010-1111-2222",
-                "123445", "101동 1001호", orderLines);
-    }
-
-    @BeforeEach
-    void setup() {
-        orderLines = new ArrayList<>(Arrays.asList(
-                new OrderLine(1L, 9000L, 2L, "짜장면"),
-                new OrderLine(2L, 8000L, 1L, "짬뽕")
-        ));
+        return Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(Member.builder().id(1L).cellPhone("010-1111-2222").build())
+                .build();
     }
 
     @DisplayName("Order 도메인 생성 테스트")
     @Test
     void create() {
-        assertThatCode(() -> Order.create(
-                1L, "010-1111-2222",
-                "123445", "101동 1001호", orderLines))
-                .doesNotThrowAnyException();
+        assertThatCode(() -> Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(Member.builder().id(1L).cellPhone("010-1111-2222").build())
+                .build()
+        ).doesNotThrowAnyException();
     }
 
     @DisplayName("Order 전체 주문 금액 계산 테스트")
     @Test
-    void calculatePaymentsAmount() {
+    void calculatePaymentAmount() {
         Order order = createtTestOrder();
+        OrderLine.builder()
+                .order(order)
+                .food(Food.builder().price(6000L).build())
+                .quantity(2L)
+                .build();
+        OrderLine.builder()
+                .order(order)
+                .food(Food.builder().price(7000L).build())
+                .quantity(2L)
+                .build();
 
-        Long totalPayments = order.calculatePaymentsAmount();
+        Long totalPayments = order.calculatePaymentAmount();
 
         assertThat(totalPayments).isEqualTo(26000L);
     }
