@@ -31,14 +31,14 @@ public class AuthService {
         Member member = memberRepository.findByEmail(email).orElseThrow(() ->
                 new MemberNotFoundException(MemberErrorCode.NOT_FOUND, email));
 
-        checkPassword(password, member);
+        if (isPasswordMatching(password, member)) {
+            return jwtTokenProvider.generate(member.getName(), member.getEmail());
+        }
 
-        return jwtTokenProvider.generate(member.getName(), member.getEmail());
+        throw new PasswordInvalidException(AuthErrorCode.INVALID_PASSWORD);
     }
 
-    private void checkPassword(String password, Member member) {
-        if (!encoder.matches(password, member.getPassword())) {
-            throw new PasswordInvalidException(AuthErrorCode.INVALID_PASSWORD);
-        }
+    private boolean isPasswordMatching(String inputPassword, Member member) {
+        return encoder.matches(inputPassword, member.getPassword());
     }
 }
