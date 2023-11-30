@@ -9,7 +9,8 @@ public enum AuthErrorCode {
     MISSING_AUTHORIZATION_HEADER(HttpStatus.UNAUTHORIZED, "[ERROR] Authorization Header Is Null"),
     INVALID_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Not Bearer"),
     EXPIRED_AUTHENTICATION_TOKEN(HttpStatus.UNAUTHORIZED, "[ERROR] Token Is Expired"),
-    ACCESS_DENIED(HttpStatus.FORBIDDEN, "[ERROR] Access Denied");
+    ACCESS_DENIED(HttpStatus.FORBIDDEN, "[ERROR] Access Denied"),
+    UNKNOWN_AUTHENTICATION_EXCEPTION(HttpStatus.UNAUTHORIZED, "[ERROR] Unknown jwt filter authentication error");
 
     private final HttpStatus status;
     private final String message;

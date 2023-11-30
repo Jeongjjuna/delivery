@@ -28,5 +28,4 @@ public class GlobalControllerAdvice {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(LocalDateTime.now(), HttpStatus.BAD_REQUEST.getReasonPhrase(), fieldError.getDefaultMessage()));
     }
-
 }

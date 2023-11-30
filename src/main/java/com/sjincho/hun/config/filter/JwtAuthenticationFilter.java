@@ -4,6 +4,7 @@ import com.sjincho.hun.auth.exception.AuthErrorCode;
 import com.sjincho.hun.auth.exception.AuthorizationHeaderNullException;
 import com.sjincho.hun.auth.exception.NotBearerAuthorizationException;
 import com.sjincho.hun.auth.exception.TokenExpiredException;
+import com.sjincho.hun.auth.exception.UnknownJwtAuthenticationException;
 import com.sjincho.hun.auth.service.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -60,6 +61,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             request.setAttribute("JwtAuthenticationFilterException", e);
         } catch (TokenExpiredException e) {
             request.setAttribute("JwtAuthenticationFilterException", e);
+        } catch (Exception e) {
+            request.setAttribute(
+                    "JwtAuthenticationFilterException",
+                    new UnknownJwtAuthenticationException(AuthErrorCode.UNKNOWN_AUTHENTICATION_EXCEPTION, e.getClass().getSimpleName()));
         } finally {
             filterChain.doFilter(request, response);
         }

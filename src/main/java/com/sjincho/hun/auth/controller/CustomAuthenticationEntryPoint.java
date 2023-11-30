@@ -1,7 +1,5 @@
 package com.sjincho.hun.auth.controller;
 
-import com.sjincho.hun.auth.exception.AccessDeniedException;
-import com.sjincho.hun.auth.exception.AuthErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -22,12 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) {
-        log.info("인증 중 에러가 났기 떄문에 엔트리포인트의 -> commence()실행");
-
-        if (request.getAttribute("JwtAuthenticationFilterException") != null) {
-            resolver.resolveException(request, response, null, (Exception) request.getAttribute("JwtAuthenticationFilterException"));
-        }
-
-        resolver.resolveException(request, response, null, new AccessDeniedException(AuthErrorCode.ACCESS_DENIED));
+        log.error("인증 중 에러가 발생해서 CustomAuthenticationEntryPoint.class의 commence()실행");
+        resolver.resolveException(request, response, null, (Exception) request.getAttribute("JwtAuthenticationFilterException"));
     }
 }

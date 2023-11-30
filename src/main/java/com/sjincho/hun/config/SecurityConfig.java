@@ -1,5 +1,6 @@
 package com.sjincho.hun.config;
 
+import com.sjincho.hun.auth.controller.CustomAccessDeniedEntryPoint;
 import com.sjincho.hun.auth.controller.CustomAuthenticationEntryPoint;
 import com.sjincho.hun.config.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -17,11 +18,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedEntryPoint customAccessDeniedEntryPoint;
 
     public SecurityConfig(final JwtAuthenticationFilter jwtAuthenticationFilter,
-                          final CustomAuthenticationEntryPoint customAuthenticationEntryPoint) {
+                          final CustomAuthenticationEntryPoint customAuthenticationEntryPoint,
+                          final CustomAccessDeniedEntryPoint customAccessDeniedEntryPoint) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedEntryPoint = customAccessDeniedEntryPoint;
     }
 
     @Bean
@@ -46,6 +50,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(handle -> handle.authenticationEntryPoint(customAuthenticationEntryPoint))
+                .exceptionHandling(handle -> handle.accessDeniedHandler(customAccessDeniedEntryPoint))
                 .build();
     }
 }
