@@ -21,7 +21,8 @@ public class SwaggerConfig {
                 "/foods/**",
                 "/members/**",
                 "/orders/**",
-                "/deliveries/**"};
+                "/deliveries/**",
+                "/auth/**"};
 
         return GroupedOpenApi.builder()
                 .group("\"음식상품\", \"회원\", \"주문\", \"배달\" 도메인에 대한 API")
