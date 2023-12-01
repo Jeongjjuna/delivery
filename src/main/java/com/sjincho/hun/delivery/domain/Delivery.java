@@ -1,5 +1,6 @@
 package com.sjincho.hun.delivery.domain;
 
+import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 @Entity(name = "delivery")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Delivery {
+public class Delivery extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

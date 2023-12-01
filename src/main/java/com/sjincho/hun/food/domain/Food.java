@@ -1,5 +1,6 @@
 package com.sjincho.hun.food.domain;
 
+import com.sjincho.hun.common.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,13 +11,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-import java.time.LocalDateTime;
 
 @Entity(name = "food")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "deleted_at IS NULL")
-public class Food {
+public class Food extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,9 +31,6 @@ public class Food {
 
     @Column(name = "price", nullable = false)
     private Long price;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
 
     @Builder
     public Food(final String name, final String foodType, final Long price) {
@@ -50,10 +47,6 @@ public class Food {
 
     public Long calculate(Long quantity) {
         return price * quantity;
-    }
-
-    public void delete() {
-        deletedAt = LocalDateTime.now();
     }
 
 }

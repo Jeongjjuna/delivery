@@ -1,5 +1,6 @@
 package com.sjincho.hun.order.domain;
 
+import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotAcceptingException;
@@ -20,14 +21,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order {
+public class Order extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -48,14 +48,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
     @Builder
     public Order(final Address address, final Member member) {
         this.address = address;
         this.member = member;
-        this.createdAt = LocalDateTime.now();
         this.orderStatus = OrderStatus.ACCEPTING;
     }
 

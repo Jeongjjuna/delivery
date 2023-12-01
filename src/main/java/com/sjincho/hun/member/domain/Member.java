@@ -1,5 +1,6 @@
 package com.sjincho.hun.member.domain;
 
+import com.sjincho.hun.common.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,13 +13,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-import java.time.LocalDateTime;
 
 @Entity(name = "member")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Where(clause = "deleted_at IS NULL")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,21 +41,16 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;
-
     @Builder
     public Member(final Long id, final String name,
                   final String email, final String password,
-                  final String cellPhone, final MemberRole memberRole,
-                  final LocalDateTime deletedAt) {
+                  final String cellPhone, final MemberRole memberRole) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.cellPhone = cellPhone;
         this.memberRole = memberRole;
-        this.deletedAt = deletedAt;
     }
 
     public static Member create(final String name, final String email, final String password,
@@ -77,9 +72,4 @@ public class Member {
         this.cellPhone = cellPhone;
         this.memberRole = memberRole;
     }
-
-    public void delete() {
-        deletedAt = LocalDateTime.now();
-    }
-
 }

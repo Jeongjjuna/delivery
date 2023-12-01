@@ -1,5 +1,6 @@
 package com.sjincho.hun.order.domain;
 
+import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.food.domain.Food;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "order_line")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderLine {
+public class OrderLine extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
