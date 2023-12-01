@@ -1,5 +1,6 @@
 package com.sjincho.hun.order.controller;
 
+import com.sjincho.hun.auth.dto.User;
 import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.dto.request.OrderRequest;
 import com.sjincho.hun.order.dto.response.OrderResponse;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,8 +65,14 @@ public class OrderController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('customer')")
-    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest request) {
-        final Long orderId = orderService.order(request);
+    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest request, final Authentication authentication) {
+
+        User orderer = null;
+        if (authentication.getPrincipal() instanceof User) {
+            orderer = (User) authentication.getPrincipal();
+        }
+
+        final Long orderId = orderService.order(request, orderer.getId());
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();
     }

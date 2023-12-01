@@ -65,7 +65,7 @@ public class OrderService {
     }
 
     @Transactional
-    public Long order(final OrderRequest request) {
+    public Long order(final OrderRequest request, Long ordererId) {
         final List<Long> foodIds = request.getOrderLineRequests().stream()
                 .map(orderLineRequest -> orderLineRequest.getFoodId())
                 .toList();
@@ -74,12 +74,12 @@ public class OrderService {
             throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
         }
 
-        final Member member = memberRepository.findById(request.getMemberId()).orElseThrow(() ->
-                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, request.getMemberId()));
+        final Member orderder = memberRepository.findById(ordererId).orElseThrow(() ->
+                new MemberNotFoundException(MemberErrorCode.NOT_FOUND, ordererId));
 
         final Order order = Order.builder()
                 .address(new Address(request.getPostalCode(), request.getDetailAddress()))
-                .member(member)
+                .member(orderder)
                 .build();
 
         request.getOrderLineRequests().stream()
