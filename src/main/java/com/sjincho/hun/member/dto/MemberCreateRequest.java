@@ -1,5 +1,6 @@
 package com.sjincho.hun.member.dto;
 
+import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.domain.MemberRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,5 +33,15 @@ public class MemberCreateRequest {
         this.password = password;
         this.cellPhone = cellPhone;
         this.memberRole = memberRole;
+    }
+
+    public Member toEntity() {
+        return Member.builder()
+                .name(name)
+                .email(email)
+                .password(password)
+                .cellPhone(cellPhone)
+                .memberRole(memberRole)
+                .build();
     }
 }

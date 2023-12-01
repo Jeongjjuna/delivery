@@ -40,15 +40,10 @@ public class MemberService {
     public Long register(final MemberCreateRequest request) {
         checkDuplicatedEmail(request.getEmail());
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        final Member member = request.toEntity();
 
-        final Member member = Member.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .password(encodedPassword)
-                .cellPhone(request.getCellPhone())
-                .memberRole(request.getMemberRole())
-                .build();
+        String encodedPassword = passwordEncoder.encode(request.getPassword());
+        member.applyEncodedPassword(encodedPassword);
 
         final Member saved = memberRepository.save(member);
 

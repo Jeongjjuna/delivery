@@ -53,17 +53,6 @@ public class Member extends BaseEntity {
         this.memberRole = memberRole;
     }
 
-    public static Member create(final String name, final String email, final String password,
-                                final String cellPhone, final MemberRole memberRole) {
-        return Member.builder()
-                .name(name)
-                .email(email)
-                .password(password)
-                .cellPhone(cellPhone)
-                .memberRole(memberRole)
-                .build();
-    }
-
     public void update(final String name, final String email, final String password,
                        final String cellPhone, final MemberRole memberRole) {
         this.name = name;
@@ -71,5 +60,9 @@ public class Member extends BaseEntity {
         this.password = password;
         this.cellPhone = cellPhone;
         this.memberRole = memberRole;
+    }
+
+    public void applyEncodedPassword(final String encodedPassword) {
+        this.password = encodedPassword;
     }
 }
