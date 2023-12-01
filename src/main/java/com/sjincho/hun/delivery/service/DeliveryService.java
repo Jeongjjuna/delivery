@@ -2,7 +2,6 @@ package com.sjincho.hun.delivery.service;
 
 import com.sjincho.hun.delivery.domain.Delivery;
 import com.sjincho.hun.delivery.domain.DeliveryStatus;
-import com.sjincho.hun.delivery.dto.DeliveryRequest;
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.exception.DeliveryAlreadyRegisterException;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
@@ -52,13 +51,13 @@ public class DeliveryService {
     }
 
     @Transactional
-    public Long resister(final DeliveryRequest request) {
-        Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() ->
-                new OrderNotFoundException(OrderErrorCode.NOT_FOUND, request.getOrderId()));
+    public Long resister(final Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() ->
+                new OrderNotFoundException(OrderErrorCode.NOT_FOUND, orderId));
 
         deliveryRepository.findByOrderIdWithOrder(order.getId())
                 .ifPresent(delivery -> {
-                    throw new DeliveryAlreadyRegisterException(DeliveryErrorCode.ALREADY_REGISTERED, request.getOrderId());
+                    throw new DeliveryAlreadyRegisterException(DeliveryErrorCode.ALREADY_REGISTERED, order.getId());
                 });
 
         // TODO : 배달 생성을 위해 order -> member 지연로딩 체크

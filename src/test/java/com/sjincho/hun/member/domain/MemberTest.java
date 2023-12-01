@@ -26,7 +26,7 @@ class MemberTest {
     @Test
     void update() {
         Member member = new Member(1L, "홍길동", "email@gmail.com", "password",
-                "010-1111-2222", MemberRole.CUSTOMER, LocalDateTime.now());
+                "010-1111-2222", MemberRole.CUSTOMER);
 
         member.update("일지매", "updated@gmail.com", "password",
                 "010-1111-2222", MemberRole.CUSTOMER);

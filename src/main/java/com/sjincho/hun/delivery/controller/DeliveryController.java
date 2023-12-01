@@ -1,10 +1,8 @@
 package com.sjincho.hun.delivery.controller;
 
-import com.sjincho.hun.delivery.dto.DeliveryRequest;
 import com.sjincho.hun.delivery.dto.DeliveryResponse;
 import com.sjincho.hun.delivery.service.DeliveryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
@@ -53,10 +50,10 @@ public class DeliveryController {
         return ResponseEntity.ok(responses);
     }
 
-    @PostMapping
+    @PostMapping("/orders/{orderId}")
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<Void> resister(@Valid @RequestBody final DeliveryRequest request) {
-        final Long deliveryId = deliveryService.resister(request);
+    public ResponseEntity<Void> resister(@PathVariable final Long orderId) {
+        final Long deliveryId = deliveryService.resister(orderId);
 
         return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
     }
