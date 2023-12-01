@@ -1,5 +1,6 @@
 package com.sjincho.hun.food.dto;
 
+import com.sjincho.hun.food.domain.Food;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -24,5 +25,13 @@ public class FoodCreateRequest {
         this.name = name;
         this.foodType = foodType;
         this.price = price;
+    }
+
+    public Food toEntity() {
+        return Food.builder()
+                .name(name)
+                .foodType(foodType)
+                .price(price)
+                .build();
     }
 }

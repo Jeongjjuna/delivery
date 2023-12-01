@@ -34,11 +34,7 @@ public class FoodService {
 
     @Transactional
     public Long register(final FoodCreateRequest request) {
-        final Food food = Food.builder()
-                .name(request.getName())
-                .foodType(request.getFoodType())
-                .price(request.getPrice())
-                .build();
+        final Food food = request.toEntity();
 
         final Food saved = foodRepository.save(food);
 
