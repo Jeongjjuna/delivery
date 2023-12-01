@@ -6,7 +6,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum OrderErrorCode {
     NOT_FOUND(HttpStatus.NOT_FOUND, "[ERROR] Order Not Found" ),
-    NOT_ACCEPTING(HttpStatus.CONFLICT, "[ERROR] Order Not Accepting");
+    NOT_ACCEPTING(HttpStatus.CONFLICT, "[ERROR] Order Not Accepting"),
+    UNAUTHORIZED_CANCEL(HttpStatus.UNAUTHORIZED, "[ERROR] Order Cancel Unauthorized");
 
     private final HttpStatus status;
     private final String message;

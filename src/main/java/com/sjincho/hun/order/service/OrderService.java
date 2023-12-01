@@ -17,6 +17,7 @@ import com.sjincho.hun.order.dto.request.OrderRequest;
 import com.sjincho.hun.order.dto.response.OrderResponse;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotFoundException;
+import com.sjincho.hun.order.exception.UnAuthorizedCancelException;
 import com.sjincho.hun.order.service.port.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -114,8 +115,12 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderStatus cancelOrder(final Long orderId) {
+    public OrderStatus cancelOrder(final Long orderId, Long requesterId) {
         final Order order = findExistingOrder(orderId);
+
+        if (order.getMember().getId() != requesterId) {
+            throw new UnAuthorizedCancelException(OrderErrorCode.UNAUTHORIZED_CANCEL, order.getMember().getId(), requesterId);
+        }
 
         order.cancel();
 
