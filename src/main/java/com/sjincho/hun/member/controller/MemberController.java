@@ -1,5 +1,6 @@
 package com.sjincho.hun.member.controller;
 
+import com.sjincho.hun.auth.dto.User;
 import com.sjincho.hun.member.dto.MemberCreateRequest;
 import com.sjincho.hun.member.dto.MemberResponse;
 import com.sjincho.hun.member.dto.MemberUpdateRequest;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +36,18 @@ public class MemberController {
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<MemberResponse> get(@PathVariable final Long memberId) {
         final MemberResponse response = memberService.get(memberId);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyAuthority('customer', 'owner')")
+    public ResponseEntity<MemberResponse> my(Authentication authentication) {
+        User user = null;
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            user = (User) authentication.getPrincipal();
+        }
+        final MemberResponse response = memberService.get(user.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -65,7 +79,7 @@ public class MemberController {
 
     @DeleteMapping("/{memberId}")
     @PreAuthorize("hasAnyAuthority('customer', 'owner')")
-    public ResponseEntity<Void> delete(@PathVariable final Long memberId) {
+    public ResponseEntity<Void> delete(@PathVariable final Long memberId, Authentication authentication) {
         memberService.delete(memberId);
         return ResponseEntity.ok().build();
     }

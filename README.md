@@ -13,6 +13,7 @@ URL / HTTP Method
 ### 회원(구현완료)
 - 전체 회원 조회 - `GET /members` - 판매점
 - 회원 조회 - `GET /members/{id}` - 판매점
+- 내 정보 조회 - `GET /members/my` - 판매점, 사용자
 - 회원 등록 - `POST /members`
 - 회원 수정 - `PUT /members/{id}` - 판매점, 사용자
 - 회원 삭제 - `DELETE /members/{id}` - 판매점, 사용자
