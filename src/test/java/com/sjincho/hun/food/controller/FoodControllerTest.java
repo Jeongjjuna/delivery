@@ -5,7 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sjincho.hun.config.CustomerMockUser;
 import com.sjincho.hun.config.OwnerMockUser;
 import com.sjincho.hun.food.domain.Food;
@@ -42,6 +41,46 @@ class FoodControllerTest {
     public void clean() {
         foodJpaRepository.deleteAll();
         memberJpaRepository.deleteAll();
+    }
+
+    @DisplayName("전체 음식 조회 테스트 : 손님이 전체 음식 조회시 200 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_전체_음식_조회_요청() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+
+        Food saved = foodJpaRepository.save(food);
+
+        // when, then
+        mockMvc.perform(get("/foods?page=0&size=10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("전체 음식 조회 테스트 : 음식점이 전체 음식 조회시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_전체_음식_조회_요청() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+
+        Food saved = foodJpaRepository.save(food);
+
+        // when, then
+        mockMvc.perform(get("/foods?page=0&size=10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @DisplayName("특정 음식 조회 테스트 : 존재하지 않는 id 음식 조회시 404 응답 반환")
