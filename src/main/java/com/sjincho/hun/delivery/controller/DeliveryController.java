@@ -42,7 +42,7 @@ public class DeliveryController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/delivering")
+    @GetMapping("/in-delivery")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<DeliveryResponse>> getAllDelivering(final Pageable pageable) {
         final Page<DeliveryResponse> responses = deliveryService.getAllDelivering(pageable);
