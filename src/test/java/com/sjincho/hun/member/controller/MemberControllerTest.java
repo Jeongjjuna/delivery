@@ -2,9 +2,11 @@ package com.sjincho.hun.member.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.sjincho.hun.auth.dto.User;
 import com.sjincho.hun.config.CustomerMockUser;
 import com.sjincho.hun.config.OwnerMockUser;
 import com.sjincho.hun.member.domain.Member;
@@ -20,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.stream.Stream;
 
@@ -37,6 +41,207 @@ class MemberControllerTest {
     @AfterEach
     public void clean() {
         memberJpaRepository.deleteAll();
+    }
+
+    @DisplayName("회원수정 데이터 유효성 검사")
+    @ParameterizedTest(name = "name:{0}, email:{1}, password:{2}, cellPhone:{3}, memberRole:{4} 회원가입 요청시 400 응답 반환")
+    @MethodSource("provideRequestForInvalidData")
+    void 회원수정_데이터_유효성_검사(String name, String email, String password, String cellPhone, String memberRole) throws Exception {
+        // given
+        String invalidJson = """
+                    {
+                      "name" : %s,
+                      "email" : %s,
+                      "password" : %s,
+                      "cellPhone" : %s,
+                      "memberRole" : %s
+                    }
+                    """.formatted(name, email, password, cellPhone, memberRole);
+
+        // when, then
+        mockMvc.perform(post("/members")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 수정 테스트 : 존재하지 않는 회원의 정보 수정시 404 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 존재하지_않는_회원_정보_수정_요청() throws Exception {
+        // given
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        memberJpaRepository.save(member);
+
+        String json = """
+                {
+                  "name" : "정지훈",
+                  "email" : "user1@naver.com",
+                  "password" : "password",
+                  "cellPhone" : "010-1111-2222",
+                  "memberRole" : "CUSTOMER"
+                }
+                """;
+
+        // when, then
+        mockMvc.perform(put("/members/{memberId}", 99999L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 수정 테스트 : 다른 사람의 회원 정보 수정시 403 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 다른사람의_회원_정보_수정_요청() throws Exception {
+        // given
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member saved = memberJpaRepository.save(member);
+
+        String json = """
+                {
+                  "name" : "정지훈",
+                  "email" : "user1@naver.com",
+                  "password" : "password",
+                  "cellPhone" : "010-1111-2222",
+                  "memberRole" : "CUSTOMER"
+                }
+                """;
+
+        // when, then
+        mockMvc.perform(put("/members/{memberId}", saved.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 수정 테스트 : 음식점이 회원 수정시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_회원_수정_요청() throws Exception {
+        // given
+        String json = """
+                {
+                  "name" : "정지훈",
+                  "email" : "user1@naver.com",
+                  "password" : "password",
+                  "cellPhone" : "010-1111-2222",
+                  "memberRole" : "CUSTOMER"
+                }
+                """;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // when, then
+        mockMvc.perform(put("/members/{memberId}", user.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 수정 테스트 : 손님이 회원 수정시 200 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_회원_수정_요청() throws Exception {
+        // given
+        String json = """
+                {
+                  "name" : "정지훈",
+                  "email" : "user1@naver.com",
+                  "password" : "password",
+                  "cellPhone" : "010-1111-2222",
+                  "memberRole" : "CUSTOMER"
+                }
+                """;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // when, then
+        mockMvc.perform(put("/members/{memberId}", user.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("전체 회원 조회 테스트 : 손님이 전체 회원 조회시 403 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_전체_회원_조회_요청() throws Exception {
+        // given
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        memberJpaRepository.save(member);
+
+        // when, then
+        mockMvc.perform(get("/members?page=0&size=10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("전체 회원 조회 테스트 : 음식점이 전체 회원 조회시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_전체_회원_조회_요청() throws Exception {
+        // given
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        memberJpaRepository.save(member);
+
+        // when, then
+        mockMvc.perform(get("/members?page=0&size=10")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("나의 정보 조회 테스트 : 음식점이 나의 정보 조회시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_개인정보_조회_요청() throws Exception {
+        // when, then
+        mockMvc.perform(get("/members/my")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("나의 정보 조회 테스트 : 음식점이 나의 정보 조회시 200 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_개인정보_조회_요청() throws Exception {
+        // when, then
+        mockMvc.perform(get("/members/my")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @DisplayName("특정 회원 조회 테스트 : 존재하지 않는 id 회원 조회시 404 응답 반환")

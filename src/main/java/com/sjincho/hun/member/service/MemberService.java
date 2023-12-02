@@ -53,11 +53,12 @@ public class MemberService {
 
     @Transactional
     public MemberResponse update(final Long memberId, final MemberUpdateRequest request, Long requesterId) {
+        final Member member = findExistingMember(memberId);
+
         if (memberId != requesterId) {
             throw new UnAuthorizedUpdateException(MemberErrorCode.UNAUTHORIZED_UPDATE, memberId, requesterId);
         }
 
-        final Member member = findExistingMember(memberId);
 
         checkDuplicatedEmail(request.getEmail());
 
@@ -76,11 +77,11 @@ public class MemberService {
 
     @Transactional
     public void delete(final Long memberId, Long requesterId) {
+        final Member member = findExistingMember(memberId);
+
         if (memberId != requesterId) {
             throw new UnAuthorizedUpdateException(MemberErrorCode.UNAUTHORIZED_UPDATE, memberId, requesterId);
         }
-
-        final Member member = findExistingMember(memberId);
 
         member.delete();
 
