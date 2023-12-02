@@ -7,6 +7,7 @@ import com.sjincho.hun.member.dto.MemberUpdateRequest;
 import com.sjincho.hun.member.exception.MemberEmailDuplicatedException;
 import com.sjincho.hun.member.exception.MemberErrorCode;
 import com.sjincho.hun.member.exception.MemberNotFoundException;
+import com.sjincho.hun.member.exception.UnAuthorizedUpdateException;
 import com.sjincho.hun.member.service.port.MemberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,7 +52,11 @@ public class MemberService {
     }
 
     @Transactional
-    public MemberResponse update(final Long memberId, final MemberUpdateRequest request) {
+    public MemberResponse update(final Long memberId, final MemberUpdateRequest request, Long requesterId) {
+        if (memberId != requesterId) {
+            throw new UnAuthorizedUpdateException(MemberErrorCode.UNAUTHORIZED_UPDATE, memberId, requesterId);
+        }
+
         final Member member = findExistingMember(memberId);
 
         checkDuplicatedEmail(request.getEmail());
@@ -70,7 +75,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void delete(final Long memberId) {
+    public void delete(final Long memberId, Long requesterId) {
+        if (memberId != requesterId) {
+            throw new UnAuthorizedUpdateException(MemberErrorCode.UNAUTHORIZED_UPDATE, memberId, requesterId);
+        }
+
         final Member member = findExistingMember(memberId);
 
         member.delete();

@@ -71,8 +71,15 @@ public class MemberController {
     @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<MemberResponse> update(
             @PathVariable final Long memberId,
-            @Valid @RequestBody final MemberUpdateRequest request) {
-        final MemberResponse response = memberService.update(memberId, request);
+            @Valid @RequestBody final MemberUpdateRequest request,
+            final Authentication authentication) {
+
+        User requester = null;
+        if (authentication.getPrincipal() instanceof User) {
+            requester = (User) authentication.getPrincipal();
+        }
+
+        final MemberResponse response = memberService.update(memberId, request, requester.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -80,7 +87,13 @@ public class MemberController {
     @DeleteMapping("/{memberId}")
     @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<Void> delete(@PathVariable final Long memberId, Authentication authentication) {
-        memberService.delete(memberId);
+
+        User requester = null;
+        if (authentication.getPrincipal() instanceof User) {
+            requester = (User) authentication.getPrincipal();
+        }
+
+        memberService.delete(memberId, requester.getId());
         return ResponseEntity.ok().build();
     }
 
