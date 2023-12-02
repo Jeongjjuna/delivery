@@ -130,7 +130,7 @@ class FoodControllerTest {
     }
 
     @DisplayName("음식 수정 데이터 유효성 검사")
-    @ParameterizedTest(name = "name:{0}, foodType:{1}, price:{2} 음식 수정 요청시 401 응답 반환")
+    @ParameterizedTest(name = "name:{0}, foodType:{1}, price:{2} 음식 수정 요청시 400 응답 반환")
     @MethodSource("provideRequestForInvalidData")
     @OwnerMockUser
     void 음식_수정_데이터_유효성_검사(String name, String foodType, String price) throws Exception {
@@ -340,7 +340,7 @@ class FoodControllerTest {
     }
 
     @DisplayName("음식 등록 데이터 유효성 검사")
-    @ParameterizedTest(name = "name:{0}, foodType:{1}, price:{2} 음식 등록 요청시 401 응답 반환")
+    @ParameterizedTest(name = "name:{0}, foodType:{1}, price:{2} 음식 등록 요청시 400 응답 반환")
     @MethodSource("provideRequestForInvalidData")
     @OwnerMockUser
     void 음식_등록_데이터_유효성_검사(String name, String foodType, String price) throws Exception {
