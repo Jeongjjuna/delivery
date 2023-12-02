@@ -1,5 +1,6 @@
 package com.sjincho.hun.food.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -44,6 +45,90 @@ class FoodControllerTest {
         memberJpaRepository.deleteAll();
     }
 
+    @DisplayName("음식 삭제 테스트 : 존재하지 않는 id의 음식 삭제시 404 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 존재하지않는_음식_삭제_요청() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food saved = foodJpaRepository.save(food);
+
+        String json = """
+                {
+                  "name" : "볶음밥",
+                  "foodType" : "한식",
+                  "price" : 10000
+                }
+                """;
+
+        // when, then
+        mockMvc.perform(delete("/foods/{foodId}", 99999999L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @DisplayName("음식 삭제 테스트 : 음식점이 음식 삭제시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_음식_삭제_요청() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food saved = foodJpaRepository.save(food);
+
+        String json = """
+                {
+                  "name" : "볶음밥",
+                  "foodType" : "한식",
+                  "price" : 10000
+                }
+                """;
+
+        // when, then
+        mockMvc.perform(delete("/foods/{foodId}", saved.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("음식 삭제 테스트 : 손님이 음식 삭제시 403 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_음식_삭제_요청() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food saved = foodJpaRepository.save(food);
+
+        String json = """
+                {
+                  "name" : "볶음밥",
+                  "foodType" : "한식",
+                  "price" : 10000
+                }
+                """;
+
+        // when, then
+        mockMvc.perform(delete("/foods/{foodId}", saved.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
     @DisplayName("음식 수정 데이터 유효성 검사")
     @ParameterizedTest(name = "name:{0}, foodType:{1}, price:{2} 음식 수정 요청시 401 응답 반환")
     @MethodSource("provideRequestForInvalidData")
@@ -72,7 +157,6 @@ class FoodControllerTest {
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }
-
 
     @DisplayName("음식 수정 테스트 : 존재하지 않는 id의 음식 수정시 404 응답 반환")
     @Test
@@ -277,15 +361,6 @@ class FoodControllerTest {
                 .andDo(print());
     }
 
-    private static Stream<Arguments> provideRequestForInvalidData() {
-        return Stream.of(
-                Arguments.of(null, "한식", "10000"),
-                Arguments.of("볶음밥", null, "10000"),
-                Arguments.of("볶음밥", "한식", null),
-                Arguments.of("볶음밥", "한식", "-1")
-        );
-    }
-
     @DisplayName("음식 등록 테스트 : 음식점이 음식등록시 201 응답 반환")
     @Test
     @OwnerMockUser
@@ -326,5 +401,14 @@ class FoodControllerTest {
                         .content(json))
                 .andExpect(status().isForbidden())
                 .andDo(print());
+    }
+
+    private static Stream<Arguments> provideRequestForInvalidData() {
+        return Stream.of(
+                Arguments.of(null, "한식", "10000"),
+                Arguments.of("볶음밥", null, "10000"),
+                Arguments.of("볶음밥", "한식", null),
+                Arguments.of("볶음밥", "한식", "-1")
+        );
     }
 }
