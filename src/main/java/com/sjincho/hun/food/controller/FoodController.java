@@ -51,7 +51,7 @@ public class FoodController {
     public ResponseEntity<Void> resister(@Valid @RequestBody final FoodCreateRequest food) {
         final Long foodId = foodService.register(food);
 
-        return ResponseEntity.created(URI.create("/admin/foods/" + foodId)).build();
+        return ResponseEntity.created(URI.create("/foods/" + foodId)).build();
     }
 
     @PutMapping("/{foodId}")
