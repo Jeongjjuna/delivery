@@ -1,5 +1,6 @@
 package com.sjincho.hun.member.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -21,6 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +43,78 @@ class MemberControllerTest {
     @AfterEach
     public void clean() {
         memberJpaRepository.deleteAll();
+    }
+
+    @DisplayName("회원 삭제 테스트 : 존재하지 않는 회원의 정보 삭제시 404 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 존재하지_않는_회원_정보_삭제_요청() throws Exception {
+        // given
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        memberJpaRepository.save(member);
+
+        // when, then
+        mockMvc.perform(delete("/members/{memberId}", 99999L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 삭제 테스트 : 다른 사람의 회원 정보 삭제시 403 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 다른사람의_회원_정보_삭제_요청() throws Exception {
+        // given
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member saved = memberJpaRepository.save(member);
+
+        // when, then
+        mockMvc.perform(delete("/members/{memberId}", saved.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 삭제 테스트 : 음식점이 회원 삭제시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_회원_삭제_요청() throws Exception {
+        // given
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // when, then
+        mockMvc.perform(delete("/members/{memberId}", user.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("회원 삭제 테스트 : 손님이 회원 삭제시 200 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_회원_삭제_요청() throws Exception {
+        // given
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+
+        // when, then
+        mockMvc.perform(delete("/members/{memberId}", user.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
     @DisplayName("회원수정 데이터 유효성 검사")
@@ -130,10 +204,10 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("회원 수정 테스트 : 음식점이 회원 수정시 200 응답 반환")
+    @DisplayName("회원 수정 테스트 : 음식점이 자신의 회원 정보 수정시 200 응답 반환")
     @Test
     @OwnerMockUser
-    void 음식점이_회원_수정_요청() throws Exception {
+    void 음식점이_회원_정보_수정_요청() throws Exception {
         // given
         String json = """
                 {
@@ -144,8 +218,11 @@ class MemberControllerTest {
                   "memberRole" : "CUSTOMER"
                 }
                 """;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+
+        User user = (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         // when, then
         mockMvc.perform(put("/members/{memberId}", user.getId())
@@ -155,10 +232,10 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("회원 수정 테스트 : 손님이 회원 수정시 200 응답 반환")
+    @DisplayName("회원 수정 테스트 : 손님이 자신의 회원 정보 수정시 200 응답 반환")
     @Test
     @CustomerMockUser
-    void 손님이_회원_수정_요청() throws Exception {
+    void 손님이_회원_정보_수정_요청() throws Exception {
         // given
         String json = """
                 {
@@ -169,8 +246,11 @@ class MemberControllerTest {
                   "memberRole" : "CUSTOMER"
                 }
                 """;
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
+
+        User user = (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
 
         // when, then
         mockMvc.perform(put("/members/{memberId}", user.getId())
@@ -268,7 +348,7 @@ class MemberControllerTest {
     @DisplayName("특정 회원 조회 테스트 : 음식점이 특정 회원조회시 200 응답 반환")
     @Test
     @OwnerMockUser
-    void 음식점이_음식조회_요청() throws Exception {
+    void 음식점이_회원조회_요청() throws Exception {
         // given
         Member member = Member.builder()
                 .name("name")
