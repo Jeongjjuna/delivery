@@ -11,8 +11,6 @@ import com.sjincho.hun.config.CustomerMockUser;
 import com.sjincho.hun.config.OwnerMockUser;
 import com.sjincho.hun.food.domain.Food;
 import com.sjincho.hun.food.repository.FoodJpaRepository;
-import com.sjincho.hun.member.repository.MemberJpaRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,10 +21,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Stream;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 @DisplayName("Food 도메인 API 테스트")
 class FoodControllerTest {
 
@@ -35,15 +35,6 @@ class FoodControllerTest {
 
     @Autowired
     private FoodJpaRepository foodJpaRepository;
-
-    @Autowired
-    private MemberJpaRepository memberJpaRepository;
-
-    @AfterEach
-    public void clean() {
-        foodJpaRepository.deleteAll();
-        memberJpaRepository.deleteAll();
-    }
 
     @DisplayName("음식 삭제 테스트 : 존재하지 않는 id의 음식 삭제시 404 응답 반환")
     @Test

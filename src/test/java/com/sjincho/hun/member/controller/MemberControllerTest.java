@@ -13,7 +13,6 @@ import com.sjincho.hun.config.OwnerMockUser;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.domain.MemberRole;
 import com.sjincho.hun.member.repository.MemberJpaRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,15 +21,16 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.stream.Stream;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 @DisplayName("Member 도메인 API 테스트")
 class MemberControllerTest {
 
@@ -39,11 +39,6 @@ class MemberControllerTest {
 
     @Autowired
     private MemberJpaRepository memberJpaRepository;
-
-    @AfterEach
-    public void clean() {
-        memberJpaRepository.deleteAll();
-    }
 
     @DisplayName("회원 삭제 테스트 : 존재하지 않는 회원의 정보 삭제시 404 응답 반환")
     @Test
@@ -123,14 +118,14 @@ class MemberControllerTest {
     void 회원수정_데이터_유효성_검사(String name, String email, String password, String cellPhone, String memberRole) throws Exception {
         // given
         String invalidJson = """
-                    {
-                      "name" : %s,
-                      "email" : %s,
-                      "password" : %s,
-                      "cellPhone" : %s,
-                      "memberRole" : %s
-                    }
-                    """.formatted(name, email, password, cellPhone, memberRole);
+                {
+                  "name" : %s,
+                  "email" : %s,
+                  "password" : %s,
+                  "cellPhone" : %s,
+                  "memberRole" : %s
+                }
+                """.formatted(name, email, password, cellPhone, memberRole);
 
         // when, then
         mockMvc.perform(post("/members")
@@ -313,7 +308,7 @@ class MemberControllerTest {
                 .andDo(print());
     }
 
-    @DisplayName("나의 정보 조회 테스트 : 음식점이 나의 정보 조회시 200 응답 반환")
+    @DisplayName("나의 정보 조회 테스트 : 손님이 나의 정보 조회시 200 응답 반환")
     @Test
     @CustomerMockUser
     void 손님이_개인정보_조회_요청() throws Exception {
