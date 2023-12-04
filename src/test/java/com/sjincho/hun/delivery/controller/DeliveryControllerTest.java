@@ -1,6 +1,7 @@
 package com.sjincho.hun.delivery.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -47,6 +48,126 @@ class DeliveryControllerTest {
 
     @Autowired
     private DeliveryJpaRepository deliveryJpaRepository;
+
+    @DisplayName("배달 등록 하기 테스트 : 존재하지 않는 주문id로 배달등록 요청시 404 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 존재하지_않는_주문_배달_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        // when, then
+        mockMvc.perform(post("/deliveries/orders/{orderId}", 99999L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 등록 하기 테스트 : 손님이 배달등록 요청시 403 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_배달_등록_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        // when, then
+        mockMvc.perform(post("/deliveries/orders/{orderId}", savedOrder.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 등록 하기 테스트 : 음식점이 배달 등록 요청시 201 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_배달_등록_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        // when, then
+        mockMvc.perform(post("/deliveries/orders/{orderId}", savedOrder.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andDo(print());
+    }
 
     @DisplayName("배달중인 주문 목록 조회 테스트 : 손님이 배달중인 주문목록 조회시 403 응답 반환")
     @Test
