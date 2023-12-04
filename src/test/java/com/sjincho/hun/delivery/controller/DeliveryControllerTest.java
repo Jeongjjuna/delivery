@@ -1,6 +1,7 @@
 package com.sjincho.hun.delivery.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -49,10 +50,433 @@ class DeliveryControllerTest {
     @Autowired
     private DeliveryJpaRepository deliveryJpaRepository;
 
+    @DisplayName("배달 취소 하기 테스트 : 배달준비중이 아닌 배달의 배달취소 요청시 409 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 배달준비중이_아닌_배달에대해_배달_취소_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.DELIVERING)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/cancel", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 취소 하기 테스트 : 손님이 배달취소 요청시 403 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_배달_취소_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/cancel", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 취소 하기 테스트 : 음식점이 배달취소 요청시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_배달_취소_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/cancel", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 완료 하기 테스트 : 배달중이 아닌 배달의 배달완료 요청시 409 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 배달중이_아닌_배달에대해_배달_완료_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.COMPLETED)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/start", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 완료 하기 테스트 : 손님이 배달완료 요청시 403 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_배달_완료_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.DELIVERING)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/start", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 완료 하기 테스트 : 음식점이 배달완료 요청시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_배달_완료_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.DELIVERING)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/complete", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 시작 하기 테스트 : 준비중인 아닌 배달의 배달시작 요청시 409 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 준비중이_아닌_배달에대해_배달_시작_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.DELIVERING)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/start", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 시작 하기 테스트 : 손님이 배달시작 요청시 403 응답 반환")
+    @Test
+    @CustomerMockUser
+    void 손님이_배달_시작_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/start", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andDo(print());
+    }
+
+    @DisplayName("배달 시작 하기 테스트 : 음식점이 배달시작 요청시 200 응답 반환")
+    @Test
+    @OwnerMockUser
+    void 음식점이_배달_시작_하기() throws Exception {
+        // given
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
+        Food savedFood = foodJpaRepository.save(food);
+
+        Member member = Member.builder()
+                .name("name")
+                .email("user1@naver.com")
+                .password("password")
+                .cellPhone("000-0000-0000")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        Member savedMember = memberJpaRepository.save(member);
+
+        Order order = Order.builder()
+                .address(new Address("123445", "101동 1001호"))
+                .member(savedMember)
+                .build();
+        order.addOrderLine(OrderLine.builder()
+                .order(order)
+                .food(savedFood)
+                .quantity(2L)
+                .build()
+        );
+        Order savedOrder = orderJpaRepository.save(order);
+
+        Delivery delivery = Delivery.builder()
+                .order(savedOrder)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
+        Delivery savedDelivery = deliveryJpaRepository.save(delivery);
+
+        // when, then
+        mockMvc.perform(patch("/deliveries/{deliveryId}/start", savedDelivery.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
     @DisplayName("배달 등록 하기 테스트 : 존재하지 않는 주문id로 배달등록 요청시 404 응답 반환")
     @Test
     @OwnerMockUser
-    void 존재하지_않는_주문_배달_하기() throws Exception {
+    void 존재하지_않는_주문의_배달_등록_하기() throws Exception {
         // given
         Food food = Food.builder()
                 .name("짜장면")
