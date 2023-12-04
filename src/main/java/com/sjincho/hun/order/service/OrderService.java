@@ -75,12 +75,12 @@ public class OrderService {
             throw new FoodNotFoundException(FoodErrorCode.NOT_FOUND);
         }
 
-        final Member orderder = memberRepository.findById(ordererId).orElseThrow(() ->
+        final Member orderer = memberRepository.findById(ordererId).orElseThrow(() ->
                 new MemberNotFoundException(MemberErrorCode.NOT_FOUND, ordererId));
 
         final Order order = Order.builder()
                 .address(new Address(request.getPostalCode(), request.getDetailAddress()))
-                .member(orderder)
+                .member(orderer)
                 .build();
 
         request.getOrderLineRequests().stream()
