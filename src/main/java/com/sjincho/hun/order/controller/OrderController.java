@@ -47,10 +47,10 @@ public class OrderController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/members/{orderId}")
+    @GetMapping("/members/{memberId}")
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long orderId, final Pageable pageable) {
-        final Page<OrderResponse> responses = orderService.getAllByMemberId(orderId, pageable);
+    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long memberId, final Pageable pageable) {
+        final Page<OrderResponse> responses = orderService.getAllByMemberId(memberId, pageable);
 
         return ResponseEntity.ok(responses);
     }
