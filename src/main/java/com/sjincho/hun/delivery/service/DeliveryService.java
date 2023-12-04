@@ -91,7 +91,7 @@ public class DeliveryService {
     }
 
     @Transactional
-    public void delete(final Long deliveryId) {
+    public void cancelDelivery(final Long deliveryId) {
         final Delivery delivery = findExistingDelivery(deliveryId);
 
         delivery.delete();

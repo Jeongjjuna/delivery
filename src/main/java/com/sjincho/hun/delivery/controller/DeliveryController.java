@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -63,7 +62,7 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponse> startDelivery(@PathVariable final Long deliveryId) {
         deliveryService.startDelivery(deliveryId);
 
-        return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{deliveryId}/complete")
@@ -71,13 +70,13 @@ public class DeliveryController {
     public ResponseEntity<DeliveryResponse> completeDelivery(@PathVariable final Long deliveryId) {
         deliveryService.completeDelivery(deliveryId);
 
-        return ResponseEntity.created(URI.create("/delivery/" + deliveryId)).build();
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{deliveryId}")
+    @PatchMapping("/{deliveryId}/cancel")
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<Void> delete(@PathVariable final Long deliveryId) {
-        deliveryService.delete(deliveryId);
+    public ResponseEntity<Void> cancelDelivery(@PathVariable final Long deliveryId) {
+        deliveryService.cancelDelivery(deliveryId);
         return ResponseEntity.ok().build();
     }
 }
