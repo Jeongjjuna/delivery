@@ -1,4 +1,4 @@
-package com.sjincho.hun.config.filter;
+package com.sjincho.hun.auth.filter;
 
 import com.sjincho.hun.auth.exception.AuthErrorCode;
 import com.sjincho.hun.auth.exception.AuthorizationHeaderNullException;

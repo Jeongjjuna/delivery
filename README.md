@@ -1,6 +1,47 @@
 # 배달어플 API
 
-URL / HTTP Method
+### 1. Project Structure
+```
+기본경로 : main ──> java ──> com ──> sjincho ──> hun
+
+main...
+├── hun
+│    ├── auth
+│    ├── common
+│    ├── config
+│    ├── delivery
+│    ├── exception
+│    ├── food
+│    ├── member
+│    ├── order
+│    │      
+│    ├── DeliveryApplication.java
+│
+test...
+├── hun
+     ├── config
+     ├── delivery
+     ├── food
+     ├── member
+     ├── order
+```
+
+- auth
+  - controller: 인증중 발생하는 에러를 처리하는 핸들러와, 로그인 REST API 컨트롤러를 구현하고 있다.
+  - dto: 인증정보를 담는 UserDetails와 로그인 요청 정보를 담은 LoginRequest를 포함한다.
+  - exception: 인증과정에서 발생할 수 있는 커스텀 에러들을 포함하고 있다.
+  - service: 로그인 service와, 인증 정보를 가져오는 UserDetailService, jwt관련 기능 서비스를 구현하고있다.
+- common: Entity의 공통필드를 BaseEntity로 관리한다.
+- config: Security, Swagger 설정파일을 관리한다.
+- delivery
+- exception
+- food
+- member
+- order
+
+
+
+
 
 
 ### 음식(구현완료)

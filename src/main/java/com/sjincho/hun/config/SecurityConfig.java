@@ -2,7 +2,7 @@ package com.sjincho.hun.config;
 
 import com.sjincho.hun.auth.controller.CustomAccessDeniedHandler;
 import com.sjincho.hun.auth.controller.CustomAuthenticationEntryPoint;
-import com.sjincho.hun.config.filter.JwtAuthenticationFilter;
+import com.sjincho.hun.auth.filter.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
