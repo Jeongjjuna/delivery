@@ -10,8 +10,12 @@ import java.util.Optional;
 
 public interface DeliveryJpaRepository extends JpaRepository<Delivery, Long> {
 
-    @Query("SELECT d FROM delivery d WHERE d.order.id = :orderId")
+    @Query("SELECT d FROM delivery d JOIN FETCH d.order o JOIN FETCH o.member")
+    Page<Delivery> findAllWithOrderWithMember(Pageable pageable);
+
+    @Query("SELECT d FROM delivery d JOIN FETCH d.order o JOIN FETCH o.member WHERE o.id = :orderId")
     Optional<Delivery> findByOrderIdWithOrder(Long orderId);
 
+    @Query("SELECT d FROM delivery d JOIN FETCH d.order o JOIN FETCH o.member WHERE d.deliveryStatus = :status")
     Page<Delivery> findAllByDeliveryStatus(final DeliveryStatus status, final Pageable pageable);
 }

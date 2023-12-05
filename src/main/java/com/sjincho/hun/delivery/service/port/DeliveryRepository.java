@@ -10,13 +10,13 @@ public interface DeliveryRepository {
 
     Optional<Delivery> findById(Long id);
 
-    Page<Delivery> findAll(Pageable pageable);
+    Page<Delivery> findAllWithOrderWithMember(Pageable pageable);
+
+    Optional<Delivery> findByOrderIdWithOrder(Long orderId);
 
     Page<Delivery> findAllByDeliveryStatus(final DeliveryStatus deliveryStatus, final Pageable pageable);
 
     Delivery save(Delivery delivery);
 
     void delete(Delivery delivery);
-
-    Optional<Delivery> findByOrderIdWithOrder(Long orderId);
 }

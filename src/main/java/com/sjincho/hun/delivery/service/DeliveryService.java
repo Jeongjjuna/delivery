@@ -38,7 +38,7 @@ public class DeliveryService {
     }
 
     public Page<DeliveryResponse> getAll(final Pageable pageable) {
-        final Page<Delivery> deliveries = deliveryRepository.findAll(pageable);
+        final Page<Delivery> deliveries = deliveryRepository.findAllWithOrderWithMember(pageable);
 
         return deliveries.map(delivery -> DeliveryResponse.from(delivery));
     }
@@ -60,7 +60,6 @@ public class DeliveryService {
                     throw new DeliveryAlreadyRegisterException(DeliveryErrorCode.ALREADY_REGISTERED, order.getId());
                 });
 
-        // TODO : 배달 생성을 위해 order -> member 지연로딩 체크
         final Delivery delivery = Delivery.builder()
                 .order(order)
                 .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
