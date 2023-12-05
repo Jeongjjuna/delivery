@@ -1,6 +1,6 @@
 # 배달어플 API
 
-### 1. Project Structure
+## 1. Project Structure
 ```
 기본경로 : main ──> java ──> com ──> sjincho ──> hun
 
@@ -25,24 +25,40 @@ test...
      ├── member
      ├── order
 ```
-
+### main
 - auth
-  - controller: 인증중 발생하는 에러를 처리하는 핸들러와, 로그인 REST API 컨트롤러를 구현하고 있다.
-  - dto: 인증정보를 담는 UserDetails와 로그인 요청 정보를 담은 LoginRequest를 포함한다.
-  - exception: 인증과정에서 발생할 수 있는 커스텀 에러들을 포함하고 있다.
-  - service: 로그인 service와, 인증 정보를 가져오는 UserDetailService, jwt관련 기능 서비스를 구현하고있다.
-- common: Entity의 공통필드를 BaseEntity로 관리한다.
-- config: Security, Swagger 설정파일을 관리한다.
-- delivery
+  - controller : 인증중 발생하는 에러를 처리하는 핸들러와, 로그인 REST API 컨트롤러를 구현하고 있다.
+  - dto : 인증정보를 담는 UserDetails와 로그인 요청 정보를 담은 LoginRequest를 포함한다.
+  - exception : 인증과정에서 발생할 수 있는 커스텀 에러들을 포함하고 있다.
+  - service : 로그인 service와, 인증 정보를 가져오는 UserDetailService, jwt관련 기능 서비스를 구현하고있다.
+  - filter : 토큰의 인증을 검사하는 필터를 구현하고있다.
+- common : Entity의 공통필드를 BaseEntity로 관리한다.
+- config : Security, Swagger 설정파일을 관리한다.
 - exception
-- food
-- member
-- order
+  - DeliveryApplicationException : 런타임중에 발생하는 예외를 관리한다.
+  - ErrorResponse : 에러 응답의 구체적인 형태를 관리한다.
+  - GlobalControllerAdvice : 애플리케이션에서 발생하는 예외를 핸들링한다.
+- delivery : 배달관련 REST API를 구현
+  - controller, service, repository, dto, domain, exception으로 구성
+- food : 음식상품관련 REST API를 구현
+  - controller, service, repository, dto, domain, exception으로 구성
+- member : 회원관련 REST API를 구현
+  - controller, service, repository, dto, domain, exception으로 구성
+- order : 주문 REST API를 구현
+  - controller, service, repository, dto, domain, exception으로 구성
+
+### test
+- config : 테스트시 인증에 필요한 MockUser가 설정되어있다.
+- delivery : domain단위테스트와, controller통합테스트를 구현
+- food : domain단위테스트와, controller통합테스트를 구현
+- member : domain단위테스트와, controller통합테스트를 구현
+- order : domain단위테스트와, controller통합테스트를 구현
 
 
 
 
 
+## 2. REST API
 
 ### 음식(구현완료)
 - 판매 음식 전체 조회 - `GET /foods` - 판매점, 사용자
@@ -86,8 +102,8 @@ test...
 
 
 ---
-## ERD
+## 3. ERD
 ![table_diagram.png](docs%2Fimages%2Ftable_diagram.png)
 
-## 도메인
+## 4. 도메인
 ![entity_diagram.png](docs%2Fimages%2Fentity_diagram.png)
