@@ -1,6 +1,7 @@
 package com.sjincho.hun.order.dto.response;
 
 import com.sjincho.hun.order.domain.Order;
+import com.sjincho.hun.order.domain.OrderLine;
 import com.sjincho.hun.order.domain.OrderStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
-public class OrderResponse {
+public class OrderDetailResponse {
     private final Long id;
     private final List<OrderLineResponse> orderLineResponses;
     private final Long ordererId;
@@ -21,11 +22,11 @@ public class OrderResponse {
     private final OrderStatus orderStatus;
 
     @Builder
-    private OrderResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
-                          final Long ordererId, final String ordererCellPhone,
-                          final String postalCode, final String detailAddress,
-                          final LocalDateTime createAt, final Long paymentAmount,
-                          final OrderStatus orderStatus) {
+    private OrderDetailResponse(final Long id, final List<OrderLineResponse> orderLineResponses,
+                                final Long ordererId, final String ordererCellPhone,
+                                final String postalCode, final String detailAddress,
+                                final LocalDateTime createAt, final Long paymentAmount,
+                                final OrderStatus orderStatus) {
         this.id = id;
         this.orderLineResponses = orderLineResponses;
         this.ordererId = ordererId;
@@ -37,12 +38,13 @@ public class OrderResponse {
         this.orderStatus = orderStatus;
     }
 
-    public static OrderResponse from(final Order order, final Long paymentAmount) {
-        final List<OrderLineResponse> orderLineResponses = order.getOrderLines().stream()
+    public static OrderDetailResponse from(final Order order, final List<OrderLine> orderLines, final Long paymentAmount) {
+
+        final List<OrderLineResponse> orderLineResponses = orderLines.stream()
                 .map(OrderLineResponse::from)
                 .collect(Collectors.toList());
 
-        return OrderResponse.builder()
+        return OrderDetailResponse.builder()
                 .id(order.getId())
                 .orderLineResponses(orderLineResponses)
                 .ordererId(order.getMember().getId())

@@ -18,13 +18,18 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Page<Order> findAll(final Pageable pageable) {
-        return orderJpaRepository.findAll(pageable);
+    public Optional<Order> findById(final Long id) {
+        return orderJpaRepository.findById(id);
     }
 
     @Override
-    public Optional<Order> findById(final Long id) {
-        return orderJpaRepository.findById(id);
+    public Page<Order> findAllWithMember(final Pageable pageable) {
+        return orderJpaRepository.findAllWithMember(pageable);
+    }
+
+    @Override
+    public Optional<Order> findByIdWithMember(final Long orderId) {
+        return orderJpaRepository.findByIdWithMember(orderId);
     }
 
     @Override
@@ -33,8 +38,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Page<Order> findAllByOrderStatus(final OrderStatus status, final Pageable pageable) {
-        return orderJpaRepository.findAllByOrderStatus(status, pageable);
+    public Page<Order> findAllByOrderStatusWithMember(final OrderStatus status, final Pageable pageable) {
+        return orderJpaRepository.findAllByOrderStatusWithMember(status, pageable);
     }
 
     @Override

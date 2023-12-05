@@ -3,7 +3,8 @@ package com.sjincho.hun.order.controller;
 import com.sjincho.hun.auth.dto.User;
 import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.dto.request.OrderRequest;
-import com.sjincho.hun.order.dto.response.OrderResponse;
+import com.sjincho.hun.order.dto.response.OrderDetailResponse;
+import com.sjincho.hun.order.dto.response.OrderSimpleResponse;
 import com.sjincho.hun.order.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -33,32 +34,32 @@ public class OrderController {
 
     @GetMapping("/{orderId}")
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<OrderResponse> get(@PathVariable final Long orderId) {
-        final OrderResponse response = orderService.get(orderId);
+    public ResponseEntity<OrderDetailResponse> get(@PathVariable final Long orderId) {
+        final OrderDetailResponse response = orderService.get(orderId);
 
         return ResponseEntity.ok(response);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<Page<OrderResponse>> getAll(final Pageable pageable) {
-        final Page<OrderResponse> responses = orderService.getAll(pageable);
+    public ResponseEntity<Page<OrderSimpleResponse>> getAll(final Pageable pageable) {
+        final Page<OrderSimpleResponse> responses = orderService.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/members/{memberId}")
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<Page<OrderResponse>> getAllByMemberId(@PathVariable final Long memberId, final Pageable pageable) {
-        final Page<OrderResponse> responses = orderService.getAllByMemberId(memberId, pageable);
+    public ResponseEntity<Page<OrderSimpleResponse>> getAllByMemberId(@PathVariable final Long memberId, final Pageable pageable) {
+        final Page<OrderSimpleResponse> responses = orderService.getAllByMemberId(memberId, pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @GetMapping("/accepting")
     @PreAuthorize("hasAnyAuthority('owner')")
-    public ResponseEntity<Page<OrderResponse>> getAllAcceptingOrder(final Pageable pageable) {
-        final Page<OrderResponse> responses = orderService.getAllAcceptingOrder(pageable);
+    public ResponseEntity<Page<OrderSimpleResponse>> getAllAcceptingOrder(final Pageable pageable) {
+        final Page<OrderSimpleResponse> responses = orderService.getAllAcceptingOrder(pageable);
 
         return ResponseEntity.ok(responses);
     }

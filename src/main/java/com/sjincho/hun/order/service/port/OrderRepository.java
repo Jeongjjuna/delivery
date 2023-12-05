@@ -10,11 +10,13 @@ public interface OrderRepository {
 
     Optional<Order> findById(Long id);
 
-    Page<Order> findAll(Pageable pageable);
+    Optional<Order> findByIdWithMember(Long orderId);
+
+    Page<Order> findAllWithMember(Pageable pageable);
 
     Page<Order> findAllByMemberIdWithMember(final Long memberId, final Pageable pageable);
 
-    Page<Order> findAllByOrderStatus(final OrderStatus status, final Pageable pageable);
+    Page<Order> findAllByOrderStatusWithMember(final OrderStatus status, final Pageable pageable);
 
     Order save(Order order);
 }

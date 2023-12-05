@@ -14,10 +14,12 @@ import com.sjincho.hun.order.domain.OrderLine;
 import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.dto.request.OrderLineRequest;
 import com.sjincho.hun.order.dto.request.OrderRequest;
-import com.sjincho.hun.order.dto.response.OrderResponse;
+import com.sjincho.hun.order.dto.response.OrderDetailResponse;
+import com.sjincho.hun.order.dto.response.OrderSimpleResponse;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotFoundException;
 import com.sjincho.hun.order.exception.UnAuthorizedCancelException;
+import com.sjincho.hun.order.service.port.OrderLineRepository;
 import com.sjincho.hun.order.service.port.OrderRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,39 +32,46 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final FoodRepository foodRepository;
     private final MemberRepository memberRepository;
+    private final OrderLineRepository orderLineRepository;
 
     public OrderService(final OrderRepository orderRepository,
                         final FoodRepository foodRepository,
-                        final MemberRepository memberRepository) {
+                        final MemberRepository memberRepository,
+                        final OrderLineRepository orderLineRepository) {
         this.orderRepository = orderRepository;
         this.foodRepository = foodRepository;
         this.memberRepository = memberRepository;
+        this.orderLineRepository = orderLineRepository;
     }
 
-    public OrderResponse get(final Long orderId) {
+    public OrderDetailResponse get(final Long orderId) {
         final Order order = findExistingOrder(orderId);
 
-        Long paymentAmount = order.calculatePaymentAmount();
+        List<OrderLine> orderLines = orderLineRepository.findByOrderId(orderId);
+        Long paymentAmount = orderLines.stream()
+                .map(OrderLine::calculatePayment)
+                .mapToLong(Long::longValue)
+                .sum();
 
-        return OrderResponse.from(order, paymentAmount);
+        return OrderDetailResponse.from(order, orderLines, paymentAmount);
     }
 
-    public Page<OrderResponse> getAll(final Pageable pageable) {
-        final Page<Order> orders = orderRepository.findAll(pageable);
+    public Page<OrderSimpleResponse> getAll(final Pageable pageable) {
+        final Page<Order> orders = orderRepository.findAllWithMember(pageable);
 
-        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
+        return orders.map(order -> OrderSimpleResponse.from(order));
     }
 
-    public Page<OrderResponse> getAllByMemberId(final Long memberId, final Pageable pageable) {
+    public Page<OrderSimpleResponse> getAllByMemberId(final Long memberId, final Pageable pageable) {
         final Page<Order> orders = orderRepository.findAllByMemberIdWithMember(memberId, pageable);
 
-        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
+        return orders.map(order -> OrderSimpleResponse.from(order));
     }
 
-    public Page<OrderResponse> getAllAcceptingOrder(final Pageable pageable) {
-        final Page<Order> orders = orderRepository.findAllByOrderStatus(OrderStatus.ACCEPTING, pageable);
+    public Page<OrderSimpleResponse> getAllAcceptingOrder(final Pageable pageable) {
+        final Page<Order> orders = orderRepository.findAllByOrderStatusWithMember(OrderStatus.ACCEPTING, pageable);
 
-        return orders.map(order -> OrderResponse.from(order, order.calculatePaymentAmount()));
+        return orders.map(order -> OrderSimpleResponse.from(order));
     }
 
     @Transactional
@@ -130,7 +139,7 @@ public class OrderService {
     }
 
     private Order findExistingOrder(final Long id) {
-        return orderRepository.findById(id).orElseThrow(() ->
+        return orderRepository.findByIdWithMember(id).orElseThrow(() ->
                 new OrderNotFoundException(OrderErrorCode.NOT_FOUND, id));
     }
 
