@@ -1,10 +1,10 @@
 package com.sjincho.hun.member.controller;
 
 import com.sjincho.hun.auth.dto.User;
-import com.sjincho.hun.member.dto.MemberCreateRequest;
-import com.sjincho.hun.member.dto.MemberResponse;
-import com.sjincho.hun.member.dto.MemberUpdateRequest;
-import com.sjincho.hun.member.service.MemberService;
+import com.sjincho.hun.member.domain.MemberCreate;
+import com.sjincho.hun.member.controller.response.MemberResponse;
+import com.sjincho.hun.member.domain.MemberUpdate;
+import com.sjincho.hun.member.service.MemberServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -26,16 +26,16 @@ import java.net.URI;
 @RequestMapping("/members")
 @Tag(name = "member-controller", description = "회원 서비스")
 public class MemberController {
-    private final MemberService memberService;
+    private final MemberServiceImpl memberServiceImpl;
 
-    public MemberController(final MemberService memberService) {
-        this.memberService = memberService;
+    public MemberController(final MemberServiceImpl memberServiceImpl) {
+        this.memberServiceImpl = memberServiceImpl;
     }
 
     @GetMapping("/{memberId}")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<MemberResponse> get(@PathVariable final Long memberId) {
-        final MemberResponse response = memberService.get(memberId);
+        final MemberResponse response = memberServiceImpl.get(memberId);
 
         return ResponseEntity.ok(response);
     }
@@ -47,7 +47,7 @@ public class MemberController {
         if (authentication != null && authentication.getPrincipal() instanceof User) {
             user = (User) authentication.getPrincipal();
         }
-        final MemberResponse response = memberService.get(user.getId());
+        final MemberResponse response = memberServiceImpl.get(user.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -55,14 +55,14 @@ public class MemberController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<MemberResponse>> getAll(final Pageable pageable) {
-        final Page<MemberResponse> responses = memberService.getAll(pageable);
+        final Page<MemberResponse> responses = memberServiceImpl.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @PostMapping
-    public ResponseEntity<Void> resister(@Valid @RequestBody final MemberCreateRequest request) {
-        final Long memberId = memberService.register(request);
+    public ResponseEntity<Void> resister(@Valid @RequestBody final MemberCreate request) {
+        final Long memberId = memberServiceImpl.register(request);
 
         return ResponseEntity.created(URI.create("/members/" + memberId)).build();
     }
@@ -71,7 +71,7 @@ public class MemberController {
     @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<MemberResponse> update(
             @PathVariable final Long memberId,
-            @Valid @RequestBody final MemberUpdateRequest request,
+            @Valid @RequestBody final MemberUpdate request,
             final Authentication authentication) {
 
         User requester = null;
@@ -79,7 +79,7 @@ public class MemberController {
             requester = (User) authentication.getPrincipal();
         }
 
-        final MemberResponse response = memberService.update(memberId, request, requester.getId());
+        final MemberResponse response = memberServiceImpl.update(memberId, request, requester.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -93,7 +93,7 @@ public class MemberController {
             requester = (User) authentication.getPrincipal();
         }
 
-        memberService.delete(memberId, requester.getId());
+        memberServiceImpl.delete(memberId, requester.getId());
         return ResponseEntity.ok().build();
     }
 

@@ -14,6 +14,4 @@ public interface MemberRepository {
     Page<Member> findAll(Pageable pageable);
 
     Member save(Member member);
-
-    void delete(Member member);
 }

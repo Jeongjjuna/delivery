@@ -23,9 +23,19 @@ class FoodTest {
     @DisplayName("Food 도메인 수정 테스트")
     @Test
     void update() {
-        Food food = new Food("짜장면", "중식", 9000L);
+        Food food = Food.builder()
+                .name("짜장면")
+                .foodType("중식")
+                .price(9000L)
+                .build();
 
-        food.update("슈퍼짜장면", "슈퍼중식", 8000L);
+        FoodUpdate foodUpdate = FoodUpdate.builder()
+                .name("슈퍼짜장면")
+                .foodType("슈퍼중식")
+                .price(8000L)
+                .build();
+
+        food.update(foodUpdate);
 
         assertAll(
                 () -> assertThat(food.getName()).isEqualTo("슈퍼짜장면"),

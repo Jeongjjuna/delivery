@@ -12,9 +12,7 @@ public interface FoodRepository {
 
     Page<Food> findAll(Pageable pageable);
 
-    Food save(Food food);
-
-    void delete(Food food);
-
     List<Food> findAllById(List<Long> foodIds);
+
+    Food save(Food food);
 }

@@ -2,10 +2,10 @@ package com.sjincho.hun.order.controller;
 
 import com.sjincho.hun.auth.dto.User;
 import com.sjincho.hun.order.domain.OrderStatus;
-import com.sjincho.hun.order.dto.request.OrderRequest;
-import com.sjincho.hun.order.dto.response.OrderDetailResponse;
-import com.sjincho.hun.order.dto.response.OrderSimpleResponse;
-import com.sjincho.hun.order.service.OrderService;
+import com.sjincho.hun.order.domain.OrderCreate;
+import com.sjincho.hun.order.controller.response.OrderDetailResponse;
+import com.sjincho.hun.order.controller.response.OrderSimpleResponse;
+import com.sjincho.hun.order.service.OrderServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -26,16 +26,16 @@ import java.net.URI;
 @RequestMapping("/orders")
 @Tag(name = "order-controller", description = "주문 서비스")
 public class OrderController {
-    private final OrderService orderService;
+    private final OrderServiceImpl orderServiceImpl;
 
-    public OrderController(final OrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(final OrderServiceImpl orderServiceImpl) {
+        this.orderServiceImpl = orderServiceImpl;
     }
 
     @GetMapping("/{orderId}")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<OrderDetailResponse> get(@PathVariable final Long orderId) {
-        final OrderDetailResponse response = orderService.get(orderId);
+        final OrderDetailResponse response = orderServiceImpl.get(orderId);
 
         return ResponseEntity.ok(response);
     }
@@ -43,7 +43,7 @@ public class OrderController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderSimpleResponse>> getAll(final Pageable pageable) {
-        final Page<OrderSimpleResponse> responses = orderService.getAll(pageable);
+        final Page<OrderSimpleResponse> responses = orderServiceImpl.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
@@ -51,7 +51,7 @@ public class OrderController {
     @GetMapping("/members/{memberId}")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderSimpleResponse>> getAllByMemberId(@PathVariable final Long memberId, final Pageable pageable) {
-        final Page<OrderSimpleResponse> responses = orderService.getAllByMemberId(memberId, pageable);
+        final Page<OrderSimpleResponse> responses = orderServiceImpl.getAllByMemberId(memberId, pageable);
 
         return ResponseEntity.ok(responses);
     }
@@ -59,21 +59,21 @@ public class OrderController {
     @GetMapping("/accepting")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderSimpleResponse>> getAllAcceptingOrder(final Pageable pageable) {
-        final Page<OrderSimpleResponse> responses = orderService.getAllAcceptingOrder(pageable);
+        final Page<OrderSimpleResponse> responses = orderServiceImpl.getAllAcceptingOrder(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('customer')")
-    public ResponseEntity<Void> order(@Valid @RequestBody final OrderRequest request, final Authentication authentication) {
+    public ResponseEntity<Void> order(@Valid @RequestBody final OrderCreate request, final Authentication authentication) {
 
         User orderer = null;
         if (authentication.getPrincipal() instanceof User) {
             orderer = (User) authentication.getPrincipal();
         }
 
-        final Long orderId = orderService.order(request, orderer.getId());
+        final Long orderId = orderServiceImpl.order(request, orderer.getId());
 
         return ResponseEntity.created(URI.create("/members/" + orderId)).build();
     }
@@ -87,7 +87,7 @@ public class OrderController {
             requester = (User) authentication.getPrincipal();
         }
 
-        final OrderStatus response = orderService.cancelOrder(orderId, requester.getId());
+        final OrderStatus response = orderServiceImpl.cancelOrder(orderId, requester.getId());
 
         return ResponseEntity.ok(response);
     }
@@ -95,7 +95,7 @@ public class OrderController {
     @PatchMapping("/{orderId}/accept")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<OrderStatus> approveOrder(@PathVariable final Long orderId) {
-        final OrderStatus response = orderService.approveOrder(orderId);
+        final OrderStatus response = orderServiceImpl.approveOrder(orderId);
 
         return ResponseEntity.ok(response);
     }
@@ -103,7 +103,7 @@ public class OrderController {
     @PatchMapping("/{orderId}/reject")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<OrderStatus> rejectOrder(@PathVariable final Long orderId) {
-        final OrderStatus response = orderService.rejectOrder(orderId);
+        final OrderStatus response = orderServiceImpl.rejectOrder(orderId);
 
         return ResponseEntity.ok(response);
     }

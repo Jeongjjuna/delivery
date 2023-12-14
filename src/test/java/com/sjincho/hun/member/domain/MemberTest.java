@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import java.time.LocalDateTime;
 
 class MemberTest {
 
@@ -25,11 +24,23 @@ class MemberTest {
     @DisplayName("Member 도메인 수정 테스트")
     @Test
     void update() {
-        Member member = new Member(1L, "홍길동", "email@gmail.com", "password",
-                "010-1111-2222", MemberRole.CUSTOMER);
+        Member member = Member.builder()
+                .id(1L)
+                .name("홍길동")
+                .email("email@gmail.com")
+                .password("password")
+                .cellPhone("010-1111-2222")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
 
-        member.update("일지매", "updated@gmail.com", "password",
-                "010-1111-2222", MemberRole.CUSTOMER);
+        MemberUpdate memberUpdate = MemberUpdate.builder()
+                .name("일지매")
+                .email("updated@gmail.com")
+                .password("010-1111-2222")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+
+        member.update(memberUpdate);
 
         assertAll(
                 () -> assertThat(member.getName()).isEqualTo("일지매"),

@@ -1,52 +1,45 @@
 package com.sjincho.hun.delivery.domain;
 
-import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.delivery.exception.DeliveryErrorCode;
 import com.sjincho.hun.delivery.exception.DeliveryNotDeliveringException;
 import com.sjincho.hun.delivery.exception.DeliveryNotReadyStatusException;
 import com.sjincho.hun.order.domain.Order;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-@Entity(name = "delivery")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Delivery extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "delivery_id", updatable = false)
+public class Delivery {
     private Long id;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-
-    @Column(name = "delivery_status", nullable = false)
-    @Enumerated(EnumType.STRING)
     private DeliveryStatus deliveryStatus;
-
-    @Column(name = "delivery_started_at")
     private LocalDateTime deliveryStartedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     @Builder
-    public Delivery(final Order order, final DeliveryStatus deliveryStatus, final LocalDateTime deliveryStartedAt) {
+    public Delivery(final Long id, final Order order,
+                    final DeliveryStatus deliveryStatus,
+                    final LocalDateTime deliveryStartedAt,
+                    final LocalDateTime createdAt,
+                    final LocalDateTime updatedAt,
+                    final LocalDateTime deletedAt) {
+        this.id = id;
         this.order = order;
         this.deliveryStatus = deliveryStatus;
         this.deliveryStartedAt = deliveryStartedAt;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+    }
+
+    public static Delivery create(final Order order) {
+        return Delivery.builder()
+                .order(order)
+                .deliveryStatus(DeliveryStatus.READY_FOR_DELIVERY)
+                .deliveryStartedAt(null)
+                .build();
     }
 
     public void start() {

@@ -1,58 +1,45 @@
 package com.sjincho.hun.order.domain;
 
-import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotAcceptingException;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
-@Entity(name = "orders")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Order extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_id", updatable = false)
+public class Order {
     private Long id;
-
-    @Embedded
-    private Address address;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
     private Member member;
-
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<OrderLine> orderLines = new ArrayList<>();
-
-    @Column(name = "create_status", nullable = false)
-    @Enumerated(EnumType.STRING)
+    private Address address;
     private OrderStatus orderStatus;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
     @Builder
-    public Order(final Address address, final Member member) {
-        this.address = address;
+    public Order(final Long id, final Member member,
+                 final Address address, final OrderStatus orderStatus,
+                 final LocalDateTime createdAt, final LocalDateTime updatedAt,
+                 final LocalDateTime deletedAt) {
+        this.id = id;
         this.member = member;
-        this.orderStatus = OrderStatus.ACCEPTING;
+        this.address = address;
+        this.orderStatus = orderStatus;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
+    }
+
+    public static Order from(OrderCreate orderCreate, Member orderer) {
+        return Order.builder()
+                .member(orderer)
+                .address(new Address(
+                        orderCreate.getPostalCode(),
+                        orderCreate.getDetailAddress())
+                )
+                .orderStatus(OrderStatus.ACCEPTING)
+                .build();
     }
 
     public void approve() {
@@ -78,16 +65,5 @@ public class Order extends BaseEntity {
         }
 
         throw new OrderNotAcceptingException(OrderErrorCode.NOT_ACCEPTING);
-    }
-
-    public Long calculatePaymentAmount() {
-        return orderLines.stream()
-                .map(OrderLine::calculatePayment)
-                .mapToLong(Long::longValue)
-                .sum();
-    }
-
-    public void addOrderLine(OrderLine orderLine) {
-        orderLines.add(orderLine);
     }
 }

@@ -6,4 +6,6 @@ import java.util.List;
 public interface OrderLineRepository {
 
     List<OrderLine> findByOrderId(Long orderId);
+
+    OrderLine save(OrderLine orderLine);
 }

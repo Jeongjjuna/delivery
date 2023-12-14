@@ -17,6 +17,4 @@ public interface DeliveryRepository {
     Page<Delivery> findAllByDeliveryStatus(final DeliveryStatus deliveryStatus, final Pageable pageable);
 
     Delivery save(Delivery delivery);
-
-    void delete(Delivery delivery);
 }

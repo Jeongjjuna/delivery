@@ -1,7 +1,6 @@
 package com.sjincho.hun.auth.service;
 
 import com.sjincho.hun.auth.dto.User;
-import com.sjincho.hun.member.dto.MemberResponse;
 import com.sjincho.hun.member.service.port.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

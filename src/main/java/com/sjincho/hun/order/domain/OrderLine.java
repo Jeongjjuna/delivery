@@ -1,47 +1,32 @@
 package com.sjincho.hun.order.domain;
 
-import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.food.domain.Food;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Entity(name = "order_line")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class OrderLine extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "order_line_id", updatable = false)
+public class OrderLine {
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "food_id", nullable = false)
     private Food food;
-
-    @Column(name = "quantity", nullable = false)
     private Long quantity;
 
     @Builder
-    public OrderLine(final Order order, final Food food, final Long quantity) {
+    public OrderLine(final Long id, final Order order,
+                     final Food food, final Long quantity) {
+        this.id = id;
         this.order = order;
         this.food = food;
         this.quantity = quantity;
-        order.addOrderLine(this);
+    }
+
+    public static OrderLine from(OrderLineCreate orderLineCreate,
+                                 Order order, Food food) {
+        return OrderLine.builder()
+                .order(order)
+                .food(food)
+                .quantity(orderLineCreate.getQuantity())
+                .build();
     }
 
     public Long calculatePayment() {

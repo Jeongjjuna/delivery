@@ -1,9 +1,9 @@
 package com.sjincho.hun.food.controller;
 
-import com.sjincho.hun.food.dto.FoodCreateRequest;
-import com.sjincho.hun.food.dto.FoodResponse;
-import com.sjincho.hun.food.dto.FoodUpdateRequest;
-import com.sjincho.hun.food.service.FoodService;
+import com.sjincho.hun.food.controller.response.FoodResponse;
+import com.sjincho.hun.food.domain.FoodCreate;
+import com.sjincho.hun.food.domain.FoodUpdate;
+import com.sjincho.hun.food.service.FoodServiceImpl;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -24,16 +24,16 @@ import java.net.URI;
 @RequestMapping("/foods")
 @Tag(name = "food-controller", description = "음식상품 서비스")
 public class FoodController {
-    private final FoodService foodService;
+    private final FoodServiceImpl foodServiceImpl;
 
-    public FoodController(final FoodService foodService) {
-        this.foodService = foodService;
+    public FoodController(final FoodServiceImpl foodServiceImpl) {
+        this.foodServiceImpl = foodServiceImpl;
     }
 
     @GetMapping("/{foodId}")
     @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<FoodResponse> get(@PathVariable final Long foodId) {
-        final FoodResponse response = foodService.get(foodId);
+        final FoodResponse response = foodServiceImpl.get(foodId);
 
         return ResponseEntity.ok(response);
     }
@@ -41,15 +41,15 @@ public class FoodController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('customer', 'owner')")
     public ResponseEntity<Page<FoodResponse>> getAll(final Pageable pageable) {
-        final Page<FoodResponse> responses = foodService.getAll(pageable);
+        final Page<FoodResponse> responses = foodServiceImpl.getAll(pageable);
 
         return ResponseEntity.ok(responses);
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('owner')")
-    public ResponseEntity<Void> resister(@Valid @RequestBody final FoodCreateRequest food) {
-        final Long foodId = foodService.register(food);
+    public ResponseEntity<Void> resister(@Valid @RequestBody final FoodCreate food) {
+        final Long foodId = foodServiceImpl.register(food);
 
         return ResponseEntity.created(URI.create("/foods/" + foodId)).build();
     }
@@ -58,8 +58,8 @@ public class FoodController {
     @PreAuthorize("hasAuthority('owner')")
     public ResponseEntity<FoodResponse> update(
             @PathVariable final Long foodId,
-            @Valid @RequestBody final FoodUpdateRequest food) {
-        final FoodResponse response = foodService.update(foodId, food);
+            @Valid @RequestBody final FoodUpdate food) {
+        final FoodResponse response = foodServiceImpl.update(foodId, food);
 
         return ResponseEntity.ok(response);
     }
@@ -67,7 +67,7 @@ public class FoodController {
     @DeleteMapping("/{foodId}")
     @PreAuthorize("hasAuthority('owner')")
     public ResponseEntity<Void> delete(@PathVariable final Long foodId) {
-        foodService.delete(foodId);
+        foodServiceImpl.delete(foodId);
         return ResponseEntity.ok().build();
     }
 }

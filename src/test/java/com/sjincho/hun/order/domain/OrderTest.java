@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.sjincho.hun.food.domain.Food;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.exception.OrderNotAcceptingException;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +14,11 @@ class OrderTest {
     private Order createtTestOrder() {
         return Order.builder()
                 .address(new Address("123445", "101동 1001호"))
-                .member(Member.builder().id(1L).cellPhone("010-1111-2222").build())
+                .member(Member.builder()
+                        .id(1L)
+                        .cellPhone("010-1111-2222")
+                        .build())
+                .orderStatus(OrderStatus.ACCEPTING)
                 .build();
     }
 
@@ -27,26 +30,6 @@ class OrderTest {
                 .member(Member.builder().id(1L).cellPhone("010-1111-2222").build())
                 .build()
         ).doesNotThrowAnyException();
-    }
-
-    @DisplayName("Order 전체 주문 금액 계산 테스트")
-    @Test
-    void calculatePaymentAmount() {
-        Order order = createtTestOrder();
-        OrderLine.builder()
-                .order(order)
-                .food(Food.builder().price(6000L).build())
-                .quantity(2L)
-                .build();
-        OrderLine.builder()
-                .order(order)
-                .food(Food.builder().price(7000L).build())
-                .quantity(2L)
-                .build();
-
-        Long totalPayments = order.calculatePaymentAmount();
-
-        assertThat(totalPayments).isEqualTo(26000L);
     }
 
     @DisplayName("주문 수락 테스트")

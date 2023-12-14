@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.sjincho.hun.config.CustomerMockUser;
 import com.sjincho.hun.config.OwnerMockUser;
 import com.sjincho.hun.food.domain.Food;
-import com.sjincho.hun.food.repository.FoodJpaRepository;
+import com.sjincho.hun.food.service.port.FoodRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -34,7 +34,7 @@ class FoodControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private FoodJpaRepository foodJpaRepository;
+    private FoodRepository foodRepository;
 
     @DisplayName("음식 삭제 테스트 : 존재하지 않는 id의 음식 삭제시 404 응답 반환")
     @Test
@@ -46,7 +46,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String json = """
                 {
@@ -74,7 +74,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String json = """
                 {
@@ -102,7 +102,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String json = """
                 {
@@ -131,7 +131,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String invalidJson = """
                 {
@@ -159,7 +159,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String json = """
                 {
@@ -187,7 +187,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String json = """
                 {
@@ -215,7 +215,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         String json = """
                 {
@@ -244,7 +244,7 @@ class FoodControllerTest {
                 .price(9000L)
                 .build();
 
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         // when, then
         mockMvc.perform(get("/foods?page=0&size=10")
@@ -264,7 +264,7 @@ class FoodControllerTest {
                 .price(9000L)
                 .build();
 
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         // when, then
         mockMvc.perform(get("/foods?page=0&size=10")
@@ -283,7 +283,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         // when, then
         mockMvc.perform(get("/foods/{foodId}", 99999999L)
@@ -302,7 +302,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         // when, then
         mockMvc.perform(get("/foods/{foodId}", saved.getId())
@@ -321,7 +321,7 @@ class FoodControllerTest {
                 .foodType("중식")
                 .price(9000L)
                 .build();
-        Food saved = foodJpaRepository.save(food);
+        Food saved = foodRepository.save(food);
 
         // when, then
         mockMvc.perform(get("/foods/{foodId}", saved.getId())

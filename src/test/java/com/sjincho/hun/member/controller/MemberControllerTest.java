@@ -12,7 +12,7 @@ import com.sjincho.hun.config.CustomerMockUser;
 import com.sjincho.hun.config.OwnerMockUser;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.domain.MemberRole;
-import com.sjincho.hun.member.repository.MemberJpaRepository;
+import com.sjincho.hun.member.service.port.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -38,7 +38,7 @@ class MemberControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private MemberJpaRepository memberJpaRepository;
+    private MemberRepository memberRepository;
 
     @DisplayName("회원 삭제 테스트 : 존재하지 않는 회원의 정보 삭제시 404 응답 반환")
     @Test
@@ -52,7 +52,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
 
         // when, then
         mockMvc.perform(delete("/members/{memberId}", 99999L)
@@ -73,7 +73,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        Member saved = memberJpaRepository.save(member);
+        Member saved = memberRepository.save(member);
 
         // when, then
         mockMvc.perform(delete("/members/{memberId}", saved.getId())
@@ -147,7 +147,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
 
         String json = """
                 {
@@ -179,7 +179,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        Member saved = memberJpaRepository.save(member);
+        Member saved = memberRepository.save(member);
 
         String json = """
                 {
@@ -267,7 +267,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
 
         // when, then
         mockMvc.perform(get("/members?page=0&size=10")
@@ -288,7 +288,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
 
         // when, then
         mockMvc.perform(get("/members?page=0&size=10")
@@ -331,7 +331,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        Member saved = memberJpaRepository.save(member);
+        Member saved = memberRepository.save(member);
 
         // when, then
         mockMvc.perform(get("/members/{memberId}", 999999L)
@@ -352,7 +352,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        Member saved = memberJpaRepository.save(member);
+        Member saved = memberRepository.save(member);
 
         // when, then
         mockMvc.perform(get("/members/{memberId}", saved.getId())
@@ -373,7 +373,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        Member saved = memberJpaRepository.save(member);
+        Member saved = memberRepository.save(member);
 
         // when, then
         mockMvc.perform(get("/members/{memberId}", saved.getId())
@@ -416,7 +416,7 @@ class MemberControllerTest {
                 .cellPhone("000-0000-0000")
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
-        memberJpaRepository.save(member);
+        memberRepository.save(member);
 
         String json = """
                 {
