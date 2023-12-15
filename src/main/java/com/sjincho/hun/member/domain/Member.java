@@ -1,6 +1,8 @@
 package com.sjincho.hun.member.domain;
 
 import com.sjincho.hun.common.domain.BaseEntity;
+import com.sjincho.hun.member.exception.MemberErrorCode;
+import com.sjincho.hun.member.exception.UnAuthorizedException;
 import lombok.Builder;
 import lombok.Getter;
 import java.time.LocalDateTime;
@@ -43,5 +45,11 @@ public class Member extends BaseEntity {
 
     public void applyEncodedPassword(final String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public void checkSameMember(Long requesterId) {
+        if (id != requesterId) {
+            throw new UnAuthorizedException(MemberErrorCode.UNAUTHORIZED_UPDATE, id, requesterId);
+        }
     }
 }

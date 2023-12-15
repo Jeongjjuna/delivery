@@ -1,14 +1,13 @@
 package com.sjincho.hun.member.service;
 
 import com.sjincho.hun.member.controller.port.MemberService;
+import com.sjincho.hun.member.controller.response.MemberResponse;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.member.domain.MemberCreate;
-import com.sjincho.hun.member.controller.response.MemberResponse;
 import com.sjincho.hun.member.domain.MemberUpdate;
 import com.sjincho.hun.member.exception.MemberEmailDuplicatedException;
 import com.sjincho.hun.member.exception.MemberErrorCode;
 import com.sjincho.hun.member.exception.MemberNotFoundException;
-import com.sjincho.hun.member.exception.UnAuthorizedUpdateException;
 import com.sjincho.hun.member.service.port.MemberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,10 +55,7 @@ public class MemberServiceImpl implements MemberService {
     public MemberResponse update(final Long memberId, final MemberUpdate memberUpdate, Long requesterId) {
         final Member member = findExistingMember(memberId);
 
-        if (memberId != requesterId) {
-            throw new UnAuthorizedUpdateException(MemberErrorCode.UNAUTHORIZED_UPDATE, memberId, requesterId);
-        }
-
+        member.checkSameMember(requesterId);
 
         checkDuplicatedEmail(memberUpdate.getEmail());
 
@@ -74,9 +70,7 @@ public class MemberServiceImpl implements MemberService {
     public void delete(final Long memberId, Long requesterId) {
         final Member member = findExistingMember(memberId);
 
-        if (memberId != requesterId) {
-            throw new UnAuthorizedUpdateException(MemberErrorCode.UNAUTHORIZED_UPDATE, memberId, requesterId);
-        }
+        member.checkSameMember(requesterId);
 
         member.delete();
 
