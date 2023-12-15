@@ -47,9 +47,13 @@ public class Member extends BaseEntity {
         this.password = encodedPassword;
     }
 
-    public void checkSameMember(Long requesterId) {
+    public void checkSameMember(final Long requesterId) {
         if (id != requesterId) {
             throw new UnAuthorizedException(MemberErrorCode.UNAUTHORIZED_UPDATE, id, requesterId);
         }
+    }
+
+    public boolean isSameMember(final Long memberId) {
+        return this.id == memberId;
     }
 }

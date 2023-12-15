@@ -123,9 +123,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderStatus cancelOrder(final Long orderId, Long requesterId) {
         final Order order = findExistingOrder(orderId);
 
-        if (order.getMember().getId() != requesterId) {
-            throw new UnAuthorizedCancelException(OrderErrorCode.UNAUTHORIZED_CANCEL, order.getMember().getId(), requesterId);
-        }
+        order.checkSameMember(requesterId);
 
         order.cancel();
 

@@ -3,6 +3,7 @@ package com.sjincho.hun.order.domain;
 import com.sjincho.hun.member.domain.Member;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotAcceptingException;
+import com.sjincho.hun.order.exception.UnAuthorizedCancelException;
 import lombok.Builder;
 import lombok.Getter;
 import java.time.LocalDateTime;
@@ -65,5 +66,12 @@ public class Order {
         }
 
         throw new OrderNotAcceptingException(OrderErrorCode.NOT_ACCEPTING);
+    }
+
+    public void checkSameMember(final Long requesterId) {
+        if (member.isSameMember(requesterId)) {
+            return;
+        }
+        throw new UnAuthorizedCancelException(OrderErrorCode.UNAUTHORIZED_CANCEL, member.getId(), requesterId);
     }
 }
