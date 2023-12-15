@@ -15,6 +15,7 @@ import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderCreate;
 import com.sjincho.hun.order.domain.OrderLine;
 import com.sjincho.hun.order.domain.OrderLineCreate;
+import com.sjincho.hun.order.domain.OrderLines;
 import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.exception.OrderErrorCode;
 import com.sjincho.hun.order.exception.OrderNotFoundException;
@@ -47,13 +48,11 @@ public class OrderServiceImpl implements OrderService {
     public OrderDetailResponse get(final Long orderId) {
         final Order order = findExistingOrder(orderId);
 
-        List<OrderLine> orderLines = orderLineRepository.findByOrderId(orderId);
-        Long paymentAmount = orderLines.stream()
-                .map(OrderLine::calculatePayment)
-                .mapToLong(Long::longValue)
-                .sum();
+        OrderLines orderLines = orderLineRepository.findByOrderId(orderId);
 
-        return OrderDetailResponse.from(order, orderLines, paymentAmount);
+        Long paymentAmount = orderLines.getPaymentAmount();
+
+        return OrderDetailResponse.from(order, orderLines.getOrderLines(), paymentAmount);
     }
 
     public Page<OrderSimpleResponse> getAll(final Pageable pageable) {

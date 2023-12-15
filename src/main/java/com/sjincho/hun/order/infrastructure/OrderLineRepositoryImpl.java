@@ -1,6 +1,7 @@
 package com.sjincho.hun.order.infrastructure;
 
 import com.sjincho.hun.order.domain.OrderLine;
+import com.sjincho.hun.order.domain.OrderLines;
 import com.sjincho.hun.order.infrastructure.entity.OrderLineEntity;
 import com.sjincho.hun.order.service.port.OrderLineRepository;
 import org.springframework.stereotype.Repository;
@@ -16,10 +17,11 @@ public class OrderLineRepositoryImpl implements OrderLineRepository {
     }
 
     @Override
-    public List<OrderLine> findByOrderId(final Long orderId) {
-        return orderLineJpaRepository.findByOrderId(orderId).stream()
+    public OrderLines findByOrderId(final Long orderId) {
+        List<OrderLine> orderLines = orderLineJpaRepository.findByOrderId(orderId).stream()
                 .map(OrderLineEntity::toModel)
                 .toList();
+        return new OrderLines(orderLines);
     }
 
     @Override
