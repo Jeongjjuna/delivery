@@ -1,15 +1,19 @@
 package com.sjincho.hun.order.controller;
 
 import com.sjincho.hun.auth.dto.User;
+import com.sjincho.hun.delivery.exception.DeliveryNotFoundException;
+import com.sjincho.hun.exception.DeliveryApplicationException;
 import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.domain.OrderCreate;
 import com.sjincho.hun.order.controller.response.OrderDetailResponse;
 import com.sjincho.hun.order.controller.response.OrderSimpleResponse;
 import com.sjincho.hun.order.service.OrderServiceImpl;
+import com.sjincho.hun.utils.ClassUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -68,10 +72,8 @@ public class OrderController {
     @PreAuthorize("hasAnyAuthority('customer')")
     public ResponseEntity<Void> order(@Valid @RequestBody final OrderCreate request, final Authentication authentication) {
 
-        User orderer = null;
-        if (authentication.getPrincipal() instanceof User) {
-            orderer = (User) authentication.getPrincipal();
-        }
+        User orderer = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class)
+                .orElseThrow(() -> new DeliveryApplicationException(HttpStatus.INTERNAL_SERVER_ERROR, "typecasting error", "authentication typecasting error"));
 
         final Long orderId = orderServiceImpl.order(request, orderer.getId());
 
@@ -82,10 +84,8 @@ public class OrderController {
     @PreAuthorize("hasAnyAuthority('customer')")
     public ResponseEntity<OrderStatus> cancelOrder(@PathVariable final Long orderId, final Authentication authentication) {
 
-        User requester = null;
-        if (authentication.getPrincipal() instanceof User) {
-            requester = (User) authentication.getPrincipal();
-        }
+        User requester = ClassUtils.getSafeCastInstance(authentication.getPrincipal(), User.class)
+                .orElseThrow(() -> new DeliveryApplicationException(HttpStatus.INTERNAL_SERVER_ERROR, "typecasting error", "authentication typecasting error"));
 
         final OrderStatus response = orderServiceImpl.cancelOrder(orderId, requester.getId());
 
