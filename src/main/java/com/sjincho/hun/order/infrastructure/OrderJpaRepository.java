@@ -1,6 +1,7 @@
 package com.sjincho.hun.order.infrastructure;
 
 import com.sjincho.hun.order.domain.OrderStatus;
+import com.sjincho.hun.order.infrastructure.entity.OrderEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

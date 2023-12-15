@@ -1,4 +1,4 @@
-package com.sjincho.hun.member.infastructure;
+package com.sjincho.hun.member.infastructure.entity;
 
 import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.member.domain.Member;

@@ -1,9 +1,9 @@
-package com.sjincho.hun.delivery.infrastructure;
+package com.sjincho.hun.delivery.infrastructure.entity;
 
 import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.delivery.domain.Delivery;
 import com.sjincho.hun.delivery.domain.DeliveryStatus;
-import com.sjincho.hun.order.infrastructure.OrderEntity;
+import com.sjincho.hun.order.infrastructure.entity.OrderEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

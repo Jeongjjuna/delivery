@@ -1,6 +1,7 @@
 package com.sjincho.hun.delivery.infrastructure;
 
 import com.sjincho.hun.delivery.domain.DeliveryStatus;
+import com.sjincho.hun.delivery.infrastructure.entity.DeliveryEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

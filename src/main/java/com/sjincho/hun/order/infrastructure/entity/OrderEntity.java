@@ -1,7 +1,7 @@
-package com.sjincho.hun.order.infrastructure;
+package com.sjincho.hun.order.infrastructure.entity;
 
 import com.sjincho.hun.common.domain.BaseEntity;
-import com.sjincho.hun.member.infastructure.MemberEntity;
+import com.sjincho.hun.member.infastructure.entity.MemberEntity;
 import com.sjincho.hun.order.domain.Address;
 import com.sjincho.hun.order.domain.Order;
 import com.sjincho.hun.order.domain.OrderStatus;

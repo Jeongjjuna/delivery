@@ -2,6 +2,7 @@ package com.sjincho.hun.delivery.infrastructure;
 
 import com.sjincho.hun.delivery.domain.Delivery;
 import com.sjincho.hun.delivery.domain.DeliveryStatus;
+import com.sjincho.hun.delivery.infrastructure.entity.DeliveryEntity;
 import com.sjincho.hun.delivery.service.port.DeliveryRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

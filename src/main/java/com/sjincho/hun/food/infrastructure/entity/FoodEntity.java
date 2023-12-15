@@ -1,4 +1,4 @@
-package com.sjincho.hun.food.infrastructure;
+package com.sjincho.hun.food.infrastructure.entity;
 
 import com.sjincho.hun.common.domain.BaseEntity;
 import com.sjincho.hun.food.domain.Food;

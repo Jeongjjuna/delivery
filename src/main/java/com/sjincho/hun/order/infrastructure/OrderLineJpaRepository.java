@@ -1,5 +1,6 @@
 package com.sjincho.hun.order.infrastructure;
 
+import com.sjincho.hun.order.infrastructure.entity.OrderLineEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;

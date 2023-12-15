@@ -1,6 +1,7 @@
 package com.sjincho.hun.food.infrastructure;
 
 import com.sjincho.hun.food.domain.Food;
+import com.sjincho.hun.food.infrastructure.entity.FoodEntity;
 import com.sjincho.hun.food.service.port.FoodRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

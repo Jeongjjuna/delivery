@@ -1,6 +1,7 @@
 package com.sjincho.hun.order.infrastructure;
 
 import com.sjincho.hun.order.domain.OrderLine;
+import com.sjincho.hun.order.infrastructure.entity.OrderLineEntity;
 import com.sjincho.hun.order.service.port.OrderLineRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

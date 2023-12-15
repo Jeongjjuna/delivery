@@ -1,6 +1,6 @@
-package com.sjincho.hun.order.infrastructure;
+package com.sjincho.hun.order.infrastructure.entity;
 
-import com.sjincho.hun.food.infrastructure.FoodEntity;
+import com.sjincho.hun.food.infrastructure.entity.FoodEntity;
 import com.sjincho.hun.order.domain.OrderLine;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

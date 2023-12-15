@@ -1,6 +1,7 @@
 package com.sjincho.hun.member.infastructure;
 
 import com.sjincho.hun.member.domain.Member;
+import com.sjincho.hun.member.infastructure.entity.MemberEntity;
 import com.sjincho.hun.member.service.port.MemberRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
