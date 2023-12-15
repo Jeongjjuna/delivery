@@ -20,7 +20,7 @@ public class FoodEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "food_id", updatable = false)
+    @Column(name = "id", updatable = false)
     private Long id;
 
     @Column(name = "name", nullable = false)
