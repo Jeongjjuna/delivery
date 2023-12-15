@@ -20,7 +20,6 @@ import com.sjincho.hun.order.domain.OrderLine;
 import com.sjincho.hun.order.domain.OrderStatus;
 import com.sjincho.hun.order.service.port.OrderLineRepository;
 import com.sjincho.hun.order.service.port.OrderRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 @Transactional
 @DisplayName("Order 도메인 API 테스트")
-class OrderEntityControllerTest {
+class OrderControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

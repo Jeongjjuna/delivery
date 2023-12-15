@@ -7,7 +7,7 @@ import com.sjincho.hun.food.domain.Food;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class OrderEntityLineEntityTest {
+class OrderLineTest {
 
     @DisplayName("OrderLine 도메인 생성 테스트")
     @Test
