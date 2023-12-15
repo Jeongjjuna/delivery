@@ -10,6 +10,24 @@ import org.junit.jupiter.api.Test;
 
 class MemberTest {
 
+    @DisplayName("Member 도메인 암호화된 비밀번호로 변경하는 테스트")
+    @Test
+    void applyEncodedPassword() {
+        Member member = Member.builder()
+                .id(1L)
+                .name("홍길동")
+                .email("email@gmail.com")
+                .password("password")
+                .cellPhone("010-1111-2222")
+                .memberRole(MemberRole.CUSTOMER)
+                .build();
+        String encodedPassword = "encoded";
+
+        member.applyEncodedPassword(encodedPassword);
+
+        assertThat(member.getPassword()).isEqualTo("encoded");
+    }
+
     @DisplayName("Member 도메인과 요청자 id가 다르면 예외를 발생시킨다.")
     @Test
     void checkSameMemberException() {
