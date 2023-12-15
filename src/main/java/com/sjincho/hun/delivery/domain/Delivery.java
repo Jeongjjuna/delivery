@@ -48,7 +48,7 @@ public class Delivery {
             deliveryStartedAt = LocalDateTime.now();
             return;
         }
-        throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS);
+        throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS, id);
     }
 
     public void complete() {
@@ -64,7 +64,7 @@ public class Delivery {
             changeDeliveryStatus(DeliveryStatus.CANCELED);
             return;
         }
-        throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS);
+        throw new DeliveryNotReadyStatusException(DeliveryErrorCode.NOT_READY_STATUS, id);
     }
 
     private boolean isDeliveringStatus() {
