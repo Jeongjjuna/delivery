@@ -60,7 +60,7 @@ public class OrderController {
         return ResponseEntity.ok(responses);
     }
 
-    @GetMapping("/accepting")
+    @GetMapping("/in-accept")
     @PreAuthorize("hasAnyAuthority('owner')")
     public ResponseEntity<Page<OrderSimpleResponse>> getAllAcceptingOrder(final Pageable pageable) {
         final Page<OrderSimpleResponse> responses = orderServiceImpl.getAllAcceptingOrder(pageable);

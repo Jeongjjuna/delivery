@@ -79,7 +79,7 @@ test...
 - 전체 주문 조회 - `GET /orders` - 판매점
 - 주문 조회 - `GET /orders/{id}` - 판매점
 - 사용자의 주문 조회 - `GET /orders/members/{id}` - 판매점
-- 현재 접수중인 모든 주문 조회 -  `GET /orders/accepting` - 판매점
+- 현재 접수중인 모든 주문 조회 -  `GET /orders/in-accept` - 판매점
 - 주문 하기 - `POST /orders` - 사용자
 - 주문 취소 - `PATCH /orders/{id}/cancel` - 사용자
 - 주문 수락 - `PATCH /orders/{id}/accept` - 판매점
@@ -89,7 +89,7 @@ test...
 ### 배달(구현완료)
 - 전체 배달 조회 - `GET /deliveries` - 판매점
 - 배달 조회 - `GET /deliveries/{id}` - 판매점
-- 현재 배달중인 모든 배달 조회 - `GET /deliveries/delivering` - 판매점
+- 현재 배달중인 모든 배달 조회 - `GET /deliveries/in-delivery` - 판매점
 - 배달 등록 - `POST /deliveries` - 판매점
 - 배달 시작 - `PATCH /deliveries/{id}/start` - 판매점
 - 배달 완료 - `PATCH/deliveries/{id}/complete` - 판매점

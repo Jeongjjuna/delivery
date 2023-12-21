@@ -267,7 +267,7 @@ class OrderControllerTest {
         OrderLine savedOrderLine = setOrderLine(savedFood, savedOrder);
 
         // when, then
-        mockMvc.perform(get("/orders/accepting")
+        mockMvc.perform(get("/orders/in-accept")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andDo(print());
@@ -284,7 +284,7 @@ class OrderControllerTest {
         OrderLine savedOrderLine = setOrderLine(savedFood, savedOrder);
 
         // when, then
-        mockMvc.perform(get("/orders/accepting")
+        mockMvc.perform(get("/orders/in-accept")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
