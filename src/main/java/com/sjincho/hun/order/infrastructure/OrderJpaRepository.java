@@ -16,9 +16,12 @@ public interface OrderJpaRepository extends JpaRepository<OrderEntity, Long> {
     @Query("SELECT o FROM orders o JOIN FETCH o.memberEntity")
     Page<OrderEntity> findAllWithMember(Pageable pageable);
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT o FROM orders o JOIN FETCH o.memberEntity WHERE o.id = :orderId")
     Optional<OrderEntity> findByIdWithMember(@Param("orderId") Long orderId);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("SELECT o FROM orders o JOIN FETCH o.memberEntity WHERE o.id = :orderId")
+    Optional<OrderEntity> findByIdWithMemberForUpdate(@Param("orderId") Long orderId);
 
     @Query("SELECT o FROM orders o JOIN FETCH o.memberEntity WHERE o.memberEntity.id = :memberId")
     Page<OrderEntity> findAllByMemberIdWithMember(final Long memberId, final Pageable pageable);

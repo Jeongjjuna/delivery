@@ -99,7 +99,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public OrderStatus approveOrder(final Long orderId) {
-        final Order order = findExistingOrder(orderId);
+        final Order order = orderRepository.findByIdWithMemberForUpdate(orderId).orElseThrow(() ->
+                new OrderNotFoundException(OrderErrorCode.NOT_FOUND, orderId));
 
         order.approve();
 
@@ -121,7 +122,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     public OrderStatus cancelOrder(final Long orderId, Long requesterId) {
-        final Order order = findExistingOrder(orderId);
+        final Order order = orderRepository.findByIdWithMemberForUpdate(orderId).orElseThrow(() ->
+                new OrderNotFoundException(OrderErrorCode.NOT_FOUND, orderId));
 
         order.checkSameMember(requesterId);
 

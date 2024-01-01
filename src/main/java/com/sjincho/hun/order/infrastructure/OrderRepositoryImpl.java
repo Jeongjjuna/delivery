@@ -34,6 +34,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
+    public Optional<Order> findByIdWithMemberForUpdate(final Long orderId) {
+        return orderJpaRepository.findByIdWithMemberForUpdate(orderId).map(OrderEntity::toModel);
+    }
+
+    @Override
     public Page<Order> findAllByMemberIdWithMember(final Long memberId, final Pageable pageable) {
         return orderJpaRepository.findAllByMemberIdWithMember(memberId, pageable).map(OrderEntity::toModel);
     }

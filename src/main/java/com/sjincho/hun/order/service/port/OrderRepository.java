@@ -12,6 +12,8 @@ public interface OrderRepository {
 
     Optional<Order> findByIdWithMember(Long orderId);
 
+    Optional<Order> findByIdWithMemberForUpdate(Long orderId);
+
     Page<Order> findAllWithMember(Pageable pageable);
 
     Page<Order> findAllByMemberIdWithMember(final Long memberId, final Pageable pageable);
