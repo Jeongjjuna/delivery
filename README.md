@@ -1,5 +1,7 @@
 # 배달어플 API
-배달이라는 주제에 대해 SpringBoot를 활용하여 REST API를 구현한 프로젝트 입니다.(2023.11 ~ 2023.12)
+
+배달이라는 주제에 대해 SpringBoot를 활용하여 REST API를 구현한 프로젝트 입니다.(2023.11 ~ 2023.12)
+
 SpringBoot, MySQL, JPA, Junit5
 
 ## 1. Project Structure
